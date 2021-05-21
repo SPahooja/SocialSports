@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +22,15 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Kotlin Linter
-      # uses: vroy/gha-kotlin-linter@772edff1ebb6ec3ecb1b56da2b808bad499856bf
-      uses: vroy/gha-kotlin-linter@v2
-      #with:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kotlin Linter
+        # uses: vroy/gha-kotlin-linter@772edff1ebb6ec3ecb1b56da2b808bad499856bf
+        uses: vroy/gha-kotlin-linter@v2
+        #with:
         # A list of patterns to pass along to the ktlint command
         #patterns: # optional, default is **/*.kt
+
