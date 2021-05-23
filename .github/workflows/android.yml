@@ -1,0 +1,36 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kotlin Linter
+        # uses: vroy/gha-kotlin-linter@772edff1ebb6ec3ecb1b56da2b808bad499856bf
+        uses: vroy/gha-kotlin-linter@v2
+        #with:
+        # A list of patterns to pass along to the ktlint command
+        #patterns: # optional, default is **/*.kt
+
