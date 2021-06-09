@@ -1,3 +1,3 @@
-// package com.uwcs446.socialsports.services.user
-//
-// class NoUserException : Throwable()
+package com.uwcs446.socialsports.services.user
+
+class NoUserException : Throwable()

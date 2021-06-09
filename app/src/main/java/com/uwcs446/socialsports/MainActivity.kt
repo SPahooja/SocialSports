@@ -12,6 +12,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.databinding.ActivityMainBinding
+import com.uwcs446.socialsports.services.user.CurrentUserService
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val userService = CurrentUserService(this)
 
         val navView: BottomNavigationView = binding.navView
 
