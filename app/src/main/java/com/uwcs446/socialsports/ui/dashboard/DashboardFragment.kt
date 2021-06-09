@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.uwcs446.socialsports.databinding.FragmentDashboardBinding
 
@@ -33,7 +32,7 @@ class DashboardFragment : Fragment() {
         val textView: TextView = binding.textDashboard
         dashboardViewModel.text.observe(
             viewLifecycleOwner,
-            Observer {
+            {
                 textView.text = it
             }
         )
