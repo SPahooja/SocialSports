@@ -40,7 +40,7 @@ class NotificationsFragment : Fragment() {
         )
         activity?.let {
             AuthUI.getInstance().signOut(it)
-        } //TODO remove and add dedicated ui for logout
+        } // TODO remove and add dedicated ui for logout
         return root
     }
 

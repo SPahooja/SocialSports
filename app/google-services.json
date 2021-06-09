@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "861130841599",
+    "project_id": "sportsforall-37ab4",
+    "storage_bucket": "sportsforall-37ab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861130841599:android:3f45b1c33082987fd71bca",
+        "android_client_info": {
+          "package_name": "com.uwcs446.socialsports"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "861130841599-097r5v1du4nemqrfgbvu1ks5ra8m2bmd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAn61Ymj0eweUu5_trx9PdutOJ_R9egtyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "861130841599-097r5v1du4nemqrfgbvu1ks5ra8m2bmd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

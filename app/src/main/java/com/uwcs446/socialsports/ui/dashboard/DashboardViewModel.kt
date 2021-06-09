@@ -12,5 +12,4 @@ class DashboardViewModel : ViewModel() {
     val text: LiveData<String> = _text
 
     var user = "NO-USER" // TODO: Fetch from user service
-
 }
