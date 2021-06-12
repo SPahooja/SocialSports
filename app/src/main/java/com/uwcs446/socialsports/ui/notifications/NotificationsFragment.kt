@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.firebase.ui.auth.AuthUI
 import com.uwcs446.socialsports.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
@@ -37,6 +38,9 @@ class NotificationsFragment : Fragment() {
                 textView.text = it
             }
         )
+        activity?.let {
+            AuthUI.getInstance().signOut(it)
+        } // TODO remove and add dedicated ui for logout
         return root
     }
 
