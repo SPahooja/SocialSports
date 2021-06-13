@@ -1,13 +1,47 @@
 package com.uwcs446.socialsports.ui.notifications
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.uwcs446.socialsports.services.user.User
+import com.uwcs446.socialsports.services.user.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class NotificationsViewModel : ViewModel() {
+@HiltViewModel
+class NotificationsViewModel
+@Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+
+    private val userObserver = Observer<User> {
+        _text.setValue(computeLabel())
+    }
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = computeLabel()
     }
     val text: LiveData<String> = _text
+
+    init {
+        userRepository.user.observeForever(userObserver)
+    }
+
+    fun handleLogout() {
+        userRepository.logout()
+    }
+
+    fun handleLogin(activity: Activity) {
+        userRepository.login(activity)
+    }
+
+    override fun onCleared() {
+        userRepository.user.removeObserver(userObserver)
+        super.onCleared()
+    }
+
+    private fun computeLabel() =
+        "This is notifications Fragment with user: [${userRepository.getUser()?.id ?: "NO_USER"}]"
 }

@@ -19,5 +19,4 @@ class UserModule {
 //    @Singleton
 //    @Provides
 //    fun provideContext(activity: Activity): Context = activity.baseContext
-
 }

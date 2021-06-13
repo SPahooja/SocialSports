@@ -1,63 +1,52 @@
 package com.uwcs446.socialsports.services.user
 
 import android.app.Activity
-import android.app.Service
-import android.content.Intent
-import android.os.IBinder
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.legacy.coreutils.R
-import com.firebase.ui.auth.AuthUI
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.uwcs446.socialsports.RC_SIGN_IN
+import javax.inject.Inject
 
-class CurrentUserService(activity: Activity) : Service() {
-    private val parent = activity
-    private val currentFirebaseUser: FirebaseUser? = fetchCurrentUser()
+class CurrentUserService @Inject constructor() : UserRepository {
 
-    private val currentUser: User? = null
+    // Can also use auth state listeners https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth.AuthStateListener
 
-    init {
-        setupFirebase()
+    private val firebase = FirebaseAuth.getInstance()
+
+    private val _user = MutableLiveData<User>().apply {
+        value = currentUser
     }
 
-    fun getUserOrThrow(): User {
-        return User.from(currentFirebaseUser) ?: throw NoUserException()
+    override val user: LiveData<User> = _user
+
+    private val currentFirebaseUser
+        get() = firebase.currentUser
+
+    private val currentUser
+        get() = User.from(currentFirebaseUser)
+
+    override fun getUser(): User? {
+        return currentUser
     }
 
-    private fun setupFirebase() {
-        if (currentUser != null) {
-            println("USER: $currentUser, ${currentUser.id}")
-            return
-        }
-        startActivityForResult(
-            parent,
-            AuthUI
-                .getInstance()
-                .createSignInIntentBuilder()
-                .setLogo(R.drawable.notification_bg)
-                .setAvailableProviders(
-                    arrayListOf(
-                        AuthUI.IdpConfig.EmailBuilder()
-                            .setRequireName(true)
-                            .build(),
-                        AuthUI.IdpConfig.PhoneBuilder()
-                            .build(),
-                        AuthUI.IdpConfig.GoogleBuilder()
-                            .build()
-                    )
-                )
-                .build(),
-            RC_SIGN_IN,
-            null
-        )
+    override fun logout() {
+        firebase
+            .signOut()
+            .also { refreshUser() }
     }
 
-    private fun fetchCurrentUser(): FirebaseUser? {
-        return FirebaseAuth.getInstance().currentUser
+    override fun login(activity: Activity) {
+        if (currentFirebaseUser != null) return
+        FirebaseUserLoginService
+            .login(activity)
+            .also { refreshUser() }
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
+    override fun handleAuthChange() {
+        // TODO handle user data changes
+        refreshUser()
+    }
+
+    private fun refreshUser() {
+        _user.postValue(currentUser)
     }
 }

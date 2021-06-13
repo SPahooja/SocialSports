@@ -3,20 +3,25 @@ package com.uwcs446.socialsports
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.auth.IdpResponse.fromResultIntent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.databinding.ActivityMainBinding
-import com.uwcs446.socialsports.services.user.CurrentUserService
+import com.uwcs446.socialsports.services.user.FirebaseUserLoginService
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity :
+    AppCompatActivity(), FirebaseAuth.AuthStateListener {
 
     private lateinit var binding: ActivityMainBinding
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,13 +29,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val userService = CurrentUserService(this)
+        mainViewModel.login(this)
+        FirebaseUserLoginService.login(this)
 
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
@@ -40,18 +44,26 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
+    override fun onBackPressed() {} // TODO explore further to avoid not signing in
+
+    // TODO CAN USE EITHER AUTHLISTENER OR ACTIVITYRESULT FOR FIRST LOGIN (don't need both)
+    override fun onStart() {
+        super.onStart()
+        FirebaseAuth.getInstance().addAuthStateListener(this)
+    }
+
+    override fun onAuthStateChanged(auth: FirebaseAuth) {
+        mainViewModel.handleAuthChange()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
             if (resultCode == RESULT_OK) {
-                val user = FirebaseAuth.getInstance().currentUser
-
-                println("USER: ${user?.uid}")
+                val response = fromResultIntent(data)
+                Toast.makeText(this, "Logged-In", Toast.LENGTH_SHORT).show() // TODO
             } else {
-                Toast.makeText(this, "U messed up", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "U messed up", Toast.LENGTH_SHORT).show() // TODO
             }
         }
     }
