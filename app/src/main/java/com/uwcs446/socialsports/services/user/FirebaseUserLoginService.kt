@@ -4,7 +4,7 @@ import android.app.Activity
 import androidx.core.app.ActivityCompat
 import com.firebase.ui.auth.AuthUI
 import com.uwcs446.socialsports.R
-import com.uwcs446.socialsports.RC_SIGN_IN
+import com.uwcs446.socialsports.utils.RC_SIGN_IN
 
 object FirebaseUserLoginService {
 

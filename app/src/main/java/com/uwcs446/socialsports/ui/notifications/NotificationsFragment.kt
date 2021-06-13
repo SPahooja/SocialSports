@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.uwcs446.socialsports.databinding.FragmentNotificationsBinding
+import com.uwcs446.socialsports.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +23,7 @@ class NotificationsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         notificationsViewModel =
             ViewModelProvider(this).get(NotificationsViewModel::class.java)
 
@@ -39,9 +40,12 @@ class NotificationsFragment : Fragment() {
                 textView.text = it
             }
         )
-//        activity?.let {
-//            AuthUI.getInstance().signOut(it)
-//        } // TODO remove and add dedicated ui for logout
+        val res = notificationsViewModel.testResource()
+        when (res) {
+            is Resource.Error -> TODO()
+            is Resource.Loading -> TODO()
+            is Resource.Success -> TODO()
+        }
         return root
     }
 

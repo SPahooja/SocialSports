@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.uwcs446.socialsports.services.user.User
 import com.uwcs446.socialsports.services.user.UserRepository
+import com.uwcs446.socialsports.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -35,6 +36,10 @@ class NotificationsViewModel
 
     fun handleLogin(activity: Activity) {
         userRepository.login(activity)
+    }
+
+    fun testResource(): Resource<String> {
+        return Resource.Loading("llll")
     }
 
     override fun onCleared() {

@@ -15,6 +15,11 @@ class UserModule {
     @Provides
     @Singleton
     fun provideUserHelper(service: CurrentUserService): UserRepository = service
+
+    @Provides
+    @Singleton
+    fun provideCurrentUserService() = CurrentUserService()
+
 //
 //    @Singleton
 //    @Provides

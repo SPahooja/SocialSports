@@ -14,11 +14,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.databinding.ActivityMainBinding
 import com.uwcs446.socialsports.services.user.FirebaseUserLoginService
+import com.uwcs446.socialsports.utils.RC_SIGN_IN
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity :
-    AppCompatActivity(), FirebaseAuth.AuthStateListener {
+    AppCompatActivity(),
+    FirebaseAuth.AuthStateListener {
 
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()

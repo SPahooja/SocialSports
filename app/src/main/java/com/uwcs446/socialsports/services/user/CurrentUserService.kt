@@ -4,11 +4,12 @@ import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import javax.inject.Inject
 
-class CurrentUserService @Inject constructor() : UserRepository {
+class CurrentUserService :
+    UserRepository {
 
-    // Can also use auth state listeners https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth.AuthStateListener
+    // Can also use auth state listeners
+    // https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth.AuthStateListener
 
     private val firebase = FirebaseAuth.getInstance()
 
