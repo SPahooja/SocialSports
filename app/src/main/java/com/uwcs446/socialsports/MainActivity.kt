@@ -16,6 +16,11 @@ import com.uwcs446.socialsports.databinding.ActivityMainBinding
 import com.uwcs446.socialsports.services.user.FirebaseUserLoginService
 import com.uwcs446.socialsports.utils.RC_SIGN_IN
 import dagger.hilt.android.AndroidEntryPoint
+import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.uwcs446.socialsports.databinding.ActivityMainBinding
+import com.uwcs446.socialsports.services.user.CurrentUserService
 
 @AndroidEntryPoint
 class MainActivity :

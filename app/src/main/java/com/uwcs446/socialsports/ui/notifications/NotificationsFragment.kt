@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.firebase.ui.auth.AuthUI
 import com.uwcs446.socialsports.databinding.FragmentNotificationsBinding
 import com.uwcs446.socialsports.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
