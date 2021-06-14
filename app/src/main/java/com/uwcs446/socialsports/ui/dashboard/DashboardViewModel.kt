@@ -16,4 +16,6 @@ class DashboardViewModel @Inject constructor(private val userRepository: UserRep
             "This is dashboard Fragment with user: [${userRepository.getUser()?.id ?: "NO_USER"}]"
     }
     val text: LiveData<String> = _text
+
+    var user = "NO-USER" // TODO: Fetch from user service
 }
