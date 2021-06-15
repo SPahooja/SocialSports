@@ -13,5 +13,4 @@ class MainViewModel
     fun handleAuthChange() {
         userRepository.handleAuthChange()
     }
-
 }

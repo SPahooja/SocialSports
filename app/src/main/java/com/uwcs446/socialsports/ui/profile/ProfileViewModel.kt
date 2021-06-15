@@ -33,8 +33,7 @@ class ProfileViewModel
         userRepository.logout()
     }
 
-
-    fun testResource(): Resource<String> { //TODO remove
+    fun testResource(): Resource<String> { // TODO remove
         return Resource.Loading("llll")
     }
 

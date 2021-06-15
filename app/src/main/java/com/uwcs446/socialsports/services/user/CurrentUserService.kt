@@ -14,7 +14,6 @@ class CurrentUserService
     // Can also use auth state listeners
     // https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth.AuthStateListener
 
-
     private val _user = MutableLiveData<User>().apply {
         value = currentUser
     }
@@ -36,7 +35,6 @@ class CurrentUserService
             .signOut()
             .also { refreshUser() }
     }
-
 
     override fun handleAuthChange() {
         // TODO handle user data changes, enforce signing in
