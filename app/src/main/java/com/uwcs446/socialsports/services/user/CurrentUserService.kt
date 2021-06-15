@@ -1,17 +1,19 @@
 package com.uwcs446.socialsports.services.user
 
-import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
+import javax.inject.Inject
 
-class CurrentUserService :
+class CurrentUserService
+@Inject constructor(
+    private val firebaseAuth: FirebaseAuth
+) :
     UserRepository {
 
     // Can also use auth state listeners
     // https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth.AuthStateListener
 
-    private val firebase = FirebaseAuth.getInstance()
 
     private val _user = MutableLiveData<User>().apply {
         value = currentUser
@@ -20,7 +22,7 @@ class CurrentUserService :
     override val user: LiveData<User> = _user
 
     private val currentFirebaseUser
-        get() = firebase.currentUser
+        get() = firebaseAuth.currentUser
 
     private val currentUser
         get() = User.from(currentFirebaseUser)
@@ -30,20 +32,14 @@ class CurrentUserService :
     }
 
     override fun logout() {
-        firebase
+        firebaseAuth
             .signOut()
             .also { refreshUser() }
     }
 
-    override fun login(activity: Activity) {
-        if (currentFirebaseUser != null) return
-        FirebaseUserLoginService
-            .login(activity)
-            .also { refreshUser() }
-    }
 
     override fun handleAuthChange() {
-        // TODO handle user data changes
+        // TODO handle user data changes, enforce signing in
         refreshUser()
     }
 

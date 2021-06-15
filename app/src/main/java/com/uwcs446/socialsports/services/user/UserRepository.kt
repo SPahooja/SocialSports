@@ -1,6 +1,5 @@
 package com.uwcs446.socialsports.services.user
 
-import android.app.Activity
 import androidx.lifecycle.LiveData
 
 interface UserRepository {
@@ -11,7 +10,7 @@ interface UserRepository {
 
     fun logout()
 
-    fun login(activity: Activity)
+//    fun login(activity: Activity)
 
     fun handleAuthChange()
 }

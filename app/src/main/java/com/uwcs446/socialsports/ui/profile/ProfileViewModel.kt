@@ -1,6 +1,5 @@
 package com.uwcs446.socialsports.ui.profile
 
-import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -34,11 +33,8 @@ class ProfileViewModel
         userRepository.logout()
     }
 
-    fun handleLogin(activity: Activity) {
-        userRepository.login(activity)
-    }
 
-    fun testResource(): Resource<String> {
+    fun testResource(): Resource<String> { //TODO remove
         return Resource.Loading("llll")
     }
 
