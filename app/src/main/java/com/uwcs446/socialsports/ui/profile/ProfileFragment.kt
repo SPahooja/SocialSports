@@ -41,11 +41,11 @@ class ProfileFragment : Fragment() {
         )
         println(
             "Resource is ${
-                when (viewModel.testResource()) {
-                    is Resource.Error -> "in Error"
-                    is Resource.Loading -> "Loading"
-                    is Resource.Success -> "Done"
-                }
+            when (viewModel.testResource()) {
+                is Resource.Error -> "in Error"
+                is Resource.Loading -> "Loading"
+                is Resource.Success -> "Done"
+            }
             }"
         )
         return root
