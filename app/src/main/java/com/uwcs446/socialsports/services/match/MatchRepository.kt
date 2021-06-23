@@ -9,5 +9,4 @@ class MatchRepository
 ) {
 
     private val TAG = this::class.simpleName
-
 }
