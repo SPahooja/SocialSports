@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
-    private val dashboardViewModel: DashboardViewModel by viewModels()
+    private val viewModel: DashboardViewModel by viewModels()
     private var _binding: FragmentDashboardBinding? = null
 
     private val binding get() = _binding!!
@@ -28,7 +28,7 @@ class DashboardFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(
+        viewModel.text.observe(
             viewLifecycleOwner,
             {
                 textView.text = it

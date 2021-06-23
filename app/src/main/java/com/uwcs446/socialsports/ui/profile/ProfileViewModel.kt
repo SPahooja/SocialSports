@@ -4,15 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.uwcs446.socialsports.services.user.User
-import com.uwcs446.socialsports.services.user.UserRepository
-import com.uwcs446.socialsports.utils.Resource
+import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.User
+import com.uwcs446.socialsports.domain.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
 @Inject constructor(
+    private val currentUserRepository: CurrentUserRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -20,28 +21,25 @@ class ProfileViewModel
         _text.setValue(computeLabel())
     }
 
-    private val _text = MutableLiveData<String>().apply {
-        value = computeLabel()
-    }
+    private val _text = MutableLiveData(computeLabel())
     val text: LiveData<String> = _text
 
     init {
-        userRepository.user.observeForever(userObserver)
+        currentUserRepository.user.observeForever(userObserver)
     }
 
     fun handleLogout() {
-        userRepository.logout()
-    }
-
-    fun testResource(): Resource<String> { // TODO remove
-        return Resource.Loading("llll")
+        currentUserRepository.logout()
     }
 
     override fun onCleared() {
-        userRepository.user.removeObserver(userObserver)
+        currentUserRepository.user.removeObserver(userObserver)
         super.onCleared()
     }
 
     private fun computeLabel() =
-        "This is profile Fragment with user: [${userRepository.getUser()?.id ?: "NO_USER"}]"
+        """
+            |This is profile Fragment with user: [${currentUserRepository.getUser()?.id ?: "NO_USER"}] 
+            | users: ${userRepository.findAll()}
+        """.trimMargin()
 }
