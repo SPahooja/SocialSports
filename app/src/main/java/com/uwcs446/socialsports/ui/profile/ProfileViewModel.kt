@@ -1,6 +1,5 @@
-package com.uwcs446.socialsports.ui.notifications
+package com.uwcs446.socialsports.ui.profile
 
-import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -12,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NotificationsViewModel
+class ProfileViewModel
 @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
@@ -34,11 +33,7 @@ class NotificationsViewModel
         userRepository.logout()
     }
 
-    fun handleLogin(activity: Activity) {
-        userRepository.login(activity)
-    }
-
-    fun testResource(): Resource<String> {
+    fun testResource(): Resource<String> { // TODO remove
         return Resource.Loading("llll")
     }
 
@@ -48,5 +43,5 @@ class NotificationsViewModel
     }
 
     private fun computeLabel() =
-        "This is notifications Fragment with user: [${userRepository.getUser()?.id ?: "NO_USER"}]"
+        "This is profile Fragment with user: [${userRepository.getUser()?.id ?: "NO_USER"}]"
 }

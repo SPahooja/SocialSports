@@ -1,26 +1,17 @@
 package com.uwcs446.socialsports
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.firebase.ui.auth.IdpResponse.fromResultIntent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.databinding.ActivityMainBinding
-import com.uwcs446.socialsports.services.user.FirebaseUserLoginService
-import com.uwcs446.socialsports.utils.RC_SIGN_IN
+import com.uwcs446.socialsports.services.user.UserLoginService
 import dagger.hilt.android.AndroidEntryPoint
-import com.firebase.ui.auth.IdpResponse
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.uwcs446.socialsports.databinding.ActivityMainBinding
-import com.uwcs446.socialsports.services.user.CurrentUserService
 
 @AndroidEntryPoint
 class MainActivity :
@@ -36,15 +27,14 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.login(this)
-        FirebaseUserLoginService.login(this)
+        UserLoginService.login(this)
 
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_profile
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -63,15 +53,15 @@ class MainActivity :
         mainViewModel.handleAuthChange()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                val response = fromResultIntent(data)
-                Toast.makeText(this, "Logged-In", Toast.LENGTH_SHORT).show() // TODO
-            } else {
-                Toast.makeText(this, "U messed up", Toast.LENGTH_SHORT).show() // TODO
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == RC_SIGN_IN) {
+//            if (resultCode == RESULT_OK) {
+//                val response = fromResultIntent(data)
+//                Toast.makeText(this, "Logged-In", Toast.LENGTH_SHORT).show() // TODO
+//            } else {
+//                Toast.makeText(this, "U messed up", Toast.LENGTH_SHORT).show() // TODO
+//            }
+//        }
+//    }
 }
