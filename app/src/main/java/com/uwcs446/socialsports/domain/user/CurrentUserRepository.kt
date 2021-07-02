@@ -2,7 +2,7 @@ package com.uwcs446.socialsports.domain.user
 
 import androidx.lifecycle.LiveData
 
-interface UserRepository {
+interface CurrentUserRepository {
 
     val user: LiveData<User>
 
