@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.uwcs446.socialsports.databinding.FragmentProfileBinding
 import com.uwcs446.socialsports.services.user.UserLoginService
-import com.uwcs446.socialsports.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,15 +38,7 @@ class ProfileFragment : Fragment() {
                 textView.text = it
             }
         )
-        println(
-            "Resource is ${
-            when (viewModel.testResource()) {
-                is Resource.Error -> "in Error"
-                is Resource.Loading -> "Loading"
-                is Resource.Success -> "Done"
-            }
-            }"
-        )
+
         return root
     }
 

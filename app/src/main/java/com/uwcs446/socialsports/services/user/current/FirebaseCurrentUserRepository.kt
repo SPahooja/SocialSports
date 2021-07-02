@@ -1,22 +1,21 @@
-package com.uwcs446.socialsports.services.user
+package com.uwcs446.socialsports.services.user.current
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
+import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.User
 import javax.inject.Inject
 
-class CurrentUserService
+class FirebaseCurrentUserRepository
 @Inject constructor(
     private val firebaseAuth: FirebaseAuth
-) :
-    UserRepository {
+) : CurrentUserRepository {
 
     // Can also use auth state listeners
     // https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth.AuthStateListener
 
-    private val _user = MutableLiveData<User>().apply {
-        value = currentUser
-    }
+    private val _user = MutableLiveData<User>(currentUser)
 
     override val user: LiveData<User> = _user
 
@@ -24,7 +23,7 @@ class CurrentUserService
         get() = firebaseAuth.currentUser
 
     private val currentUser
-        get() = User.from(currentFirebaseUser)
+        get() = currentFirebaseUser.toDomain()
 
     override fun getUser(): User? {
         return currentUser
