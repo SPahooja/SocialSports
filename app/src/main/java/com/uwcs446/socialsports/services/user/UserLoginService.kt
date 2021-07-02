@@ -3,12 +3,15 @@ package com.uwcs446.socialsports.services.user
 import android.app.Activity
 import androidx.core.app.ActivityCompat
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.utils.RC_SIGN_IN
 
-object FirebaseUserLoginService {
+object UserLoginService {
 
     fun login(activity: Activity) {
+
+        if (FirebaseAuth.getInstance().currentUser != null) return
 
         ActivityCompat.startActivityForResult(
             activity,
