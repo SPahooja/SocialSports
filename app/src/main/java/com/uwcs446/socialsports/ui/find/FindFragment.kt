@@ -18,7 +18,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentFindBinding
-import com.uwcs446.socialsports.ui.gamelist.MatchRecyclerViewAdapter
+import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

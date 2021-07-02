@@ -1,7 +1,7 @@
 package com.uwcs446.socialsports.services.match
 
 import com.google.type.DateTime
-import com.uwcs446.socialsports.services.user.User
+import com.uwcs446.socialsports.services.user.UserEntity
 
 data class Match(
     val id: String,
@@ -9,8 +9,8 @@ data class Match(
     val title: String,
     val description: String,
     val time: DateTime,
-    val host: User,
-    val participants: Set<User>,
+    val host: UserEntity,
+    val participants: Set<UserEntity>,
 ) {
     // TODO (simon): connect to firestore
 }

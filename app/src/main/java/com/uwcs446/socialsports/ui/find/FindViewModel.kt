@@ -3,7 +3,7 @@ package com.uwcs446.socialsports.ui.find
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.uwcs446.socialsports.ui.gamelist.MatchListUtils
+import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
 import java.time.LocalDate
 
 class FindViewModel : ViewModel() {

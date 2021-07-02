@@ -1,4 +1,4 @@
-package com.uwcs446.socialsports.ui.gamelist
+package com.uwcs446.socialsports.ui.matchlist
 
 import android.content.Context
 import android.view.LayoutInflater
