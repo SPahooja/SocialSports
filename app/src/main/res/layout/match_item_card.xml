@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- individual match view within match list -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/card_item_horizontal_padding"
+        android:paddingVertical="@dimen/card_item_vertical_margin">
+
+        <TextView
+            android:id="@+id/text_match_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="Soccer for All!" />
+
+        <ImageView
+            android:id="@+id/ic_match_type"
+            android:layout_width="@dimen/list_icon"
+            android:layout_height="@dimen/list_icon"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/text_match_title"
+            app:layout_constraintTop_toBottomOf="@+id/text_match_title"
+            tools:src="@drawable/ic_sports_soccer" />
+
+        <TextView
+            android:id="@+id/text_match_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_match_type"
+            app:layout_constraintStart_toEndOf="@+id/ic_match_type"
+            app:layout_constraintTop_toTopOf="@+id/ic_match_type"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="Soccer" />
+
+        <ImageView
+            android:id="@+id/ic_match_player_count"
+            android:layout_width="@dimen/list_icon"
+            android:layout_height="@dimen/list_icon"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/ic_match_type"
+            app:layout_constraintTop_toBottomOf="@+id/ic_match_type"
+            app:srcCompat="@drawable/ic_baseline_directions_walk_24" />
+
+        <TextView
+            android:id="@+id/text_match_player_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_match_player_count"
+            app:layout_constraintStart_toEndOf="@+id/ic_match_player_count"
+            app:layout_constraintTop_toTopOf="@+id/ic_match_player_count"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="4 / 10" />
+
+        <TextView
+            android:id="@+id/text_match_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_match_title"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="Jun 31, 2021" />
+
+        <TextView
+            android:id="@+id/text_match_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/text_match_date"
+            app:layout_constraintTop_toBottomOf="@+id/text_match_date"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="12:30 PM" />
+
+        <TextView
+            android:id="@+id/text_match_location_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/ic_match_player_count"
+            app:layout_constraintTop_toBottomOf="@+id/ic_match_player_count"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="Central Tech Stadium" />
+
+        <TextView
+            android:id="@+id/text_match_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/text_match_location_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_match_location_name"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            tools:text="725 Bathurst St, Toronto, ON M5S 2R5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

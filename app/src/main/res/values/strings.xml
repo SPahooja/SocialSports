@@ -5,4 +5,16 @@
     <string name="title_notifications">Notifications</string>
     <string name="logout">Logout</string>
     <string name="login">login</string>
+    <string name="title_find">Find</string>
+
+    <!--  game types  -->
+    <string name="type_soccer">Soccer</string>
+    <string name="type_basketball">Basketball</string>
+    <string name="type_ultimate_frisbee">Ultimate Frisbee</string>
+    <string name="type_all">All</string>
+
+    <!--  filter toolbar  -->
+    <string name="date_filter_hint">Date</string>
+    <string name="time_filter_hint">Time</string>
+
 </resources>
