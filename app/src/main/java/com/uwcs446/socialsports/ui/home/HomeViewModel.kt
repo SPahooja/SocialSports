@@ -7,7 +7,7 @@ import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
 
 class HomeViewModel : ViewModel() {
 
-    //TODO: update matchList to hold the current user's matches
+    // TODO: update matchList to hold the current user's matches
     private val _userMatchList = MutableLiveData<List<List<String>>>().apply {
         this.value = MatchListUtils.genFakeMatchData(2)
     }

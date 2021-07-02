@@ -4,7 +4,7 @@ class MatchListUtils {
 
     companion object {
 
-        fun genFakeMatchData(len: Int): List<List<String>>{
+        fun genFakeMatchData(len: Int): List<List<String>> {
             val fakeMatchDataList: ArrayList<List<String>> = arrayListOf()
             for (i in 1..len) {
                 val entry = listOf(
@@ -20,6 +20,5 @@ class MatchListUtils {
             }
             return fakeMatchDataList
         }
-
     }
 }

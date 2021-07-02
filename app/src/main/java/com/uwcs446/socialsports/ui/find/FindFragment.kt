@@ -1,13 +1,13 @@
 package com.uwcs446.socialsports.ui.find
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,7 +36,7 @@ class FindFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        
+
         _binding = FragmentFindBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -55,7 +55,8 @@ class FindFragment : Fragment() {
             getString(R.string.type_all),
             getString(R.string.type_soccer),
             getString(R.string.type_basketball),
-            getString(R.string.type_ultimate_frisbee))
+            getString(R.string.type_ultimate_frisbee)
+        )
 
         val typeListAdapter = ArrayAdapter(requireContext(), R.layout.type_filter_list_item, items)
         val autoCompleteTextView = binding.layoutListFilterToolbar.matchTypeDropdown
@@ -69,7 +70,6 @@ class FindFragment : Fragment() {
                 2 -> findViewModel.filterMatchByType("BASKETBALL")
                 else -> findViewModel.filterMatchByType("ULTIMATE")
             }
-
         }
 
         // default type is "All"
@@ -139,8 +139,8 @@ class FindFragment : Fragment() {
         2. filter matches by selected time
         3. Clicking cancel will undo the filtering
      */
-    private fun timepickerSetup(edittext: EditText, fragmentManager: FragmentManager){
-        edittext.setOnClickListener{
+    private fun timepickerSetup(edittext: EditText, fragmentManager: FragmentManager) {
+        edittext.setOnClickListener {
             val timePicker =
                 MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_24H)
@@ -168,7 +168,4 @@ class FindFragment : Fragment() {
             timePicker.show(fragmentManager, "timePicker")
         }
     }
-
-
-
 }

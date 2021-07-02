@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
 
-class MatchViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+class MatchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var matchTitle: TextView = itemView.findViewById(R.id.text_match_title)
     var matchType: TextView = itemView.findViewById(R.id.text_match_type)
