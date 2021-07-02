@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_find"
         android:name="com.uwcs446.socialsports.ui.find.FindFragment"
-        android:label="@string/title_find"
+        android:label="@string/top_label_find"
         tools:layout="@layout/fragment_find"/>
 
     <fragment

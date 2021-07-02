@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_find"
         android:icon="@drawable/ic_baseline_search_24"
-        android:title="@string/title_find"/>
+        android:title="@string/bottom_label_find"/>
 
     <item
         android:id="@+id/navigation_dashboard"

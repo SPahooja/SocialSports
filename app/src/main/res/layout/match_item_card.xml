@@ -5,15 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin">
+    android:layout_marginLeft="@dimen/card_item_horizontal_margin"
+    android:layout_marginRight="@dimen/card_item_horizontal_margin"
+    android:layout_marginBottom="@dimen/card_item_bottom_margin"
+    android:layout_marginTop="@dimen/card_item_top_margin">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="@dimen/card_item_horizontal_padding"
-        android:paddingVertical="@dimen/card_item_vertical_margin">
+        android:paddingVertical="@dimen/card_item_vertical_padding">
 
         <TextView
             android:id="@+id/text_match_title"

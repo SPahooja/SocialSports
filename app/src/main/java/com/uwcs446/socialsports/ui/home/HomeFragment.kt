@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentHomeBinding
+import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
 
 class HomeFragment : Fragment() {
 
@@ -27,13 +29,28 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(
+        // set up recycler view for match list
+        binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
+        binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        val adapter = homeViewModel.userMatchList.value?.let { MatchRecyclerViewAdapter(it) }
+        binding.layoutMatchList.recyclerviewMatch.adapter = adapter
+
+        // TODO: update observer which updates recyclerview when match data changes
+        val gameListRecyclerView: RecyclerView = binding.layoutMatchList.recyclerviewMatch
+        homeViewModel.userMatchList.observe(
             viewLifecycleOwner,
             {
-                textView.text = it
+                if (gameListRecyclerView.adapter == null) {
+                    val recyclerViewAdapter = MatchRecyclerViewAdapter(it)
+                    gameListRecyclerView.layoutManager =
+                        LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+                    gameListRecyclerView.adapter = recyclerViewAdapter
+                } else {
+                    gameListRecyclerView.adapter!!.notifyDataSetChanged()
+                }
             }
         )
+
         return root
     }
 

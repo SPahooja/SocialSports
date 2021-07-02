@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 class FindViewModel : ViewModel() {
 
-    //TODO: update gameList to hold data for all games
+    //TODO: update matchList to hold data for all matches
     private val _matchList = MutableLiveData<List<List<String>>>().apply {
         this.value = MatchListUtils.genFakeMatchData(20)
     }

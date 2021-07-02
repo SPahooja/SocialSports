@@ -7,7 +7,8 @@
     <dimen name="list_icon">30dp</dimen>
     
     <!-- Card margins-->
-    <dimen name="card_item_vertical_margin">16dp</dimen>
+    <dimen name="card_item_top_margin">8dp</dimen>
+    <dimen name="card_item_bottom_margin">8dp</dimen>
     <dimen name="card_item_horizontal_margin">16dp</dimen>
     <dimen name="card_item_horizontal_padding">16dp</dimen>
     <dimen name="card_item_vertical_padding">16dp</dimen>
