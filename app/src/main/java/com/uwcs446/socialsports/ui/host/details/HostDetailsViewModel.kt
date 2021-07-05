@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.uwcs446.socialsports.domain.location.HostLocation
 import com.uwcs446.socialsports.domain.match.Match
-import com.uwcs446.socialsports.domain.user.CurrentUserRepository
-import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.MatchType
+import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Duration
 import java.time.Instant
