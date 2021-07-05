@@ -2,7 +2,26 @@
     <string name="app_name">SocialSports</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="nav_menu_host">Host</string>
+    <string name="title_host">Host a Game</string>
     <string name="title_profile">Profile</string>
     <string name="logout">Logout</string>
     <string name="login">login</string>
+
+    // Host location search
+    <string name="host_hint_choose_a_location">Choose a Location</string>
+    <string name="host_location_suggestions">Suggestions</string>
+    <string name="host_location_search_result">Search Result</string>
+
+    // Host match details
+    <string name="host_selected_location">Location</string>
+    <string name="host_game_information">Game Information</string>
+    <string name="host_hint_game_title">Game Title</string>
+    <string name="host_help_game_title">e.g. Soccer for All Skills</string>
+    <string name="host_hint_sport">Select a Sport</string>
+    <string name="host_hint_date">Select Date</string>
+    <string name="host_hint_time">Select Start Time</string>
+    <string name="host_hint_participant_count">Number of Participants</string>
+    <string name="host_hint_description">Rules Description</string>
+    <string name="host_button_host_game">Save</string>
 </resources>
