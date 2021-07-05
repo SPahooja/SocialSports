@@ -10,6 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SocialSports">
+        <activity android:name=".ui.MatchDetailsActivity"
+            android:label="Match Details"
+             />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
