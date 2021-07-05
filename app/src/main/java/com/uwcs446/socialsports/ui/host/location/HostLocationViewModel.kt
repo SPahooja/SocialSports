@@ -1,9 +1,7 @@
 package com.uwcs446.socialsports.ui.host.location
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.uwcs446.socialsports.domain.location.HostLocation
 import com.uwcs446.socialsports.domain.user.UserRepository
@@ -27,7 +25,7 @@ class HostLocationViewModel @Inject constructor(
 
     private val _locationSearchResults = MutableLiveData<List<HostLocation>>()
 
-    var hostLocationSuggestions : MutableLiveData<List<HostLocation>> = _locationSuggestions
+    var hostLocationSuggestions: MutableLiveData<List<HostLocation>> = _locationSuggestions
     var hostLocationSearchResults: LiveData<List<HostLocation>> = _locationSearchResults
     var user = "NO-USER" // TODO: Fetch from user service
 
@@ -43,6 +41,3 @@ class HostLocationViewModel @Inject constructor(
         }
     }
 }
-
-
-

@@ -8,12 +8,10 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentHostLocationBinding
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class HostLocationFragment : Fragment() {
@@ -33,9 +31,9 @@ class HostLocationFragment : Fragment() {
 
         // Views
         val searchView: SearchView = binding.hostSearchChooseALocation
-        val suggestionsRecyclerView : RecyclerView = binding.hostLocationSuggestions
+        val suggestionsRecyclerView: RecyclerView = binding.hostLocationSuggestions
         val searchResultTextView: TextView = binding.hostTextLocationSearchResult
-        val searchResultRecyclerView : RecyclerView = binding.hostLocationSearchResult
+        val searchResultRecyclerView: RecyclerView = binding.hostLocationSearchResult
 
         // Location suggestions
         val suggestionsAdapter = LocationListAdapter()
@@ -43,11 +41,14 @@ class HostLocationFragment : Fragment() {
             adapter = suggestionsAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-        hostLocationViewModel.hostLocationSuggestions.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                suggestionsAdapter.submitList(it)
+        hostLocationViewModel.hostLocationSuggestions.observe(
+            viewLifecycleOwner,
+            {
+                it?.let {
+                    suggestionsAdapter.submitList(it)
+                }
             }
-        })
+        )
 
         // Location search results
         val searchResultsAdapter = LocationListAdapter()
@@ -55,11 +56,14 @@ class HostLocationFragment : Fragment() {
             adapter = searchResultsAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-        hostLocationViewModel.hostLocationSearchResults.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                searchResultsAdapter.submitList(it)
+        hostLocationViewModel.hostLocationSearchResults.observe(
+            viewLifecycleOwner,
+            {
+                it?.let {
+                    searchResultsAdapter.submitList(it)
+                }
             }
-        })
+        )
 
         // Location search
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -80,5 +84,4 @@ class HostLocationFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

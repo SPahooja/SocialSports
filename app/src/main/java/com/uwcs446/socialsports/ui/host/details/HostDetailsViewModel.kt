@@ -1,6 +1,5 @@
 package com.uwcs446.socialsports.ui.host.details
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.uwcs446.socialsports.domain.location.HostLocation
@@ -56,7 +55,7 @@ class HostDetailsViewModel @Inject constructor(
     var user = "NO-USER" // TODO: Fetch from user service
 
     fun onSaveClick() {
-        val dateTime = Instant.parse("${matchDate}T${matchTime}")
+        val dateTime = Instant.parse("${matchDate}T$matchTime")
         if (editMatchId != null) {
             val updatedMatch = editMatch?.copy(
                 title = matchTitle,
@@ -71,5 +70,4 @@ class HostDetailsViewModel @Inject constructor(
             // TODO[BACKEND]: Save new match information
         }
     }
-
 }

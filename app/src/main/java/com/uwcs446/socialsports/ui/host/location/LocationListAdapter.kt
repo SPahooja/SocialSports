@@ -23,7 +23,7 @@ class LocationListAdapter() : ListAdapter<HostLocation, LocationListAdapter.Loca
     }
 
     inner class LocationItemViewHolder(
-        private  val binding: LocationItemBinding
+        private val binding: LocationItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
