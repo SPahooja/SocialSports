@@ -12,19 +12,23 @@ fun Match.toEntity() =
         type = type,
         description = description,
         host = host.toEntity(),
+        date = date,
         time = time,
         duration = duration.toMinutes(),
-        players = players.map { it.map { user -> user.toEntity() } }
+        teamOne = teamOne.map { it.toEntity() },
+        teamTwo = teamTwo.map { it.toEntity() }
     )
 
 fun MatchEntity.toDomain() =
     Match(
         id = id,
-        title = title,
         type = type,
+        title = title,
         description = description,
-        host = host.toDomain(),
+        date = date,
         time = time,
         duration = Duration.ofMinutes(duration),
-        players = players.map { it.map { user -> user.toDomain() } }
+        host = host.toDomain(),
+        teamOne = teamOne.map { it.toDomain() },
+        teamTwo = teamTwo.map { it.toDomain() }
     )
