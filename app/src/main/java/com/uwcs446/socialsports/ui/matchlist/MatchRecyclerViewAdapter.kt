@@ -1,11 +1,13 @@
 package com.uwcs446.socialsports.ui.matchlist
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
+import com.uwcs446.socialsports.ui.MatchDetailsActivity
 
 class MatchRecyclerViewAdapter(private val matchList: List<List<String>>) : RecyclerView.Adapter<MatchViewHolder>() {
 
@@ -27,8 +29,17 @@ class MatchRecyclerViewAdapter(private val matchList: List<List<String>>) : Recy
             holder.matchTime.text = match[4]
             holder.matchLocationName.text = match[5]
             holder.matchAddress.text = match[6]
+
+            holder.itemView.setOnClickListener{
+                val intent = Intent(holder.itemView.context, MatchDetailsActivity::class.java).apply {
+                    putStringArrayListExtra("match",  ArrayList(match))
+                }
+                holder.itemView.context.startActivity(intent)
+            }
+
         }
     }
+
 
     override fun getItemCount(): Int {
         return matchList.size
@@ -37,4 +48,5 @@ class MatchRecyclerViewAdapter(private val matchList: List<List<String>>) : Recy
     fun notifyDataChanged(context: Context) {
         Toast.makeText(context, "data changed", Toast.LENGTH_SHORT).show()
     }
+
 }
