@@ -20,7 +20,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostEditDetailsBinding
-import com.uwcs446.socialsports.services.match.MatchType
+import com.uwcs446.socialsports.domain.match.MatchType
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -54,7 +54,7 @@ class HostDetailsFragment : Fragment() {
         val sportTextView: AutoCompleteTextView = binding.hostInputGameSport
         val dateTextView: EditText = binding.hostInputGameDate
         val timeTextView: EditText = binding.hostInputGameTime
-        val capacityTextView: EditText = binding.hostInputParticipantCount
+//        val capacityTextView: EditText = binding.hostInputParticipantCount
         val rulesTextView: EditText = binding.hostInputDescription
         val hostGameButton: Button = binding.hostButtonHost
 
@@ -65,7 +65,7 @@ class HostDetailsFragment : Fragment() {
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         dateTextView.setText(hostDetailsViewModel.matchDate)
         timeTextView.setText(hostDetailsViewModel.matchTime)
-        capacityTextView.setText(hostDetailsViewModel.matchCapacity.toString())
+//        capacityTextView.setText(hostDetailsViewModel.matchCapacity.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
 
         // Update user input
@@ -87,10 +87,10 @@ class HostDetailsFragment : Fragment() {
             hostDetailsViewModel.matchTime = it.toString()
             timeTextView.error = null
         }
-        capacityTextView.addTextChangedListener {
-            hostDetailsViewModel.matchCapacity = it.toString()
-            capacityTextView.error = null
-        }
+//        capacityTextView.addTextChangedListener {
+//            hostDetailsViewModel.matchCapacity = it.toString()
+//            capacityTextView.error = null
+//        }
         rulesTextView.addTextChangedListener {
             hostDetailsViewModel.matchDescription = it.toString()
         }
@@ -134,10 +134,10 @@ class HostDetailsFragment : Fragment() {
                 timeTextView.error = "Please select time"
                 return@setOnClickListener
             }
-            if (capacityTextView.text.isBlank()) {
-                capacityTextView.error = "Please specify number of participants"
-                return@setOnClickListener
-            }
+//            if (capacityTextView.text.isBlank()) {
+//                capacityTextView.error = "Please specify number of participants"
+//                return@setOnClickListener
+//            }
             hostDetailsViewModel.onSaveClick()
         }
 
