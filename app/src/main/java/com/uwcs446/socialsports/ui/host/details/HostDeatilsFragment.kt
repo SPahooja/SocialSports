@@ -53,6 +53,8 @@ class HostDetailsFragment : Fragment() {
         val sportTextView: AutoCompleteTextView = binding.hostInputGameSport
         val dateTextView: EditText = binding.hostInputGameDate
         val timeTextView: EditText = binding.hostInputGameTime
+        val durationHourTextView: EditText = binding.hostInputDurationHour
+        val durationMinuteTextView: EditText = binding.hostInputDurationMinute
 //        val capacityTextView: EditText = binding.hostInputParticipantCount
         val rulesTextView: EditText = binding.hostInputDescription
         val hostGameButton: Button = binding.hostButtonHost
@@ -64,6 +66,8 @@ class HostDetailsFragment : Fragment() {
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         dateTextView.setText(hostDetailsViewModel.matchDate)
         timeTextView.setText(hostDetailsViewModel.matchTime)
+        durationHourTextView.setText(hostDetailsViewModel.matchDurationHour.toString())
+        durationMinuteTextView.setText(hostDetailsViewModel.matchDurationMinute.toString())
 //        capacityTextView.setText(hostDetailsViewModel.matchCapacity.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
 
@@ -84,6 +88,14 @@ class HostDetailsFragment : Fragment() {
         }
         timeTextView.addTextChangedListener {
             hostDetailsViewModel.matchTime = it.toString()
+            timeTextView.error = null
+        }
+        durationHourTextView.addTextChangedListener {
+            hostDetailsViewModel.matchDurationHour = it.toString()
+            timeTextView.error = null
+        }
+        durationMinuteTextView.addTextChangedListener {
+            hostDetailsViewModel.matchDurationMinute = it.toString()
             timeTextView.error = null
         }
 //        capacityTextView.addTextChangedListener {
@@ -131,6 +143,10 @@ class HostDetailsFragment : Fragment() {
             }
             if (timeTextView.text.isBlank()) {
                 timeTextView.error = "Please select time"
+                return@setOnClickListener
+            }
+            if (durationHourTextView.text.isBlank() && durationMinuteTextView.text.isBlank()) {
+                durationMinuteTextView.error = "Please specify match duration"
                 return@setOnClickListener
             }
 //            if (capacityTextView.text.isBlank()) {

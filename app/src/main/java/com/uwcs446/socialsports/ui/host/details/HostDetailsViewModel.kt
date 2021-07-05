@@ -36,7 +36,7 @@ class HostDetailsViewModel @Inject constructor(
             title = "title_of_existing_match",
             description = "discription_of_existing_match",
             time = Instant.now(),
-            duration = Duration.ZERO,
+            duration = Duration.parse("PT8H15M"),
             host = User("testUser"),
             players = listOf(listOf(User("testUser2")))
         )
@@ -48,19 +48,24 @@ class HostDetailsViewModel @Inject constructor(
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.type ?: ""
     var matchDate = editMatch?.time?.atZone(ZoneId.of("UTC"))?.toLocalDate()?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)) ?: ""
-    var matchTime = editMatch?.time?.atZone(ZoneId.of("UTC"))?.toLocalDate()?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
-//    var matchCapacity = editMatch?.capacity ?: ""
+    var matchTime = editMatch?.time?.atZone(ZoneId.of("UTC"))?.toLocalTime()?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
+    var matchDurationHour = editMatch?.duration?.toHours() ?: ""
+    var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
+
+    //    var matchCapacity = editMatch?.capacity ?: ""
     var matchDescription = editMatch?.description ?: ""
 
     var user = "NO-USER" // TODO: Fetch from user service
 
     fun onSaveClick() {
-        val dateTime = Instant.parse("${matchDate}T$matchTime")
+        val dateTime = Instant.parse("${matchDate}T$matchTime:00.00Z")
+        val duration = Duration.parse("PT${matchDurationHour}H${matchDurationMinute}M")
         if (editMatchId != null) {
             val updatedMatch = editMatch?.copy(
                 title = matchTitle,
                 type = MatchType.valueOf(sportType.toString()),
                 time = dateTime,
+                duration = duration,
 //                capacity = matchCapacity.toString().toInt(),
                 description = matchDescription
             )
