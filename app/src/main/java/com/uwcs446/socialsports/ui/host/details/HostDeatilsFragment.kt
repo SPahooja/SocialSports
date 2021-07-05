@@ -154,6 +154,7 @@ class HostDetailsFragment : Fragment() {
 //                return@setOnClickListener
 //            }
             hostDetailsViewModel.onSaveClick()
+            Navigation.findNavController(requireView()).navigate(R.id.navigation_home) // TODO: for demo
         }
 
         return root
