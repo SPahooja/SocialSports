@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports.services.match
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
@@ -16,11 +17,13 @@ class FirebaseMatchRepository
         TODO("Not yet implemented")
     }
 
-    override fun create(match: Match): Match {
-        TODO("Not yet implemented")
+    override fun create(match: Match) {
+        val matchCollection = firestore.collection("matches")
+        val l = Tasks.await(Tasks.await(matchCollection.add(match.toEntity())).get())
+        println(l.toObject(MatchEntity::class.java)?.toDomain())
     }
 
-    override fun edit(match: Match): Match {
+    override fun edit(match: Match) {
         TODO("Not yet implemented")
     }
 

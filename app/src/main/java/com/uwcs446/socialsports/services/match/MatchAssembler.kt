@@ -5,6 +5,8 @@ import com.uwcs446.socialsports.services.user.toDomain
 import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
 
+fun Collection<Match>.toEntity() = this.map { it.toEntity() }
+
 fun Match.toEntity() =
     MatchEntity(
         id = id,
@@ -18,6 +20,8 @@ fun Match.toEntity() =
         teamOne = teamOne.map { it.toEntity() },
         teamTwo = teamTwo.map { it.toEntity() }
     )
+
+fun Collection<MatchEntity>.toDomain() = this.map { it.toDomain() }
 
 fun MatchEntity.toDomain() =
     Match(
