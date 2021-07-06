@@ -7,7 +7,7 @@ import java.time.LocalTime
 
 data class Match(
     val id: String,
-    val type: MatchType,
+    val sport: Sport,
     val title: String,
     val description: String,
     val date: LocalDate,
@@ -17,9 +17,9 @@ data class Match(
     val teamOne: List<User>,
     val teamTwo: List<User>
 ) {
-    fun teamSize() = this.type.teamSize
+    fun teamSize() = this.sport.teamSize
 
-    fun maxPlayerCount() = this.type.teamSize * 2
+    fun maxPlayerCount() = this.sport.teamSize * 2
 
     fun currentPlayerCount() = teamOne.size.plus(teamTwo.size)
 }

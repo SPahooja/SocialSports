@@ -9,7 +9,7 @@ fun Match.toEntity() =
     MatchEntity(
         id = id,
         title = title,
-        type = type,
+        sport = sport,
         description = description,
         host = host.toEntity(),
         date = date,
@@ -22,7 +22,7 @@ fun Match.toEntity() =
 fun MatchEntity.toDomain() =
     Match(
         id = id,
-        type = type,
+        sport = sport,
         title = title,
         description = description,
         date = date,
