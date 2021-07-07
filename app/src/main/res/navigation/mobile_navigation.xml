@@ -18,8 +18,40 @@
         tools:layout="@layout/fragment_find"/>
 
     <fragment
+        android:id="@+id/navigation_host"
+        android:name="com.uwcs446.socialsports.ui.host.location.HostLocationFragment"
+        android:label="@string/title_host"
+        tools:layout="@layout/fragment_host_location" >
+        <action
+            android:id="@+id/action_navigation_host_to_host_edit_details"
+            app:destination="@id/host_edit_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/host_edit_details"
+        android:name="com.uwcs446.socialsports.ui.host.details.HostDetailsFragment"
+        android:label="@string/title_host"
+        tools:layout="@layout/fragment_host_edit_details" >
+        <argument
+            android:name="hostLocation"
+            app:argType="com.uwcs446.socialsports.domain.location.HostLocation"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="matchId"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_host_edit_details_to_navigation_host"
+            app:destination="@id/navigation_host" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.uwcs446.socialsports.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+
+
 </navigation>

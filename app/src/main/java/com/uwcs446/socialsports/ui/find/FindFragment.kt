@@ -12,12 +12,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentFindBinding
+import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
 import java.time.Instant
 import java.time.ZoneId
@@ -101,16 +98,7 @@ class FindFragment : Fragment() {
      */
     private fun datepickerSetup(edittext: EditText, fragmentManager: FragmentManager) {
         edittext.setOnClickListener {
-            val constraintsBuilder =
-                CalendarConstraints.Builder()
-                    .setStart(MaterialDatePicker.todayInUtcMilliseconds())
-
-            val datePicker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                    .setCalendarConstraints(constraintsBuilder.build())
-                    .build()
+            val datePicker = DateTimePicker().getDatePicker()
 
             datePicker.addOnPositiveButtonClickListener { time ->
                 // display selected date
@@ -141,11 +129,7 @@ class FindFragment : Fragment() {
      */
     private fun timepickerSetup(edittext: EditText, fragmentManager: FragmentManager) {
         edittext.setOnClickListener {
-            val timePicker =
-                MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setTitleText("Select time")
-                    .build()
+            val timePicker = DateTimePicker().getTimePicker()
 
             timePicker.addOnPositiveButtonClickListener {
                 // set text
