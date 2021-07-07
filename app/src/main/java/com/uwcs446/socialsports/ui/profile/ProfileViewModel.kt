@@ -4,15 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
-import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.CurrentUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,20 +38,9 @@ class ProfileViewModel
     }
 
     fun test() {
-        matchRepo.create(
-            Match(
-                "id",
-                Sport.BASKETBALL,
-                "title",
-                "description lalal allalal",
-                LocalDate.now(),
-                LocalTime.now(),
-                Duration.ofMinutes(60),
-                User("userID"),
-                emptyList(),
-                listOf(User("user1"), User("user2"))
-            )
-        )
+        matchRepo.findAllByHost("user2")
+//        matchRepo.fetchExploreMatches()
+//        matchRepo.create(Match(UUID.randomUUID().toString(), Sport.BASKETBALL, "eajbhb", "description lalal allalal", LocalDate.now(), LocalTime.now(), Duration.ofMinutes(60), User("user1"), emptyList(), listOf(User("user1"), User("user2"))))
     }
 
     private fun computeLabel() =

@@ -1,6 +1,6 @@
 package com.uwcs446.socialsports.di.module
 
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.CollectionReference
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.services.match.FirebaseMatchRepository
 import dagger.Module
@@ -15,8 +15,8 @@ class MatchModule {
 
     @Provides
     @Singleton
-    fun matchRepository(firestore: FirebaseFirestore): FirebaseMatchRepository =
-        FirebaseMatchRepository(firestore)
+    fun matchRepository(@MatchesCollection collectionReference: CollectionReference): FirebaseMatchRepository =
+        FirebaseMatchRepository(collectionReference)
 
     @Provides
     @Singleton

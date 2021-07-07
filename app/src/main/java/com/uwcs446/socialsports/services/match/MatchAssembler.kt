@@ -4,6 +4,9 @@ import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.services.user.toDomain
 import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 fun Collection<Match>.toEntity() = this.map { it.toEntity() }
 
@@ -14,8 +17,7 @@ fun Match.toEntity() =
         sport = sport,
         description = description,
         host = host.toEntity(),
-        date = date,
-        time = time,
+        time = time.atDate(date).toString(),
         duration = duration.toMinutes(),
         teamOne = teamOne.map { it.toEntity() },
         teamTwo = teamTwo.map { it.toEntity() }
@@ -29,8 +31,8 @@ fun MatchEntity.toDomain() =
         sport = sport,
         title = title,
         description = description,
-        date = date,
-        time = time,
+        date = LocalDate.from(LocalDateTime.parse(time)),
+        time = LocalTime.from(LocalDateTime.parse(time)),
         duration = Duration.ofMinutes(duration),
         host = host.toDomain(),
         teamOne = teamOne.map { it.toDomain() },
