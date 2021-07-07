@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.uwcs446.socialsports.domain.location.HostLocation
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
-import com.uwcs446.socialsports.domain.match.MatchType
+import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.CurrentUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Duration
-import java.time.Instant
-import java.time.ZoneId
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,19 +25,22 @@ class HostDetailsViewModel @Inject constructor(
     // To edit an existing match, pass matchId to HostDetailsFragment as arguments and
     // use SavedStateHandle to handle fragment arguments to fill the form with existing match info
     private val selectedHostLocation = state.get<HostLocation>("hostLocation")
+    private val editMatchId = state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
 
-    // TODO: Get match model from matchRepository by matchId
-    private val editMatchId = state.get<String>("matchId")
+    // mock match data
     private var editMatch = editMatchId?.let {
         Match(
             id = "id_of_existing_match",
-            type = MatchType.SOCCER,
+            sport = Sport.SOCCER,
             title = "title_of_existing_match",
             description = "discription_of_existing_match",
-            time = Instant.now(),
-            duration = Duration.parse("PT8H15M"),
+            date = LocalDate.now(),
+            time = LocalTime.now(),
+            duration = Duration.parse("PT8H"),
             host = User("testUser"),
-            players = listOf(listOf(User("testUser2")))
+            teamOne = listOf(User("1")),
+            teamTwo = listOf(User("2")),
+            // TODO: location
         )
     }
 
@@ -46,26 +48,26 @@ class HostDetailsViewModel @Inject constructor(
     var locationTitle = selectedHostLocation?.title ?: ""
     var locationAddress = selectedHostLocation?.address ?: ""
     var matchTitle = editMatch?.title ?: ""
-    var sportType = editMatch?.type ?: ""
-    var matchDate = editMatch?.time?.atZone(ZoneId.of("UTC"))?.toLocalDate()?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)) ?: ""
-    var matchTime = editMatch?.time?.atZone(ZoneId.of("UTC"))?.toLocalTime()?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
+    var sportType = editMatch?.sport ?: ""
+    var matchDate = editMatch?.date?.toString() ?: ""
+    var matchTime = editMatch?.time?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
     var matchDurationHour = editMatch?.duration?.toHours() ?: ""
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
-
     //    var matchCapacity = editMatch?.capacity ?: ""
     var matchDescription = editMatch?.description ?: ""
 
     var user = "NO-USER" // TODO: Fetch from user service
 
     fun onSaveClick() {
-        val dateTime = Instant.parse("${matchDate}T$matchTime:00.00Z")
-        val duration = Duration.parse("PT${matchDurationHour}H${matchDurationMinute}M")
+        val durationHour = Duration.ofHours(if (matchDurationHour == "") 0 else matchDurationHour.toString().toLong())
+        val durationMin = Duration.ofMinutes(if (matchDurationMinute == "") 0 else matchDurationMinute.toString().toLong())
         if (editMatchId != null) {
             val updatedMatch = editMatch?.copy(
                 title = matchTitle,
-                type = MatchType.valueOf(sportType.toString()),
-                time = dateTime,
-                duration = duration,
+                sport = Sport.valueOf(sportType.toString()),
+                date = LocalDate.parse(matchDate),
+                time = LocalTime.parse(matchTime),
+                duration = durationHour + durationMin,
 //                capacity = matchCapacity.toString().toInt(),
                 description = matchDescription
             )

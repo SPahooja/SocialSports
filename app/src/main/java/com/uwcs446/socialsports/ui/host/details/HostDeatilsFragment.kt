@@ -9,18 +9,13 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostEditDetailsBinding
-import com.uwcs446.socialsports.domain.match.MatchType
+import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
+import com.uwcs446.socialsports.domain.match.Sport
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -55,7 +50,6 @@ class HostDetailsFragment : Fragment() {
         val timeTextView: EditText = binding.hostInputGameTime
         val durationHourTextView: EditText = binding.hostInputDurationHour
         val durationMinuteTextView: EditText = binding.hostInputDurationMinute
-//        val capacityTextView: EditText = binding.hostInputParticipantCount
         val rulesTextView: EditText = binding.hostInputDescription
         val hostGameButton: Button = binding.hostButtonHost
 
@@ -68,57 +62,36 @@ class HostDetailsFragment : Fragment() {
         timeTextView.setText(hostDetailsViewModel.matchTime)
         durationHourTextView.setText(hostDetailsViewModel.matchDurationHour.toString())
         durationMinuteTextView.setText(hostDetailsViewModel.matchDurationMinute.toString())
-//        capacityTextView.setText(hostDetailsViewModel.matchCapacity.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
-
-        // Update user input
-        titleTextView.addTextChangedListener {
-            hostDetailsViewModel.matchTitle = it.toString()
-            titleTextView.error = null
-        }
-
-        sportTextView.addTextChangedListener {
-            hostDetailsViewModel.sportType = it.toString()
-            sportTextView.error = null
-        }
-
-        dateTextView.addTextChangedListener {
-            hostDetailsViewModel.matchDate = it.toString()
-            dateTextView.error = null
-        }
-        timeTextView.addTextChangedListener {
-            hostDetailsViewModel.matchTime = it.toString()
-            timeTextView.error = null
-        }
-        durationHourTextView.addTextChangedListener {
-            hostDetailsViewModel.matchDurationHour = it.toString()
-            timeTextView.error = null
-        }
-        durationMinuteTextView.addTextChangedListener {
-            hostDetailsViewModel.matchDurationMinute = it.toString()
-            timeTextView.error = null
-        }
-//        capacityTextView.addTextChangedListener {
-//            hostDetailsViewModel.matchCapacity = it.toString()
-//            capacityTextView.error = null
-//        }
-        rulesTextView.addTextChangedListener {
-            hostDetailsViewModel.matchDescription = it.toString()
-        }
 
         // Populate sport type list
         val typeListAdapter =
-            ArrayAdapter(requireContext(), R.layout.sport_type_item, MatchType.values())
+            ArrayAdapter(requireContext(), R.layout.sport_type_item, Sport.values())
         sportTextView.setAdapter(typeListAdapter)
 
         // Setup date picker
         dateTextView.setOnClickListener {
-            showDatePicker()
+            val datePicker = DateTimePicker().getDatePicker()
+            datePicker.addOnPositiveButtonClickListener {
+                val date = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
+                val formattedDate = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                dateTextView.setText(formattedDate)
+            }
+            datePicker.show(parentFragmentManager, "datePicker")
         }
 
         // Setup time picker
         timeTextView.setOnClickListener {
-            showTimePicker()
+            val timePicker = DateTimePicker().getTimePicker()
+            timePicker.addOnPositiveButtonClickListener {
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)
+                calendar.set(Calendar.MINUTE, timePicker.minute)
+                val viewFormatter = SimpleDateFormat("HH:mm")
+                var formattedTime = viewFormatter.format(calendar.time)
+                timeTextView.setText(formattedTime)
+            }
+            timePicker.show(parentFragmentManager, "timePicker")
         }
 
         // Click HostLocation card on host details fragment to edit selected location
@@ -129,6 +102,7 @@ class HostDetailsFragment : Fragment() {
 
         // Host Game Button
         hostGameButton.setOnClickListener {
+            // Field validation
             if (titleTextView.text.isBlank()) {
                 titleTextView.error = "Please enter a game title"
                 return@setOnClickListener
@@ -149,56 +123,22 @@ class HostDetailsFragment : Fragment() {
                 durationMinuteTextView.error = "Please specify match duration"
                 return@setOnClickListener
             }
-//            if (capacityTextView.text.isBlank()) {
-//                capacityTextView.error = "Please specify number of participants"
-//                return@setOnClickListener
-//            }
+
+            // Update user input in view model
+            hostDetailsViewModel.matchTitle = titleTextView.text.toString()
+            hostDetailsViewModel.sportType = sportTextView.text.toString()
+            hostDetailsViewModel.matchDate = dateTextView.text.toString()
+            hostDetailsViewModel.matchTime = timeTextView.text.toString()
+            hostDetailsViewModel.matchDurationHour = durationHourTextView.text.toString()
+            hostDetailsViewModel.matchDurationMinute = durationMinuteTextView.text.toString()
+            hostDetailsViewModel.matchDescription = rulesTextView.text.toString()
+
+            // Handle click in view model
             hostDetailsViewModel.onSaveClick()
             Navigation.findNavController(requireView()).navigate(R.id.navigation_home) // TODO: for demo
         }
 
         return root
-    }
-
-    private fun showDatePicker() {
-        val constraintBuilder =
-            CalendarConstraints.Builder()
-                .setValidator(DateValidatorPointForward.now())
-                .build()
-
-        val datePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Date")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                .setCalendarConstraints(constraintBuilder)
-                .build()
-
-        datePicker.addOnPositiveButtonClickListener {
-            val date = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
-            val formattedDate = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
-            binding.hostInputGameDate.setText(formattedDate)
-        }
-        datePicker.show(parentFragmentManager, "datePicker")
-    }
-
-    private fun showTimePicker() {
-        val timePicker =
-            MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setTitleText("Select Time")
-                .build()
-
-        timePicker.addOnPositiveButtonClickListener {
-            val calendar = Calendar.getInstance()
-            val hour: Int = timePicker.hour
-            val minute: Int = timePicker.minute
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
-            val viewFormatter = SimpleDateFormat("HH:mm")
-            var viewFormattedTime = viewFormatter.format(calendar.time)
-            binding.hostInputGameTime.setText(viewFormattedTime)
-        }
-        timePicker.show(parentFragmentManager, "timePicker")
     }
 
     override fun onDestroyView() {
