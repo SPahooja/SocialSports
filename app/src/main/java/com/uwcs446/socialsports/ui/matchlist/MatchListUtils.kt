@@ -58,6 +58,18 @@ class MatchListUtils {
                 host = User("1"),
                 teamOne = listOf(User("1"), User("1")),
                 teamTwo = listOf(User("1"), User("1"), User("1"))
+            ),
+            Match(
+                id = "5",
+                sport = Sport.SOCCER,
+                title = "UEFA Euro Cup Finals",
+                description = "Italy vs England",
+                date = LocalDate.parse("2021-07-11"),
+                time = LocalTime.parse("15:00:00"),
+                duration = Duration.parse("PT2H"),
+                host = User("1"),
+                teamOne = listOf(User("1"), User("1")),
+                teamTwo = listOf(User("1"), User("1"), User("1"))
             )
         )
 
