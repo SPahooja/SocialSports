@@ -1,22 +1,13 @@
 package com.uwcs446.socialsports.ui.matchdetails
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.uwcs446.socialsports.R
-import com.uwcs446.socialsports.databinding.FragmentHostLocationBinding
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
-import com.uwcs446.socialsports.ui.host.location.HostLocationViewModel
 import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -28,7 +19,8 @@ class MatchDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -54,7 +46,7 @@ class MatchDetailsFragment : Fragment() {
 
         if (match != null) {
             titleTextView.setText(match.title)
-            matchSportIconImageView.setImageResource(match.sport.iconResource);
+            matchSportIconImageView.setImageResource(match.sport.iconResource)
             matchTypeTextView.setText(match.sport.toString())
             playerCountTextView.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
             dateTextView.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
@@ -62,10 +54,10 @@ class MatchDetailsFragment : Fragment() {
             locationNameTextView.setText("High Park") // TODO: add location name field
             addressTextView.setText("1873 Bloor St W, Toronto, ON M6R 2Z") // TODO: add location address field
             descriptionTextView.setText(match.description)
-            hostNameTextView.setText("John Smith")  // TODO: Use names from user
+            hostNameTextView.setText("John Smith") // TODO: Use names from user
         }
 
-        return root;
+        return root
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,5 @@
 package com.uwcs446.socialsports.domain.match
 
-import android.widget.ImageView
 import com.uwcs446.socialsports.R
 
 enum class Sport(val teamSize: Int, val iconResource: Int) {
