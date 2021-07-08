@@ -10,7 +10,7 @@ class HomeViewModel : ViewModel() {
 
     // TODO: update matchList to hold the current user's matches
     private val _userMatchList = MutableLiveData<List<Match>>().apply {
-        this.value = MatchListUtils.genFakeMatchData(1)
+        this.value = MatchListUtils.genFakeMatchData(2)
     }
 
     val userMatchList: LiveData<List<Match>> = _userMatchList
