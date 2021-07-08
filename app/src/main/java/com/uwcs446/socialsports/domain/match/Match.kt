@@ -1,25 +1,28 @@
 package com.uwcs446.socialsports.domain.match
 
+import android.os.Parcelable
 import com.uwcs446.socialsports.domain.user.User
+import kotlinx.android.parcel.Parcelize
 import java.time.Duration
-import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
 
+@Parcelize
 data class Match(
     val id: String,
-    val type: MatchType,
+    val sport: Sport,
     val title: String,
     val description: String,
-    val time: Instant,
+    val date: LocalDate,
+    val time: LocalTime,
     val duration: Duration,
     val host: User,
-    val players: List<List<User>>,
-) {
-    fun teamCount() = this.type.teamCount
+    val teamOne: List<User>,
+    val teamTwo: List<User>
+) : Parcelable{
+    fun teamSize() = this.sport.teamSize
 
-    fun teamSize() = this.type.teamSize
+    fun maxPlayerCount() = this.sport.teamSize * 2
 
-    fun playersByTeam(team: Int): List<User> {
-        return if (team > teamCount()) emptyList()
-        else players[team - 1]
-    }
+    fun currentPlayerCount() = teamOne.size.plus(teamTwo.size)
 }

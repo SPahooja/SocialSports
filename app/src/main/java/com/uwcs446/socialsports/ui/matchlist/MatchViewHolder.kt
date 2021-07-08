@@ -3,8 +3,10 @@ package com.uwcs446.socialsports.ui.matchlist
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
+import com.uwcs446.socialsports.ui.host.location.HostLocationFragmentDirections
 
 class MatchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
