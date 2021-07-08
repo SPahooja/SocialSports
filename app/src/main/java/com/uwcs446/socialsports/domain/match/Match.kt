@@ -19,7 +19,7 @@ data class Match(
     val host: User,
     val teamOne: List<User>,
     val teamTwo: List<User>
-) : Parcelable{
+) : Parcelable {
     fun teamSize() = this.sport.teamSize
 
     fun maxPlayerCount() = this.sport.teamSize * 2

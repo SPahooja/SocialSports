@@ -12,10 +12,12 @@ import com.uwcs446.socialsports.domain.match.Match
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class MatchRecyclerViewAdapter(private val matchList: List<Match>) : RecyclerView.Adapter<MatchViewHolder>() {
+class MatchRecyclerViewAdapter(private val matchList: List<Match>) :
+    RecyclerView.Adapter<MatchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchViewHolder {
-        val layoutView = LayoutInflater.from(parent.context).inflate(R.layout.match_item_card, parent, false)
+        val layoutView =
+            LayoutInflater.from(parent.context).inflate(R.layout.match_item_card, parent, false)
         return MatchViewHolder(layoutView)
     }
 
@@ -27,19 +29,22 @@ class MatchRecyclerViewAdapter(private val matchList: List<Match>) : RecyclerVie
             holder.matchTitle.text = match.title
             holder.matchType.text = match.sport.toString()
             holder.matchTypeIcon.setImageResource(match.sport.iconResource)
-            holder.matchPlayerCount.text = "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
-            holder.matchDate.text = match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-            holder.matchTime.text = match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+            holder.matchPlayerCount.text =
+                "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
+            holder.matchDate.text =
+                match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+            holder.matchTime.text =
+                match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
             holder.matchLocationName.text = "High Park" // TODO: add location name field
-            holder.matchAddress.text = "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+            holder.matchAddress.text =
+                "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
 
-            holder.itemView.setOnClickListener{ view ->
+            holder.itemView.setOnClickListener { view ->
                 val action = MobileNavigationDirections.actionGlobalToMatchDetails(match.id)
                 Navigation.findNavController(view).navigate(action)
             }
         }
     }
-
 
     override fun getItemCount(): Int {
         return matchList.size
@@ -48,5 +53,4 @@ class MatchRecyclerViewAdapter(private val matchList: List<Match>) : RecyclerVie
     fun notifyDataChanged(context: Context) {
         Toast.makeText(context, "data changed", Toast.LENGTH_SHORT).show()
     }
-
 }

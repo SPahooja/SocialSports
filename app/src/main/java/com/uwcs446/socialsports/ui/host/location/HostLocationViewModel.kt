@@ -17,7 +17,11 @@ class HostLocationViewModel @Inject constructor(
         // TODO[BACKEND]: get location suggestions for current user
         value = listOf(
             HostLocation("High Park", "1873 Bloor St W, Toronto, ON, M6R 2Z3", "3.6 km"),
-            HostLocation("Trinity Bellwoods Park", "790 Queen St W, Toronto, ON, M6J 1G3", "4.2 km"),
+            HostLocation(
+                "Trinity Bellwoods Park",
+                "790 Queen St W, Toronto, ON, M6J 1G3",
+                "4.2 km"
+            ),
             HostLocation("High Park", "1873 Bloor St W, Toronto, ON, M6R 2Z3", "3.6 km"),
             HostLocation("Trinity Bellwoods Park", "790 Queen St W, Toronto, ON, M6J 1G3", "4.2 km")
         )
@@ -34,9 +38,17 @@ class HostLocationViewModel @Inject constructor(
         _locationSearchResults.apply {
             value = listOf(
                 HostLocation("High Park", "1873 Bloor St W, Toronto, ON, M6R 2Z3", "3.6 km"),
-                HostLocation("Trinity Bellwoods Park", "790 Queen St W, Toronto, ON, M6J 1G3", "4.2 km"),
+                HostLocation(
+                    "Trinity Bellwoods Park",
+                    "790 Queen St W, Toronto, ON, M6J 1G3",
+                    "4.2 km"
+                ),
                 HostLocation("High Park", "1873 Bloor St W, Toronto, ON, M6R 2Z3", "3.6 km"),
-                HostLocation("Trinity Bellwoods Park", "790 Queen St W, Toronto, ON, M6J 1G3", "4.2 km")
+                HostLocation(
+                    "Trinity Bellwoods Park",
+                    "790 Queen St W, Toronto, ON, M6J 1G3",
+                    "4.2 km"
+                )
             )
         }
     }

@@ -74,7 +74,8 @@ class HostDetailsFragment : Fragment() {
             val datePicker = DateTimePicker().getDatePicker()
             datePicker.addOnPositiveButtonClickListener {
                 val date = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
-                val formattedDate = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                val formattedDate =
+                    date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                 dateTextView.setText(formattedDate)
             }
             datePicker.show(parentFragmentManager, "datePicker")
@@ -135,7 +136,8 @@ class HostDetailsFragment : Fragment() {
 
             // Handle click in view model
             hostDetailsViewModel.onSaveClick()
-            Navigation.findNavController(requireView()).navigate(R.id.navigation_home) // TODO: for demo
+            Navigation.findNavController(requireView())
+                .navigate(R.id.navigation_home) // TODO: for demo
         }
 
         return root

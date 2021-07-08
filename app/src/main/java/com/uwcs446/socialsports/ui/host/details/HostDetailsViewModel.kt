@@ -25,7 +25,8 @@ class HostDetailsViewModel @Inject constructor(
     // To edit an existing match, pass matchId to HostDetailsFragment as arguments and
     // use SavedStateHandle to handle fragment arguments to fill the form with existing match info
     private val selectedHostLocation = state.get<HostLocation>("hostLocation")
-    private val editMatchId = state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
+    private val editMatchId =
+        state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
 
     // mock match data
     private var editMatch = editMatchId?.let {
@@ -53,14 +54,19 @@ class HostDetailsViewModel @Inject constructor(
     var matchTime = editMatch?.time?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
     var matchDurationHour = editMatch?.duration?.toHours() ?: ""
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
+
     //    var matchCapacity = editMatch?.capacity ?: ""
     var matchDescription = editMatch?.description ?: ""
 
     var user = "NO-USER" // TODO: Fetch from user service
 
     fun onSaveClick() {
-        val durationHour = Duration.ofHours(if (matchDurationHour == "") 0 else matchDurationHour.toString().toLong())
-        val durationMin = Duration.ofMinutes(if (matchDurationMinute == "") 0 else matchDurationMinute.toString().toLong())
+        val durationHour = Duration.ofHours(
+            if (matchDurationHour == "") 0 else matchDurationHour.toString().toLong()
+        )
+        val durationMin = Duration.ofMinutes(
+            if (matchDurationMinute == "") 0 else matchDurationMinute.toString().toLong()
+        )
         if (editMatchId != null) {
             val updatedMatch = editMatch?.copy(
                 title = matchTitle,

@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.LocationItemBinding
 import com.uwcs446.socialsports.domain.location.HostLocation
 
-class LocationListAdapter() : ListAdapter<HostLocation, LocationListAdapter.LocationItemViewHolder>(DiffCallback()) {
+class LocationListAdapter() :
+    ListAdapter<HostLocation, LocationListAdapter.LocationItemViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationItemViewHolder {
-        val binding = LocationItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            LocationItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return LocationItemViewHolder(binding)
     }
 
@@ -29,7 +31,9 @@ class LocationListAdapter() : ListAdapter<HostLocation, LocationListAdapter.Loca
         init {
             itemView.setOnClickListener { v: View ->
                 val locationItem = getItem(adapterPosition)
-                val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(locationItem)
+                val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(
+                    locationItem
+                )
                 Navigation.findNavController(v).navigate(action)
             }
         }

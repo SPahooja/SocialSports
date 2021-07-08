@@ -39,7 +39,8 @@ class FindFragment : Fragment() {
 
         // set up recycler view for match list
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
-        binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutMatchList.recyclerviewMatch.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         val adapter = findViewModel.matchList.value?.let { MatchRecyclerViewAdapter(it) }
         binding.layoutMatchList.recyclerviewMatch.adapter = adapter
 
@@ -135,7 +136,8 @@ class FindFragment : Fragment() {
                 // set text
                 val hour = timePicker.hour
                 val minute = timePicker.minute
-                val selectedTime = "${if (hour == 0) "00" else hour} : ${if (minute == 0) "00" else minute}"
+                val selectedTime =
+                    "${if (hour == 0) "00" else hour} : ${if (minute == 0) "00" else minute}"
                 edittext.setText(selectedTime)
 
                 // filter

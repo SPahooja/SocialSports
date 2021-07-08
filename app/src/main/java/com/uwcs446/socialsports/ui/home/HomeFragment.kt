@@ -31,7 +31,8 @@ class HomeFragment : Fragment() {
 
         // set up recycler view for match list
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
-        binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutMatchList.recyclerviewMatch.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         val adapter = homeViewModel.userMatchList.value?.let { MatchRecyclerViewAdapter(it) }
         binding.layoutMatchList.recyclerviewMatch.adapter = adapter
 

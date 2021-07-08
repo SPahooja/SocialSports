@@ -6,4 +6,4 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class User(
     val id: String
-): Parcelable
+) : Parcelable
