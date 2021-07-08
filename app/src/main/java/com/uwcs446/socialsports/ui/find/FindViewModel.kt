@@ -3,17 +3,18 @@ package com.uwcs446.socialsports.ui.find
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
 import java.time.LocalDate
 
 class FindViewModel : ViewModel() {
 
     // TODO: update matchList to hold data for all matches
-    private val _matchList = MutableLiveData<List<List<String>>>().apply {
-        this.value = MatchListUtils.genFakeMatchData(20)
+    private val _matchList = MutableLiveData<List<Match>>().apply {
+        this.value = MatchListUtils.genFakeMatchData(3)
     }
 
-    val matchList: LiveData<List<List<String>>> = _matchList
+    val matchList: LiveData<List<Match>> = _matchList
 
     // TODO: filter match by date, remove filtering if time is null
     fun filterMatchByDate(time: LocalDate?) {}

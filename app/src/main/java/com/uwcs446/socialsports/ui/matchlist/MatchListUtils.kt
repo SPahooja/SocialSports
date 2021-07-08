@@ -1,22 +1,69 @@
 package com.uwcs446.socialsports.ui.matchlist
 
+import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.Sport
+import com.uwcs446.socialsports.domain.user.User
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalTime
+
 class MatchListUtils {
 
     companion object {
-
-        fun genFakeMatchData(len: Int): List<List<String>> {
-            val fakeMatchDataList: ArrayList<List<String>> = arrayListOf()
+        fun genFakeMatchData(len: Int): List<Match> {
+            val fakeMatchDataList: ArrayList<Match> = arrayListOf()
             for (i in 1..len) {
-                val entry = listOf(
-                    "Soccer for All! $i",
-                    "Soccer",
-                    "4 / 10",
-                    "Jun 30, 2021",
-                    "12:30 PM",
-                    "Central Tech Stadium",
-                    "725 Bathurst St, Toronto, ON M5S 2R5"
+                val entries = listOf(
+                    Match(
+                        id = "1",
+                        sport = Sport.SOCCER,
+                        title = "Soccer for All!",
+                        description = "Soccer for All",
+                        date = LocalDate.parse("2021-07-10"),
+                        time = LocalTime.parse("12:30:00"),
+                        duration = Duration.parse("PT2H"),
+                        host = User("1"),
+                        teamOne = listOf(User("1")),
+                        teamTwo = listOf(User("1"))
+                    ),
+                    Match(
+                        id = "2",
+                        sport = Sport.BASKETBALL,
+                        title = "Pro Players Only",
+                        description = "Pro Players Only",
+                        date = LocalDate.parse("2021-07-20"),
+                        time = LocalTime.parse("10:00:00"),
+                        duration = Duration.parse("PT2H"),
+                        host = User("1"),
+                        teamOne = listOf(User("1"), User("1")),
+                        teamTwo = listOf(User("1"))
+                    ),
+                    Match(
+                        id = "3",
+                        sport = Sport.SOCCER,
+                        title = "Scarborough Soccer 6v6",
+                        description = "Scarborough Soccer 6v6",
+                        date = LocalDate.parse("2021-07-17"),
+                        time = LocalTime.parse("18:00:00"),
+                        duration = Duration.parse("PT1H"),
+                        host = User("1"),
+                        teamOne = listOf(User("1"), User("1")),
+                        teamTwo = listOf(User("1"), User("1"))
+                    ),
+                    Match(
+                        id = "4",
+                        sport = Sport.ULTIMATE,
+                        title = "Ultimate Frisbee Pickup",
+                        description = "Ultimate Frisbee Pickup",
+                        date = LocalDate.parse("2021-07-22"),
+                        time = LocalTime.parse("15:30:00"),
+                        duration = Duration.parse("PT2H"),
+                        host = User("1"),
+                        teamOne = listOf(User("1"), User("1")),
+                        teamTwo = listOf(User("1"), User("1"), User("1"))
+                    )
                 )
-                fakeMatchDataList.add(entry)
+                fakeMatchDataList.addAll(entries)
             }
             return fakeMatchDataList
         }
