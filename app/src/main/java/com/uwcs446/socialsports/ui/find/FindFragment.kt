@@ -131,7 +131,8 @@ class FindFragment : Fragment() {
                 // set text
                 val hour = timePicker.hour
                 val minute = timePicker.minute
-                val selectedTime = "${if (hour == 0) "00" else hour} : ${if (minute == 0) "00" else minute}"
+                val selectedTime =
+                    "${if (hour == 0) "00" else hour} : ${if (minute == 0) "00" else minute}"
                 edittext.setText(selectedTime)
 
                 // filter

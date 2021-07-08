@@ -1,10 +1,13 @@
 package com.uwcs446.socialsports.domain.match
 
+import android.os.Parcelable
 import com.uwcs446.socialsports.domain.user.User
+import kotlinx.android.parcel.Parcelize
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 
+@Parcelize
 data class Match(
     val id: String,
     val sport: Sport,
@@ -16,7 +19,7 @@ data class Match(
     val host: User,
     val teamOne: List<User>,
     val teamTwo: List<User>
-) {
+) : Parcelable {
     fun teamSize() = this.sport.teamSize
 
     fun maxPlayerCount() = this.sport.teamSize * 2

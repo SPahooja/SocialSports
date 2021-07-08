@@ -15,7 +15,22 @@
         android:id="@+id/navigation_find"
         android:name="com.uwcs446.socialsports.ui.find.FindFragment"
         android:label="@string/top_label_find"
-        tools:layout="@layout/fragment_find"/>
+        tools:layout="@layout/fragment_find">
+        <action
+            android:id="@+id/action_navigation_find_to_match_details"
+            app:destination="@id/match_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/match_details"
+        android:name="com.uwcs446.socialsports.ui.matchdetails.MatchDetailsFragment"
+        tools:layout="@layout/fragment_match_details" >
+        <argument
+            android:name="matchId"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_host"
@@ -53,5 +68,5 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
-
+    <action android:id="@+id/action_global_to_match_details" app:destination="@id/match_details"/>
 </navigation>

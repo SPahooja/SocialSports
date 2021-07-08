@@ -73,6 +73,7 @@ class HostLocationFragment : Fragment() {
                 searchResultRecyclerView.visibility = View.VISIBLE
                 return true
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 return false
             }

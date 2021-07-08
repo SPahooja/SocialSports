@@ -1,8 +1,10 @@
 package com.uwcs446.socialsports.domain.match
 
-enum class Sport(val teamSize: Int) {
+import com.uwcs446.socialsports.R
 
-    SOCCER(teamSize = 10),
-    BASKETBALL(teamSize = 10),
-    ULTIMATE(teamSize = 10)
+enum class Sport(val teamSize: Int, val iconResource: Int) {
+
+    SOCCER(teamSize = 10, iconResource = R.drawable.ic_sports_soccer),
+    BASKETBALL(teamSize = 10, iconResource = R.drawable.ic_baseline_sports_basketball),
+    ULTIMATE(teamSize = 10, iconResource = R.drawable.ic_baseline_sports_ultimate);
 }
