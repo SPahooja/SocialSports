@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentFindBinding
 import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
+import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
 import java.time.Instant
 import java.time.ZoneId
@@ -28,6 +30,9 @@ class FindFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private val recyclerViewData = mutableListOf<Match>()
+    private val recyclerViewAdapter = MatchRecyclerViewAdapter(recyclerViewData)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,14 +40,11 @@ class FindFragment : Fragment() {
     ): View? {
 
         _binding = FragmentFindBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
         // set up recycler view for match list
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
-        binding.layoutMatchList.recyclerviewMatch.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        val adapter = findViewModel.matchList.value?.let { MatchRecyclerViewAdapter(it) }
-        binding.layoutMatchList.recyclerviewMatch.adapter = adapter
+        binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
         // set up date and time pickers for filter toolbar
         datepickerSetup(binding.layoutListFilterToolbar.edittextFilterDate, parentFragmentManager)
@@ -60,36 +62,29 @@ class FindFragment : Fragment() {
         val autoCompleteTextView = binding.layoutListFilterToolbar.matchTypeDropdown
         (autoCompleteTextView as? AutoCompleteTextView)?.setAdapter(typeListAdapter)
 
-        // TODO: update type filtering menu selection listener
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             when (position) {
-                0 -> findViewModel.filterMatchByType("All")
-                1 -> findViewModel.filterMatchByType("SOCCER")
-                2 -> findViewModel.filterMatchByType("BASKETBALL")
-                else -> findViewModel.filterMatchByType("ULTIMATE")
+                0 -> findViewModel.filterMatchBySport(null)
+                1 -> findViewModel.filterMatchBySport(Sport.SOCCER)
+                2 -> findViewModel.filterMatchBySport(Sport.BASKETBALL)
+                else -> findViewModel.filterMatchBySport(Sport.ULTIMATE)
             }
         }
 
-        // default type is "All"
+        // Default sport is "All"
         autoCompleteTextView.setText(getString(R.string.type_all), false)
 
-        // TODO: update observer which updates recyclerview when match data change
-        val gameListRecyclerView: RecyclerView = binding.layoutMatchList.recyclerviewMatch
+        // Observer which updates the recyclerview when match data changes
         findViewModel.matchList.observe(
             viewLifecycleOwner,
             {
-                if (gameListRecyclerView.adapter == null) {
-                    val recyclerViewAdapter = MatchRecyclerViewAdapter(it)
-                    gameListRecyclerView.layoutManager =
-                        LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                    gameListRecyclerView.adapter = recyclerViewAdapter
-                } else {
-                    gameListRecyclerView.adapter!!.notifyDataSetChanged()
-                }
+                recyclerViewData.clear()
+                recyclerViewData.addAll(it)
+                recyclerViewAdapter.notifyDataSetChanged()
             }
         )
 
-        return root
+        return binding.root
     }
 
     /*
