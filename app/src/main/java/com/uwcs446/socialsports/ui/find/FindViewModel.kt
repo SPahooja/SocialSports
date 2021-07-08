@@ -11,7 +11,7 @@ class FindViewModel : ViewModel() {
 
     // TODO: update matchList to hold data for all matches
     private val _matchList = MutableLiveData<List<Match>>().apply {
-        this.value = MatchListUtils.genFakeMatchData(3)
+        this.value = MatchListUtils.genFakeMatchData(5)
     }
 
     val matchList: LiveData<List<Match>> = _matchList
