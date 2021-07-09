@@ -28,7 +28,7 @@ class FindViewModel : ViewModel() {
      */
     fun filterMatchBySport(sport: Sport?) {
         _matchList.value = MatchListUtils.genFakeMatchData(5).filter {
-            if (it.sport == null) true else it.sport == sport
+            if (sport == null) true else it.sport == sport
         }
     }
 }
