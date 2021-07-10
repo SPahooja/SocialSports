@@ -28,7 +28,7 @@ class MatchRecyclerViewAdapter(private val matchList: List<Match>) :
             // TODO: update mapping based on the game item structure in gameList
             holder.matchTitle.text = match.title
             holder.matchType.text = match.sport.toString()
-            holder.matchTypeIcon.setImageResource(match.sport.iconResource)
+            holder.matchTypeIcon.setImageResource(match.sport.imageResource)
             holder.matchPlayerCount.text =
                 "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
             holder.matchDate.text =

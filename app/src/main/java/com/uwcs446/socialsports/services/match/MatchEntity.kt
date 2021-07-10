@@ -7,7 +7,7 @@ import java.util.UUID
 
 data class MatchEntity(
     val id: String = UUID.randomUUID().toString(),
-    val sport: Sport = Sport.NOT_SET,
+    val sport: Sport = Sport.ANY,
     val title: String = "",
     val description: String = "",
 //    val date: String = LocalDate.now().toString(),
