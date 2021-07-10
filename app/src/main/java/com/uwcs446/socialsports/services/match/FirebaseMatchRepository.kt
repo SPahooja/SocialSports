@@ -68,22 +68,28 @@ class FirebaseMatchRepository
             }
     }
 
-    override fun create(match: Match) {
-        collection.document(match.id).set(match.toEntity())
-            .addOnSuccessListener {
-                Log.d(TAG, "Created match ${match.id}")
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "Failed to create match ${match.id}")
-            }
-    }
+    override fun create(match: Match) = createOrSave(match.toEntity())
 
-    override fun edit(match: Match) {
-        TODO("Not yet implemented")
-    }
+    override fun edit(match: Match) = createOrSave(match.toEntity())
 
     override fun delete(matchId: String) {
-        TODO("Not yet implemented")
+        collection.document(matchId).delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "Deleted match $matchId")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Failed to delete match $matchId")
+            }
+    }
+
+    private fun createOrSave(match: MatchEntity) {
+        collection.document(match.id).set(match)
+            .addOnSuccessListener {
+                Log.d(TAG, "Saved match ${match.id}")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Failed to save match ${match.id}")
+            }
     }
 }
 
