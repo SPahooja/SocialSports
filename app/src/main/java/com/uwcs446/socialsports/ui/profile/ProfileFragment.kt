@@ -38,6 +38,7 @@ class ProfileFragment : Fragment() {
                 textView.text = it
             }
         )
+        viewModel.test()
 
         return root
     }

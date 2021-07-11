@@ -2,18 +2,18 @@ package com.uwcs446.socialsports.services.match
 
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.services.user.UserEntity
-import java.time.LocalDate
-import java.time.LocalTime
+import java.time.LocalDateTime
+import java.util.UUID
 
 data class MatchEntity(
-    val id: String,
-    val title: String,
-    val sport: Sport,
-    val description: String,
-    val host: UserEntity,
-    val date: LocalDate,
-    val time: LocalTime,
-    val duration: Long,
-    val teamOne: List<UserEntity>,
-    val teamTwo: List<UserEntity>
+    val id: String = UUID.randomUUID().toString(),
+    val sport: Sport = Sport.ANY,
+    val title: String = "",
+    val description: String = "",
+//    val date: String = LocalDate.now().toString(),
+    val time: String = LocalDateTime.now().toString(),
+    val duration: Long = 0,
+    val host: UserEntity = UserEntity(),
+    val teamOne: List<UserEntity> = emptyList(),
+    val teamTwo: List<UserEntity> = emptyList()
 )

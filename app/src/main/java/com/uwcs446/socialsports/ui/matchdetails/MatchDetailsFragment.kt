@@ -46,7 +46,7 @@ class MatchDetailsFragment : Fragment() {
 
         if (match != null) {
             titleTextView.setText(match.title)
-            matchSportIconImageView.setImageResource(match.sport.iconResource)
+            matchSportIconImageView.setImageResource(match.sport.imageResource)
             matchTypeTextView.setText(match.sport.toString())
             playerCountTextView.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
             dateTextView.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))

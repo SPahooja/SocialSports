@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.user.CurrentUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import javax.inject.Inject
 class ProfileViewModel
 @Inject constructor(
     private val currentUserRepository: CurrentUserRepository,
+    private val matchRepo: MatchRepository
 ) : ViewModel() {
 
     private val userObserver = Observer<User> {
@@ -33,6 +35,12 @@ class ProfileViewModel
     override fun onCleared() {
         currentUserRepository.user.removeObserver(userObserver)
         super.onCleared()
+    }
+
+    fun test() {
+        matchRepo.findAllByHost("user2")
+//        matchRepo.fetchExploreMatches()
+//        matchRepo.create(Match(UUID.randomUUID().toString(), Sport.BASKETBALL, "eajbhb", "description lalal allalal", LocalDate.now(), LocalTime.now(), Duration.ofMinutes(60), User("user1"), emptyList(), listOf(User("user1"), User("user2"))))
     }
 
     private fun computeLabel() =

@@ -1,12 +1,20 @@
 package com.uwcs446.socialsports.domain.match
 
+import androidx.lifecycle.LiveData
+
 interface MatchRepository {
 
-    fun findAllByUser(userId: String): List<Match>
+    val exploreMatches: LiveData<List<Match>>
 
-    fun create(match: Match): Match
+    val matchesByHost: LiveData<Pair<String, List<Match>>>
 
-    fun edit(match: Match): Match
+    fun fetchExploreMatches()
+
+    fun findAllByHost(hostId: String)
+
+    fun create(match: Match)
+
+    fun edit(match: Match)
 
     fun delete(matchId: String)
 }
