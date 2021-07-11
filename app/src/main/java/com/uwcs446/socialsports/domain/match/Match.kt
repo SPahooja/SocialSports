@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports.domain.match
 
+import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.user.User
 import java.time.Duration
 import java.time.LocalDate
@@ -10,6 +11,7 @@ data class Match(
     val sport: Sport,
     val title: String,
     val description: String,
+    val location: Location,
     val date: LocalDate,
     val time: LocalTime,
     val duration: Duration,
@@ -23,3 +25,7 @@ data class Match(
 
     fun currentPlayerCount() = teamOne.size.plus(teamTwo.size)
 }
+
+data class Location(
+    val latLng: LatLng
+)

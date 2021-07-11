@@ -2,7 +2,9 @@ package com.uwcs446.socialsports.ui.host.details
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.location.HostLocation
+import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
@@ -39,6 +41,7 @@ class HostDetailsViewModel @Inject constructor(
             time = LocalTime.now(),
             duration = Duration.parse("PT8H"),
             host = User("testUser"),
+            location = Location(LatLng(0.0, 0.0)),
             teamOne = listOf(User("1")),
             teamTwo = listOf(User("2")),
             // TODO: location
