@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
-import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 class MatchDetailsFragment : Fragment() {
 
+    private val matchDetailsViewModel: MatchDetailsViewModel by viewModels()
     private val args: MatchDetailsFragmentArgs by navArgs()
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
@@ -27,10 +28,7 @@ class MatchDetailsFragment : Fragment() {
         _binding = FragmentMatchDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Placeholder find the match that matches the passed in ID
-        val matches = MatchListUtils.genFakeMatchData(args.matchId!!.toInt())
-
-        val match = matches.find { match -> match.id == args.matchId }
+        matchDetailsViewModel.findMatchById(args.matchId!!)
 
         // Views
         val titleTextView: TextView = binding.matchTitle
@@ -44,18 +42,16 @@ class MatchDetailsFragment : Fragment() {
         val descriptionTextView: TextView = binding.matchDescription
         val hostNameTextView: TextView = binding.matchHostName
 
-        if (match != null) {
-            titleTextView.setText(match.title)
-            matchSportIconImageView.setImageResource(match.sport.imageResource)
-            matchTypeTextView.setText(match.sport.toString())
-            playerCountTextView.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
-            dateTextView.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
-            timeTextView.setText(match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
-            locationNameTextView.setText("High Park") // TODO: add location name field
-            addressTextView.setText("1873 Bloor St W, Toronto, ON M6R 2Z") // TODO: add location address field
-            descriptionTextView.setText(match.description)
-            hostNameTextView.setText("John Smith") // TODO: Use names from user
-        }
+        titleTextView.text = matchDetailsViewModel.match.value?.title
+        matchDetailsViewModel.match.value?.sport?.let { matchSportIconImageView.setImageResource(it.imageResource) }
+        matchTypeTextView.text = matchDetailsViewModel.match.value?.sport.toString()
+        playerCountTextView.text = "${matchDetailsViewModel.match.value?.currentPlayerCount()} / ${matchDetailsViewModel.match.value?.maxPlayerCount()}"
+        dateTextView.text = matchDetailsViewModel.match.value?.date?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        timeTextView.text = matchDetailsViewModel.match.value?.time?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        locationNameTextView.text = "High Park" // TODO: add location name field
+        addressTextView.text = "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+        descriptionTextView.text = matchDetailsViewModel.match.value?.description
+        hostNameTextView.text = "John Smith" // TODO: Use names from user
 
         return root
     }
