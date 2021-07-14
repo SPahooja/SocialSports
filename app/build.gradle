@@ -70,6 +70,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.firebaseui:firebase-ui-auth:7.1.1'
+    implementation 'com.firebase:geofire-android-common:3.1.0'
+
+    //google maps
+    implementation 'com.google.maps.android:maps-ktx:2.3.0'
+    implementation 'com.google.maps.android:maps-utils-ktx:2.3.0'
 
     // For instrumentation tests
     androidTestImplementation  'com.google.dagger:hilt-android-testing:2.37'
