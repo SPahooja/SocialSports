@@ -52,6 +52,31 @@ class HomeFragment : Fragment() {
             }
         )
 
+        // List of game filter toggle buttons
+        val toggleButtons = listOf(
+            binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches,
+            binding.layoutHomeFilterToolbar.toggleButtonHostingMatches,
+            binding.layoutHomeFilterToolbar.toggleButtonPastMatches
+        )
+
+        // Set up toggle button listeners
+        for (button in toggleButtons) {
+            // Ensure that exactly one toggle button is active at a time
+            button.setOnClickListener {
+                for (toggleButton in toggleButtons) {
+                    toggleButton.isChecked = false || toggleButton == button
+                }
+            }
+
+            // Filter matches based on toggle selection
+            button.setOnCheckedChangeListener { _, _ ->
+                // TODO: filter matches
+            }
+        }
+
+        // Initialize toggle buttons to view joined matches
+        binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches.isChecked = true
+
         return root
     }
 

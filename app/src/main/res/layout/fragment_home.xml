@@ -7,10 +7,18 @@
     tools:context=".ui.home.HomeFragment">
 
     <include
-        layout="@layout/match_list"
-        android:id="@+id/layout_match_list"
+        layout="@layout/home_filter_toolbar"
+        android:id="@+id/layout_home_filter_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <include
+        android:id="@+id/layout_match_list"
+        layout="@layout/match_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_home_filter_toolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>
