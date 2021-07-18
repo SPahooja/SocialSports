@@ -10,6 +10,7 @@ import com.uwcs446.socialsports.di.module.MatchesCollection
 import com.uwcs446.socialsports.di.module.UsersCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
+import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.services.user.UserEntity
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ class FirebaseMatchRepository
 
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
-    override fun fetchExploreMatches() {
+    override fun fetchExploreMatches(sport: Sport) {
         matchesCollection
             .get()
             .addOnSuccessListener { matchResult ->
@@ -39,6 +40,9 @@ class FirebaseMatchRepository
                     .documents
                     .mapNotNull {
                         it.toMatchEntity()
+                    }
+                    .filter { match ->
+                        sport == Sport.ANY || match.sport == sport
                     }
                 usersCollection
                     .whereIn(
@@ -58,12 +62,12 @@ class FirebaseMatchRepository
                         )
                             .also { Log.d(TAG, "Retrieved ${matches.size} explore matches") }
                     }
-                    .addOnFailureListener {
-                        Log.d(TAG, "Something went wrong fetching users $it")
+                    .addOnFailureListener { e ->
+                        Log.d(TAG, "Something went wrong fetching users", e)
                     }
             }
-            .addOnFailureListener {
-                Log.d(TAG, "Something went wrong fetching explore matches $it")
+            .addOnFailureListener { e ->
+                Log.d(TAG, "Something went wrong fetching explore matches", e)
             }
     }
 
