@@ -57,8 +57,8 @@ class MainActivity :
 
     // Support back button in action bar
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed();
-        return true;
+        onBackPressed()
+        return true
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
