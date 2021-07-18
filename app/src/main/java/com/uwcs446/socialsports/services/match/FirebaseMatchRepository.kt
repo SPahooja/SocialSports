@@ -7,6 +7,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.uwcs446.socialsports.di.module.MatchesCollection
+import com.uwcs446.socialsports.di.module.UsersCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.services.user.UserEntity
@@ -15,7 +16,9 @@ import javax.inject.Inject
 class FirebaseMatchRepository
 @Inject constructor(
     @MatchesCollection
-    private val collection: CollectionReference,
+    private val matchesCollection: CollectionReference,
+    @UsersCollection
+    private val usersCollection: CollectionReference,
 ) : MatchRepository {
 
     private val TAG = this::class.simpleName
@@ -29,24 +32,43 @@ class FirebaseMatchRepository
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
     override fun fetchExploreMatches() {
-        collection
+        matchesCollection
             .get()
-            .addOnSuccessListener { result ->
-                val matches = result
+            .addOnSuccessListener { matchResult ->
+                val matches = matchResult
                     .documents
                     .mapNotNull {
-                        it.toMatch()
+                        it.toMatchEntity()
                     }
-                _exploreMatches.postValue(matches)
-                    .also { Log.d(TAG, "Retrieved ${matches.size} explore matches") }
+                usersCollection
+                    .whereIn(
+                        UserEntity::id.name,
+                        allUsersFromMatches(matches)
+                    )
+                    .get()
+                    .addOnSuccessListener { usersResult ->
+                        val users = usersResult
+                            .documents
+                            .mapNotNull {
+                                it.toUserEntity()
+                            }
+
+                        _exploreMatches.postValue(
+                            matches.toDomain(users)
+                        )
+                            .also { Log.d(TAG, "Retrieved ${matches.size} explore matches") }
+                    }
+                    .addOnFailureListener {
+                        Log.d(TAG, "Something went wrong fetching users $it")
+                    }
             }
             .addOnFailureListener {
-                Log.d(TAG, "Something went wrong fetching explore matches")
+                Log.d(TAG, "Something went wrong fetching explore matches $it")
             }
     }
 
     override fun findAllByHost(hostId: String) {
-        collection
+        matchesCollection
             .whereEqualTo(
                 FieldPath.of(
                     MatchEntity::host.name,
@@ -58,10 +80,39 @@ class FirebaseMatchRepository
                 val matchesByHost = result
                     .documents
                     .mapNotNull {
-                        it.toMatch()
+                        it.toMatchEntity()
                     }
-                _matchesByHost.postValue(Pair(hostId, matchesByHost))
-                    .also { Log.d(TAG, "Retrieved ${matchesByHost.size} for host user: $hostId") }
+                usersCollection
+                    .whereIn(
+                        UserEntity::id.name,
+                        allUsersFromMatches(matchesByHost)
+                    )
+                    .get()
+                    .addOnSuccessListener { usersResult ->
+                        val users = usersResult
+                            .documents
+                            .mapNotNull {
+                                it.toUserEntity()
+                            }
+
+                        _matchesByHost
+                            .postValue(
+                                Pair(
+                                    hostId,
+                                    matchesByHost
+                                        .toDomain(users)
+                                )
+                            )
+                            .also {
+                                Log.d(
+                                    TAG,
+                                    "Retrieved ${matchesByHost.size} matches hosted by $hostId"
+                                )
+                            }
+                    }
+                    .addOnFailureListener {
+                        Log.d(TAG, "Something went wrong fetching users $it")
+                    }
             }
             .addOnFailureListener {
                 Log.d(TAG, "Something went wrong")
@@ -73,7 +124,7 @@ class FirebaseMatchRepository
     override fun edit(match: Match) = createOrSave(match.toEntity())
 
     override fun delete(matchId: String) {
-        collection.document(matchId).delete()
+        matchesCollection.document(matchId).delete()
             .addOnSuccessListener {
                 Log.d(TAG, "Deleted match $matchId")
             }
@@ -83,7 +134,7 @@ class FirebaseMatchRepository
     }
 
     private fun createOrSave(match: MatchEntity) {
-        collection.document(match.id).set(match)
+        matchesCollection.document(match.id).set(match)
             .addOnSuccessListener {
                 Log.d(TAG, "Saved match ${match.id}")
             }
@@ -93,4 +144,14 @@ class FirebaseMatchRepository
     }
 }
 
-private fun DocumentSnapshot.toMatch() = this.toObject(MatchEntity::class.java)?.toDomain()
+private fun DocumentSnapshot.toUserEntity() = this.toObject(UserEntity::class.java)
+
+private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
+
+private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
+    return matches.map { allUsersFromMatch(it) }.flatten().distinct()
+}
+
+private fun allUsersFromMatch(match: MatchEntity): List<String> {
+    return match.teamOne.plus(match.teamTwo)
+}

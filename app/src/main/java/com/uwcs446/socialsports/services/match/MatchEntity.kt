@@ -16,8 +16,8 @@ data class MatchEntity(
     val time: String = LocalDateTime.now().toString(),
     val duration: Long = 0,
     val host: UserEntity = UserEntity(),
-    val teamOne: List<UserEntity> = emptyList(),
-    val teamTwo: List<UserEntity> = emptyList()
+    val teamOne: List<String> = emptyList(),
+    val teamTwo: List<String> = emptyList()
 )
 
 data class LocationEntity(
