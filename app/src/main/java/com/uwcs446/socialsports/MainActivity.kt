@@ -62,6 +62,12 @@ class MainActivity :
         mainViewModel.handleAuthChange()
     }
 
+    // Support back button in action bar
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed();
+        return true;
+    }
+
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        super.onActivityResult(requestCode, resultCode, data)
 //        if (requestCode == RC_SIGN_IN) {
