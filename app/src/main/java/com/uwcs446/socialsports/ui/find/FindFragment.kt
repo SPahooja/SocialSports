@@ -82,7 +82,7 @@ class FindFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Observer which updates the recyclerview when match data changes
-        findViewModel.matchList.observe(viewLifecycleOwner) { matchList ->
+        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
             recyclerViewData.clear()
             recyclerViewData.addAll(matchList)
             recyclerViewAdapter.notifyDataSetChanged()
