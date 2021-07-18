@@ -44,7 +44,7 @@ class MainActivity :
         navView.setupWithNavController(navController)
     }
 
-    override fun onBackPressed() {} // TODO explore further to avoid not signing in
+    // override fun onBackPressed() {} // TODO explore further to avoid not signing in
 
     // TODO CAN USE EITHER AUTHLISTENER OR ACTIVITYRESULT FOR FIRST LOGIN (don't need both)
     override fun onStart() {
