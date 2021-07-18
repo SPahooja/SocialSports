@@ -36,7 +36,7 @@ class FindViewModel @Inject constructor(
     /**
      * Filters matches by sport.
      */
-    fun filterMatchBySport(sport: Sport) {
-        _matches.value = _matches.value?.filter { match -> sport == Sport.ANY || match.sport == sport }
+    suspend fun filterMatchBySport(sport: Sport) {
+        _matches.value = matchRepository.fetchExploreMatches(sport)
     }
 }
