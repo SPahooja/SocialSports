@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FindViewModel @Inject constructor(
-    val matchRepository: MatchRepository,
+    private val matchRepository: MatchRepository,
 ) : ViewModel() {
 
     val _matches = MutableLiveData<List<Match>>(emptyList())
