@@ -27,8 +27,6 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        UserLoginService.login(this)
-
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -44,14 +42,6 @@ class MainActivity :
         navView.setupWithNavController(navController)
     }
 
-    override fun onResume() {
-        // Force login, in case user tries to navigate backwards from the login
-        //  UI to use the app logged-out
-        UserLoginService.login(this)
-
-        super.onResume()
-    }
-
     // TODO CAN USE EITHER AUTHLISTENER OR ACTIVITYRESULT FOR FIRST LOGIN (don't need both)
     override fun onStart() {
         super.onStart()
@@ -60,6 +50,9 @@ class MainActivity :
 
     override fun onAuthStateChanged(auth: FirebaseAuth) {
         mainViewModel.handleAuthChange()
+
+        // This forces the user to log in, so that they can't use the app logged out.
+        UserLoginService.login(this)
     }
 
     // Support back button in action bar
