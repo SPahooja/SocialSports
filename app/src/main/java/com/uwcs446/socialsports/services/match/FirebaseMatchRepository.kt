@@ -61,7 +61,6 @@ class FirebaseMatchRepository
                     .addOnFailureListener {
                         Log.d(TAG, "Something went wrong fetching users $it")
                     }
-
             }
             .addOnFailureListener {
                 Log.d(TAG, "Something went wrong fetching explore matches $it")
