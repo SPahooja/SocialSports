@@ -44,7 +44,13 @@ class MainActivity :
         navView.setupWithNavController(navController)
     }
 
-    override fun onBackPressed() {} // TODO explore further to avoid not signing in
+    override fun onResume() {
+        // Force login, in case user tries to navigate backwards from the login
+        //  UI to use the app logged-out
+        UserLoginService.login(this)
+
+        super.onResume()
+    }
 
     // TODO CAN USE EITHER AUTHLISTENER OR ACTIVITYRESULT FOR FIRST LOGIN (don't need both)
     override fun onStart() {

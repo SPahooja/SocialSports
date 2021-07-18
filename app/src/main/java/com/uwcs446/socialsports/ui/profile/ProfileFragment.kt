@@ -34,8 +34,10 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.logoutButton.setOnClickListener { viewModel.handleLogout() }
-        binding.loginButton.setOnClickListener { UserLoginService.login(requireActivity()) }
+        binding.logoutButton.setOnClickListener {
+            viewModel.handleLogout()
+            UserLoginService.login(requireActivity())
+        }
 
         val textView: TextView = binding.textProfile
         viewModel.text.observe(
