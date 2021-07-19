@@ -9,14 +9,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentHomeBinding
+import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
+
+    private val recyclerViewData = mutableListOf<Match>()
+    private val recyclerViewAdapter = MatchRecyclerViewAdapter(recyclerViewData)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,24 +39,16 @@ class HomeFragment : Fragment() {
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
         binding.layoutMatchList.recyclerviewMatch.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        val adapter = homeViewModel.userMatchList.value?.let { MatchRecyclerViewAdapter(it) }
-        binding.layoutMatchList.recyclerviewMatch.adapter = adapter
+        binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
         // TODO: update observer which updates recyclerview when match data changes
         val gameListRecyclerView: RecyclerView = binding.layoutMatchList.recyclerviewMatch
-        homeViewModel.userMatchList.observe(
-            viewLifecycleOwner,
-            {
-                if (gameListRecyclerView.adapter == null) {
-                    val recyclerViewAdapter = MatchRecyclerViewAdapter(it)
-                    gameListRecyclerView.layoutManager =
-                        LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                    gameListRecyclerView.adapter = recyclerViewAdapter
-                } else {
-                    gameListRecyclerView.adapter!!.notifyDataSetChanged()
-                }
-            }
-        )
+        // Observer which updates the recyclerview when match data changes
+        homeViewModel.matches.observe(viewLifecycleOwner) { matchList ->
+            recyclerViewData.clear()
+            recyclerViewData.addAll(matchList)
+            recyclerViewAdapter.notifyDataSetChanged()
+        }
 
         // List of game filter toggle buttons
         val toggleButtons = listOf(
@@ -69,8 +67,13 @@ class HomeFragment : Fragment() {
             }
 
             // Filter matches based on toggle selection
-            button.setOnCheckedChangeListener { _, _ ->
-                // TODO: filter matches
+            button.setOnCheckedChangeListener { _button, checked ->
+                val filter = MatchFilter.values().find { filter ->
+                    filter.toString() == _button.text
+                }
+                if (checked) {
+                    homeViewModel.filterMatches(filter!!)
+                }
             }
         }
 

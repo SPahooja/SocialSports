@@ -34,6 +34,7 @@ class FirebaseMatchRepository
 
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
+    // TODO Add filtering for future timestamp
     override suspend fun fetchExploreMatches(sport: Sport): List<Match>? {
         try {
             val matches = matchesCollection
@@ -58,56 +59,105 @@ class FirebaseMatchRepository
         return null
     }
 
-    override fun findAllByHost(hostId: String) {
-        matchesCollection
-            .whereEqualTo(
-                FieldPath.of(
-                    MatchEntity::host.name,
-                    UserEntity::id.name
-                ),
-                hostId
-            ).get()
-            .addOnSuccessListener { result ->
-                val matchesByHost = result
-                    .documents
-                    .mapNotNull {
-                        it.toMatchEntity()
-                    }
-                usersCollection
-                    .whereIn(
-                        UserEntity::id.name,
-                        allUsersFromMatches(matchesByHost)
-                    )
-                    .get()
-                    .addOnSuccessListener { usersResult ->
-                        val users = usersResult
-                            .documents
-                            .mapNotNull {
-                                it.toUserEntity()
-                            }
+    // TODO: Add filtering for future timestamp
+    override suspend fun findAllByHost(hostId: String): List<Match>? {
+        try {
+            val matches = matchesCollection
+                .whereEqualTo(
+                    FieldPath.of(
+                        MatchEntity::host.name,
+                        UserEntity::id.name
+                    ),
+                    hostId
+                )
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            if (matches.isEmpty()) {
+                return emptyList()
+            }
+            val users = usersCollection
+                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
+                .get().await()
+                .documents
+                .mapNotNull { user -> user.toUserEntity() }
+            Log.d(TAG, "Found ${matches.size} matches")
+            return matches.toDomain(users)
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching all matches by host $hostId", e)
+        }
+        return null
+    }
 
-                        _matchesByHost
-                            .postValue(
-                                Pair(
-                                    hostId,
-                                    matchesByHost
-                                        .toDomain(users)
-                                )
-                            )
-                            .also {
-                                Log.d(
-                                    TAG,
-                                    "Retrieved ${matchesByHost.size} matches hosted by $hostId"
-                                )
-                            }
-                    }
-                    .addOnFailureListener {
-                        Log.d(TAG, "Something went wrong fetching users $it")
-                    }
+    // TODO: Add filtering for future timestamp
+    override suspend fun findJoinedByUser(userId: String): List<Match>? {
+        try {
+            val teamOneMatches = matchesCollection
+                .whereArrayContains(MatchEntity::teamOne.name, userId)
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            val teamTwoMatches = matchesCollection
+                .whereArrayContains(Match::teamTwo.name, userId)
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            val matches = (teamOneMatches + teamTwoMatches)
+            if (matches.isEmpty()) {
+                return emptyList()
             }
-            .addOnFailureListener {
-                Log.d(TAG, "Something went wrong")
+            val users = usersCollection
+                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
+                .get().await()
+                .documents
+                .mapNotNull { user -> user.toUserEntity() }
+            Log.d(TAG, "Found ${matches.size} matches")
+            return matches.toDomain(users)
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
+        }
+        return null
+    }
+
+    // TODO: Add filtering for past timestamp
+    override suspend fun findPastWithUser(userId: String): List<Match>? {
+        try {
+            val hostMatches = matchesCollection
+                .whereEqualTo(FieldPath.of(MatchEntity::host.name, UserEntity::id.name), userId)
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            val teamOneMatches = matchesCollection
+                .whereArrayContains(MatchEntity::teamOne.name, userId)
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            val teamTwoMatches = matchesCollection
+                .whereArrayContains(Match::teamTwo.name, userId)
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            val matches = (hostMatches + teamOneMatches + teamTwoMatches).distinctBy { match -> match.id }
+            if (matches.isEmpty()) {
+                return emptyList()
             }
+            val users = usersCollection
+                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
+                .get().await()
+                .documents
+                .mapNotNull { user -> user.toUserEntity() }
+            Log.d(TAG, "Found ${matches.size} matches")
+            return matches.toDomain(users)
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
+        }
+        return null
     }
 
     override fun create(match: Match) = createOrSave(match.toEntity())
