@@ -2,7 +2,6 @@ package com.uwcs446.socialsports.ui.host.location
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.location.HostLocation
 import com.uwcs446.socialsports.domain.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
