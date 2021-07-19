@@ -7,6 +7,8 @@ fun User.toEntity() =
         id = id
     )
 
+fun Collection<UserEntity>.toDomain() = this.map { it.toDomain() }
+
 fun UserEntity.toDomain() =
     User(
         id = id

@@ -1,6 +1,8 @@
 package com.uwcs446.socialsports.services.match
 
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.user.User
+import com.uwcs446.socialsports.services.user.UserEntity
 import com.uwcs446.socialsports.services.user.toDomain
 import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
@@ -20,13 +22,16 @@ fun Match.toEntity() =
         time = time.atDate(date).toString(),
         location = location,
         duration = duration.toMinutes(),
-        teamOne = teamOne.map { it.toEntity() },
-        teamTwo = teamTwo.map { it.toEntity() }
+        teamOne = teamOne.map { it.id },
+        teamTwo = teamTwo.map { it.id }
     )
 
-fun Collection<MatchEntity>.toDomain() = this.map { it.toDomain() }
+fun Collection<MatchEntity>.toDomain(users: List<UserEntity>): List<Match> {
+    val domainUsers = users.toDomain()
+    return this.map { it.toDomain(domainUsers) }
+}
 
-fun MatchEntity.toDomain() =
+fun MatchEntity.toDomain(users: List<User>) =
     Match(
         id = id,
         sport = sport,
@@ -37,6 +42,6 @@ fun MatchEntity.toDomain() =
         duration = Duration.ofMinutes(duration),
         host = host.toDomain(),
         location = location,
-        teamOne = teamOne.map { it.toDomain() },
-        teamTwo = teamTwo.map { it.toDomain() }
+        teamOne = users.filter { teamOne.contains(it.id) },
+        teamTwo = users.filter { teamTwo.contains(it.id) }
     )

@@ -29,8 +29,6 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        UserLoginService.login(this)
-
         Places.initialize(this, getString(R.string.google_api_key), Locale.CANADA)
 
         val navView: BottomNavigationView = binding.navView
@@ -48,8 +46,6 @@ class MainActivity :
         navView.setupWithNavController(navController)
     }
 
-    override fun onBackPressed() {} // TODO explore further to avoid not signing in
-
     // TODO CAN USE EITHER AUTHLISTENER OR ACTIVITYRESULT FOR FIRST LOGIN (don't need both)
     override fun onStart() {
         super.onStart()
@@ -58,6 +54,15 @@ class MainActivity :
 
     override fun onAuthStateChanged(auth: FirebaseAuth) {
         mainViewModel.handleAuthChange()
+
+        // This forces the user to log in, so that they can't use the app logged out.
+        UserLoginService.login(this)
+    }
+
+    // Support back button in action bar
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
