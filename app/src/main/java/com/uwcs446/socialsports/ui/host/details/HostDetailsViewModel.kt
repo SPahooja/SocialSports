@@ -2,9 +2,6 @@ package com.uwcs446.socialsports.ui.host.details
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.location.HostLocation
-import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
@@ -23,12 +20,10 @@ class HostDetailsViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
     private val state: SavedStateHandle
 ) : ViewModel() {
-
     // To edit an existing match, pass matchId to HostDetailsFragment as arguments and
     // use SavedStateHandle to handle fragment arguments to fill the form with existing match info
-    private val selectedHostLocation = state.get<HostLocation>("hostLocation")
-    private val editMatchId =
-        state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
+    private val selectedHostLocation = state.get<String>("hostLocation")
+    private val editMatchId = state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
 
     // mock match data
     private var editMatch = editMatchId?.let {
@@ -41,7 +36,7 @@ class HostDetailsViewModel @Inject constructor(
             time = LocalTime.now(),
             duration = Duration.parse("PT8H"),
             host = User("testUser"),
-            location = Location(LatLng(0.0, 0.0)),
+            location = "",
             teamOne = listOf(User("1")),
             teamTwo = listOf(User("2")),
             // TODO: location
@@ -49,8 +44,9 @@ class HostDetailsViewModel @Inject constructor(
     }
 
     // Initialize with existing match info if applicable
-    var locationTitle = selectedHostLocation?.title ?: ""
-    var locationAddress = selectedHostLocation?.address ?: ""
+//    var locationTitle = selectedHostLocation?.title ?: ""
+//    var locationAddress = selectedHostLocation?.address ?: ""
+    var placeId = selectedHostLocation
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.sport ?: ""
     var matchDate = editMatch?.date?.toString() ?: ""

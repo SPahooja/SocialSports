@@ -6,47 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.host.location.HostLocationFragment">
 
-    <SearchView
-        android:id="@+id/host_search_choose_a_location"
+    <fragment android:id="@+id/host_search_choose_a_location"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:queryHint="@string/host_hint_choose_a_location"
-        android:iconifiedByDefault="false"
+        android:layout_margin="10dp"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/host_text_location_search_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:textSize="20sp"
-        android:text="@string/host_location_search_result"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/host_search_choose_a_location" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/host_location_search_result"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:scrollbars="vertical"
-        android:nestedScrollingEnabled="false"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/host_text_location_search_result"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="3"
-        tools:listitem="@layout/location_item" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/host_text_location_suggestions"
@@ -59,7 +27,7 @@
         android:text="@string/host_location_suggestions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/host_location_search_result" />
+        app:layout_constraintTop_toBottomOf="@id/host_search_choose_a_location" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/host_location_suggestions"

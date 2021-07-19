@@ -12,10 +12,15 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import com.google.android.gms.common.api.ApiException
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostEditDetailsBinding
 import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.domain.match.Sport
+import com.uwcs446.socialsports.services.LocationService
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -23,6 +28,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HostDetailsFragment : Fragment() {
@@ -30,6 +36,9 @@ class HostDetailsFragment : Fragment() {
     private val hostDetailsViewModel: HostDetailsViewModel by viewModels()
     private var _binding: FragmentHostEditDetailsBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var locationService: LocationService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,8 +63,22 @@ class HostDetailsFragment : Fragment() {
         val hostGameButton: Button = binding.hostButtonHost
 
         // Location and match details of saved context
-        locationTitleTextView.text = hostDetailsViewModel.locationTitle
-        locationAddressTextView.text = hostDetailsViewModel.locationAddress
+        val placeId = hostDetailsViewModel.placeId
+        val placesClient = locationService.getPlacesClient()
+        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS)
+        val request = FetchPlaceRequest.newInstance(placeId!!, placeFields)
+        placesClient.fetchPlace(request)
+            .addOnSuccessListener { response: FetchPlaceResponse ->
+                val place = response.place
+                locationTitleTextView.text = place.name ?: ""
+                locationAddressTextView.text = place.address ?: ""
+            }.addOnFailureListener { exception: Exception ->
+                if (exception is ApiException) {
+                    val statusCode = exception.statusCode
+                    // TODO: Handle error
+                }
+            }
+
         titleTextView.setText(hostDetailsViewModel.matchTitle)
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         dateTextView.setText(hostDetailsViewModel.matchDate)

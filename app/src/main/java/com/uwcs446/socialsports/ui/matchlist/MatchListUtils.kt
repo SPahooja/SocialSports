@@ -1,7 +1,5 @@
 package com.uwcs446.socialsports.ui.matchlist
 
-import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.User
@@ -22,7 +20,7 @@ class MatchListUtils {
                 time = LocalTime.parse("12:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
+                location = "",
                 teamOne = listOf(User("1")),
                 teamTwo = listOf(User("1"))
             ),
@@ -35,7 +33,7 @@ class MatchListUtils {
                 time = LocalTime.parse("10:00:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
+                location = "",
                 teamOne = listOf(User("1"), User("1")),
                 teamTwo = listOf(User("1"))
             ),
@@ -48,7 +46,7 @@ class MatchListUtils {
                 time = LocalTime.parse("18:00:00"),
                 duration = Duration.parse("PT1H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
+                location = "",
                 teamOne = listOf(User("1"), User("1")),
                 teamTwo = listOf(User("1"), User("1"))
             ),
@@ -63,7 +61,7 @@ class MatchListUtils {
                 host = User("1"),
                 teamOne = listOf(User("1"), User("1")),
                 teamTwo = listOf(User("1"), User("1"), User("1")),
-                location = Location(LatLng(0.0, 0.0)),
+                location = "",
             ),
             Match(
                 id = "5",
@@ -74,7 +72,7 @@ class MatchListUtils {
                 time = LocalTime.parse("15:00:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
+                location = "",
                 teamOne = listOf(User("1"), User("1")),
                 teamTwo = listOf(User("1"), User("1"), User("1"))
             )

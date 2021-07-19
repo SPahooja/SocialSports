@@ -3,7 +3,6 @@ package com.uwcs446.socialsports.ui.host.location
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,10 +30,10 @@ class LocationListAdapter() :
         init {
             itemView.setOnClickListener { v: View ->
                 val locationItem = getItem(adapterPosition)
-                val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(
-                    locationItem
-                )
-                Navigation.findNavController(v).navigate(action)
+//                val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(
+//                    locationItem
+//                )
+//                Navigation.findNavController(v).navigate(action)
             }
         }
 
