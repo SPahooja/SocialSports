@@ -12,8 +12,6 @@
         android:id="@+id/host_search_choose_a_location_cardView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:clickable="true"
-        android:focusable="true"
         android:layout_margin="16dp"
         android:foreground="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,5 +1,7 @@
 package com.uwcs446.socialsports.services.match
 
+import com.google.android.gms.maps.model.LatLng
+import com.uwcs446.socialsports.domain.match.HostLocation
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.services.user.UserEntity
@@ -20,7 +22,7 @@ fun Match.toEntity() =
         description = description,
         host = host.toEntity(),
         time = time.atDate(date).toString(),
-        location = location,
+        location = LocationEntity(placeId = location.placeId, lat = location.latLng.latitude, lng = location.latLng.longitude),
         duration = duration.toMinutes(),
         teamOne = teamOne.map { it.id },
         teamTwo = teamTwo.map { it.id }
@@ -41,7 +43,13 @@ fun MatchEntity.toDomain(users: List<User>) =
         time = LocalTime.from(LocalDateTime.parse(time)),
         duration = Duration.ofMinutes(duration),
         host = host.toDomain(),
-        location = location,
+        location = HostLocation(
+            location.placeId,
+            LatLng(
+                location.lat,
+                location.lng
+            )
+        ),
         teamOne = users.filter { teamOne.contains(it.id) },
         teamTwo = users.filter { teamTwo.contains(it.id) }
     )

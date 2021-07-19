@@ -63,7 +63,7 @@ class HostDetailsFragment : Fragment() {
         val hostGameButton: Button = binding.hostButtonHost
 
         // Location and match details of saved context
-        val placeId = hostDetailsViewModel.placeId
+        val placeId = hostDetailsViewModel.locationId
         val placesClient = locationService.getPlacesClient()
         val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS)
         val request = FetchPlaceRequest.newInstance(placeId!!, placeFields)

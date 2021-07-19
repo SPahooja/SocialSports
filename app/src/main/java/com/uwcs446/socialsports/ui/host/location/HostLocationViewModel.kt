@@ -2,7 +2,8 @@ package com.uwcs446.socialsports.ui.host.location
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.uwcs446.socialsports.domain.location.HostLocation
+import com.google.android.gms.maps.model.LatLng
+import com.uwcs446.socialsports.domain.match.HostLocation
 import com.uwcs446.socialsports.domain.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,9 +15,9 @@ class HostLocationViewModel @Inject constructor(
     private val _locationSuggestions = MutableLiveData<List<HostLocation>>().apply {
         // TODO[BACKEND]: get location suggestions for current user
         value = listOf(
-            HostLocation("High Park", "1873 Bloor St W, Toronto, ON, M6R 2Z3", "3.6 km"),
-            HostLocation("High Park", "1873 Bloor St W, Toronto, ON, M6R 2Z3", "3.6 km"),
-            HostLocation("Trinity Bellwoods Park", "790 Queen St W, Toronto, ON, M6J 1G3", "4.2 km")
+            HostLocation("High Park", LatLng(0.0, 0.0)),
+            HostLocation("Columbia Icefield", LatLng(0.0, 0.0)),
+            HostLocation("Trinity Bellwoods Park", LatLng(0.0, 0.0))
         )
     }
     var hostLocationSuggestions: MutableLiveData<List<HostLocation>> = _locationSuggestions
