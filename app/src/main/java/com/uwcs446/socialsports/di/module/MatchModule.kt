@@ -15,8 +15,11 @@ class MatchModule {
 
     @Provides
     @Singleton
-    fun matchRepository(@MatchesCollection collectionReference: CollectionReference): FirebaseMatchRepository =
-        FirebaseMatchRepository(collectionReference)
+    fun matchRepository(
+        @MatchesCollection matches: CollectionReference,
+        @UsersCollection users: CollectionReference,
+    ): FirebaseMatchRepository =
+        FirebaseMatchRepository(matches, users)
 
     @Provides
     @Singleton
