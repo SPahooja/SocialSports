@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentHomeBinding
@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModels()
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
@@ -29,20 +29,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
         // set up recycler view for match list
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
-        binding.layoutMatchList.recyclerviewMatch.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
-        // TODO: update observer which updates recyclerview when match data changes
-        val gameListRecyclerView: RecyclerView = binding.layoutMatchList.recyclerviewMatch
         // Observer which updates the recyclerview when match data changes
         homeViewModel.matches.observe(viewLifecycleOwner) { matchList ->
             recyclerViewData.clear()
@@ -58,7 +52,7 @@ class HomeFragment : Fragment() {
         )
 
         // Set up toggle button listeners
-        for (button in toggleButtons) {
+        toggleButtons.forEach { button ->
             // Ensure that exactly one toggle button is active at a time
             button.setOnClickListener {
                 for (toggleButton in toggleButtons) {
@@ -77,10 +71,10 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Initialize toggle buttons to view joined matches
+        // Default match filtering is to view joined matches
         binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches.isChecked = true
 
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {
