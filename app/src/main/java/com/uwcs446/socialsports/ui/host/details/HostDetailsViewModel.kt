@@ -37,13 +37,14 @@ class HostDetailsViewModel @Inject constructor(
             sport = Sport.SOCCER,
             title = "title_of_existing_match",
             description = "discription_of_existing_match",
+            location = Location(LatLng(0.0, 0.0)),
             date = LocalDate.now(),
             time = LocalTime.now(),
             duration = Duration.parse("PT8H"),
             host = User("testUser"),
-            location = Location(LatLng(0.0, 0.0)),
             teamOne = listOf("1"),
             teamTwo = listOf("2"),
+            blacklist = TODO,
             // TODO: location
         )
     }

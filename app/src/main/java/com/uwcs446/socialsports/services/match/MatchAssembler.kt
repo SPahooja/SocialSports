@@ -23,7 +23,8 @@ fun Match.toEntity() =
         location = LocationEntity(lat = location.latLng.latitude, lng = location.latLng.longitude),
         duration = duration.toMinutes(),
         teamOne = teamOne,
-        teamTwo = teamTwo
+        teamTwo = teamTwo,
+        blacklist = blacklist
     )
 
 fun Collection<MatchEntity>.toDomain(): List<Match> {
@@ -36,16 +37,17 @@ fun MatchEntity.toDomain() =
         sport = sport,
         title = title,
         description = description,
-        date = LocalDate.from(LocalDateTime.parse(time)),
-        time = LocalTime.from(LocalDateTime.parse(time)),
-        duration = Duration.ofMinutes(duration),
-        host = host.toDomain(),
         location = Location(
             LatLng(
                 location.lat,
                 location.lng
             )
         ),
+        date = LocalDate.from(LocalDateTime.parse(time)),
+        time = LocalTime.from(LocalDateTime.parse(time)),
+        duration = Duration.ofMinutes(duration),
+        host = host.toDomain(),
         teamOne = teamOne,
-        teamTwo = teamTwo
+        teamTwo = teamTwo,
+        blacklist = blacklist
     )

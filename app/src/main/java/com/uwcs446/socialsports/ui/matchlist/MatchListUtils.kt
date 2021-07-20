@@ -18,65 +18,70 @@ class MatchListUtils {
                 sport = Sport.SOCCER,
                 title = "Soccer for All!",
                 description = "Soccer for All",
+                location = Location(LatLng(0.0, 0.0)),
                 date = LocalDate.parse("2021-07-10"),
                 time = LocalTime.parse("12:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1"),
-                teamTwo = listOf("1")
+                teamTwo = listOf("1"),
+                blacklist = TODO
             ),
             Match(
                 id = "2",
                 sport = Sport.BASKETBALL,
                 title = "Pro Players Only",
                 description = "Pro Players Only",
+                location = Location(LatLng(0.0, 0.0)),
                 date = LocalDate.parse("2021-07-20"),
                 time = LocalTime.parse("10:00:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
-                teamTwo = listOf("1")
+                teamTwo = listOf("1"),
+                blacklist = TODO
             ),
             Match(
                 id = "3",
                 sport = Sport.SOCCER,
                 title = "Scarborough Soccer 6v6",
                 description = "Scarborough Soccer 6v6",
+                location = Location(LatLng(0.0, 0.0)),
                 date = LocalDate.parse("2021-07-17"),
                 time = LocalTime.parse("18:00:00"),
                 duration = Duration.parse("PT1H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
-                teamTwo = listOf("1", "1")
+                teamTwo = listOf("1", "1"),
+                blacklist = TODO
             ),
             Match(
                 id = "4",
                 sport = Sport.ULTIMATE,
                 title = "Ultimate Frisbee Pickup",
                 description = "Ultimate Frisbee Pickup",
+                location = Location(LatLng(0.0, 0.0)),
                 date = LocalDate.parse("2021-07-22"),
                 time = LocalTime.parse("15:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1"),
-                location = Location(LatLng(0.0, 0.0)),
+                blacklist = TODO,
             ),
             Match(
                 id = "5",
                 sport = Sport.SOCCER,
                 title = "UEFA Euro Cup Finals",
                 description = "Italy vs England",
+                location = Location(LatLng(0.0, 0.0)),
                 date = LocalDate.parse("2021-07-11"),
                 time = LocalTime.parse("15:00:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
-                teamTwo = listOf("1", "1", "1")
+                teamTwo = listOf("1", "1", "1"),
+                blacklist = TODO
             )
         )
 

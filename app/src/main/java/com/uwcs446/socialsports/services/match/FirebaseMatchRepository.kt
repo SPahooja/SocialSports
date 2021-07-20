@@ -7,6 +7,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath.of
 import com.uwcs446.socialsports.di.module.MatchesCollection
+import com.uwcs446.socialsports.domain.exceptions.UserBannedException
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
@@ -140,6 +141,42 @@ class FirebaseMatchRepository
         return null
     }
 
+    override suspend fun join(matchId: String, userId: String, team: Int) {
+        val match = matchById(matchId) ?: return
+        if (match.blacklist.contains(userId)) {
+            throw UserBannedException()
+        }
+        createOrSave(
+            addUserToTeam(match, userId, team)
+        )
+        //TODO add match to user
+    }
+
+    override suspend fun addTobBlacklist(matchId: String, userId: String) {
+        //TODO UI should only call if current user is host
+    }
+
+    override suspend fun removeFrombBlacklist(matchId: String, userId: String) {
+        //TODO UI should only call if current user is host
+    }
+
+    private suspend fun matchById(id: String): MatchEntity? =
+        matchesCollection
+            .whereEqualTo(MatchEntity::id.name, id)
+            .get()
+            .await()
+            .documents
+            .firstOrNull()?.toMatchEntity()
+
+
+    private fun addUserToTeam(match: MatchEntity, userId: String, team: Int): MatchEntity {
+        return if (team == 1) {
+            match.copy(teamOne = match.teamOne.plus(userId))
+        } else {
+            match.copy(teamTwo = match.teamTwo.plus(userId))
+        }
+    }
+
     override fun create(match: Match) = createOrSave(match.toEntity())
 
     override fun edit(match: Match) = createOrSave(match.toEntity())
@@ -164,6 +201,8 @@ class FirebaseMatchRepository
             }
     }
 }
+
+private fun DocumentSnapshot.toMatch() = this.toMatchEntity()?.toDomain()
 
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
 

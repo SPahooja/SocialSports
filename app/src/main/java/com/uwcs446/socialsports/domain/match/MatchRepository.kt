@@ -16,6 +16,11 @@ interface MatchRepository {
 
     suspend fun findPastWithUser(userId: String): List<Match>?
 
+    suspend fun join(matchId: String, userId: String, team: Int)
+
+    suspend fun addTobBlacklist(matchId: String, userId: String)
+    suspend fun removeFrombBlacklist(matchId: String, userId: String)
+
     fun create(match: Match)
 
     fun edit(match: Match)
