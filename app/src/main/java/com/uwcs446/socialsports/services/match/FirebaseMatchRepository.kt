@@ -5,23 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldPath.of
 import com.uwcs446.socialsports.di.module.MatchesCollection
-import com.uwcs446.socialsports.di.module.UsersCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.services.user.UserEntity
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 import javax.inject.Inject
 
 class FirebaseMatchRepository
 @Inject constructor(
     @MatchesCollection
-    private val matchesCollection: CollectionReference,
-    @UsersCollection
-    private val usersCollection: CollectionReference,
+    private val matchesCollection: CollectionReference
 ) : MatchRepository {
 
     private val TAG = this::class.simpleName
@@ -38,7 +34,10 @@ class FirebaseMatchRepository
     override suspend fun fetchExploreMatches(sport: Sport): List<Match>? {
         try {
             val matches = matchesCollection
-                .whereIn(Match::sport.name, if (sport == Sport.ANY) Sport.values().toList() else listOf(sport))
+                .whereIn(
+                    Match::sport.name,
+                    if (sport == Sport.ANY) Sport.values().toList() else listOf(sport)
+                )
                 .get()
                 .await()
                 .documents
@@ -46,13 +45,8 @@ class FirebaseMatchRepository
             if (matches.isEmpty()) {
                 return emptyList()
             }
-            val users = usersCollection
-                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
-                .get().await()
-                .documents
-                .mapNotNull { user -> user.toUserEntity() }
             Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain(users)
+            return matches.toDomain()
         } catch (e: Exception) {
             Log.e(TAG, "Something went wrong while fetching explore matches", e)
         }
@@ -64,7 +58,7 @@ class FirebaseMatchRepository
         try {
             val matches = matchesCollection
                 .whereEqualTo(
-                    FieldPath.of(
+                    of(
                         MatchEntity::host.name,
                         UserEntity::id.name
                     ),
@@ -77,13 +71,8 @@ class FirebaseMatchRepository
             if (matches.isEmpty()) {
                 return emptyList()
             }
-            val users = usersCollection
-                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
-                .get().await()
-                .documents
-                .mapNotNull { user -> user.toUserEntity() }
             Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain(users)
+            return matches.toDomain()
         } catch (e: Exception) {
             Log.e(TAG, "Something went wrong while fetching all matches by host $hostId", e)
         }
@@ -109,13 +98,8 @@ class FirebaseMatchRepository
             if (matches.isEmpty()) {
                 return emptyList()
             }
-            val users = usersCollection
-                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
-                .get().await()
-                .documents
-                .mapNotNull { user -> user.toUserEntity() }
             Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain(users)
+            return matches.toDomain()
         } catch (e: Exception) {
             Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
         }
@@ -126,7 +110,7 @@ class FirebaseMatchRepository
     override suspend fun findPastWithUser(userId: String): List<Match>? {
         try {
             val hostMatches = matchesCollection
-                .whereEqualTo(FieldPath.of(MatchEntity::host.name, UserEntity::id.name), userId)
+                .whereEqualTo(of(MatchEntity::host.name, UserEntity::id.name), userId)
                 .get()
                 .await()
                 .documents
@@ -143,17 +127,13 @@ class FirebaseMatchRepository
                 .await()
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
-            val matches = (hostMatches + teamOneMatches + teamTwoMatches).distinctBy { match -> match.id }
+            val matches =
+                (hostMatches + teamOneMatches + teamTwoMatches).distinctBy { match -> match.id }
             if (matches.isEmpty()) {
                 return emptyList()
             }
-            val users = usersCollection
-                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
-                .get().await()
-                .documents
-                .mapNotNull { user -> user.toUserEntity() }
             Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain(users)
+            return matches.toDomain()
         } catch (e: Exception) {
             Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
         }
@@ -185,14 +165,14 @@ class FirebaseMatchRepository
     }
 }
 
-private fun DocumentSnapshot.toUserEntity() = this.toObject(UserEntity::class.java)
 
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
 
-private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
-    return matches.map { allUsersFromMatch(it) }.flatten().distinct()
-}
-
-private fun allUsersFromMatch(match: MatchEntity): List<String> {
-    return match.teamOne.plus(match.teamTwo)
-}
+// TODO add this logic to fetch users from match (in match details view)
+//private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
+//    return matches.map { allUsersFromMatch(it) }.flatten().distinct()
+//}
+//
+//private fun allUsersFromMatch(match: MatchEntity): List<String> {
+//    return match.teamOne.plus(match.teamTwo)
+//}
