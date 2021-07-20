@@ -12,9 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import com.google.android.gms.common.api.ApiException
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostEditDetailsBinding
@@ -64,19 +61,14 @@ class HostDetailsFragment : Fragment() {
 
         // Location and match details of saved context
         val placeId = hostDetailsViewModel.locationId
-        val placesClient = locationService.getPlacesClient()
-        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS)
-        val request = FetchPlaceRequest.newInstance(placeId!!, placeFields)
-        placesClient.fetchPlace(request)
+        locationService
+            .getPlace(placeId)
             .addOnSuccessListener { response: FetchPlaceResponse ->
                 val place = response.place
                 locationTitleTextView.text = place.name ?: ""
                 locationAddressTextView.text = place.address ?: ""
-            }.addOnFailureListener { exception: Exception ->
-                if (exception is ApiException) {
-                    val statusCode = exception.statusCode
-                    // TODO: Handle error
-                }
+            }.addOnFailureListener {
+                // TODO: handle failure
             }
 
         titleTextView.setText(hostDetailsViewModel.matchTitle)
