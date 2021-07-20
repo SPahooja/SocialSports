@@ -165,14 +165,13 @@ class FirebaseMatchRepository
     }
 }
 
-
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
 
 // TODO add this logic to fetch users from match (in match details view)
-//private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
+// private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
 //    return matches.map { allUsersFromMatch(it) }.flatten().distinct()
-//}
+// }
 //
-//private fun allUsersFromMatch(match: MatchEntity): List<String> {
+// private fun allUsersFromMatch(match: MatchEntity): List<String> {
 //    return match.teamOne.plus(match.teamTwo)
-//}
+// }
