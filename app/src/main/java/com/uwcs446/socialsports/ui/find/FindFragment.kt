@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
@@ -18,11 +19,14 @@ import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+@AndroidEntryPoint
 class FindFragment : Fragment() {
 
     private val findViewModel: FindViewModel by viewModels()
@@ -37,7 +41,7 @@ class FindFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFindBinding.inflate(inflater, container, false)
 
@@ -63,28 +67,30 @@ class FindFragment : Fragment() {
         (autoCompleteTextView as? AutoCompleteTextView)?.setAdapter(typeListAdapter)
 
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> findViewModel.filterMatchBySport(null)
-                1 -> findViewModel.filterMatchBySport(Sport.SOCCER)
-                2 -> findViewModel.filterMatchBySport(Sport.BASKETBALL)
-                else -> findViewModel.filterMatchBySport(Sport.ULTIMATE)
+            lifecycleScope.launch {
+                when (position) {
+                    0 -> findViewModel.filterMatchBySport(Sport.ANY)
+                    1 -> findViewModel.filterMatchBySport(Sport.SOCCER)
+                    2 -> findViewModel.filterMatchBySport(Sport.BASKETBALL)
+                    else -> findViewModel.filterMatchBySport(Sport.ULTIMATE)
+                }
             }
         }
 
         // Default sport is "All"
         autoCompleteTextView.setText(getString(R.string.type_all), false)
 
-        // Observer which updates the recyclerview when match data changes
-        findViewModel.matchList.observe(
-            viewLifecycleOwner,
-            {
-                recyclerViewData.clear()
-                recyclerViewData.addAll(it)
-                recyclerViewAdapter.notifyDataSetChanged()
-            }
-        )
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Observer which updates the recyclerview when match data changes
+        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
+            recyclerViewData.clear()
+            recyclerViewData.addAll(matchList)
+            recyclerViewAdapter.notifyDataSetChanged()
+        }
     }
 
     /*

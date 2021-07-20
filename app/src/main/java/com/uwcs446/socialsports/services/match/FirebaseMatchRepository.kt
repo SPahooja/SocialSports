@@ -10,7 +10,10 @@ import com.uwcs446.socialsports.di.module.MatchesCollection
 import com.uwcs446.socialsports.di.module.UsersCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
+import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.services.user.UserEntity
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import javax.inject.Inject
 
 class FirebaseMatchRepository
@@ -31,40 +34,28 @@ class FirebaseMatchRepository
 
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
-    override fun fetchExploreMatches() {
-        matchesCollection
-            .get()
-            .addOnSuccessListener { matchResult ->
-                val matches = matchResult
-                    .documents
-                    .mapNotNull {
-                        it.toMatchEntity()
-                    }
-                usersCollection
-                    .whereIn(
-                        UserEntity::id.name,
-                        allUsersFromMatches(matches)
-                    )
-                    .get()
-                    .addOnSuccessListener { usersResult ->
-                        val users = usersResult
-                            .documents
-                            .mapNotNull {
-                                it.toUserEntity()
-                            }
-
-                        _exploreMatches.postValue(
-                            matches.toDomain(users)
-                        )
-                            .also { Log.d(TAG, "Retrieved ${matches.size} explore matches") }
-                    }
-                    .addOnFailureListener {
-                        Log.d(TAG, "Something went wrong fetching users $it")
-                    }
+    override suspend fun fetchExploreMatches(sport: Sport): List<Match>? {
+        try {
+            val matches = matchesCollection
+                .whereIn(Match::sport.name, if (sport == Sport.ANY) Sport.values().toList() else listOf(sport))
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toMatchEntity() }
+            if (matches.isEmpty()) {
+                return emptyList()
             }
-            .addOnFailureListener {
-                Log.d(TAG, "Something went wrong fetching explore matches $it")
-            }
+            val users = usersCollection
+                .whereIn(UserEntity::id.name, allUsersFromMatches(matches))
+                .get().await()
+                .documents
+                .mapNotNull { user -> user.toUserEntity() }
+            Log.d(TAG, "Found ${matches.size} matches")
+            return matches.toDomain(users)
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching explore matches", e)
+        }
+        return null
     }
 
     override fun findAllByHost(hostId: String) {
