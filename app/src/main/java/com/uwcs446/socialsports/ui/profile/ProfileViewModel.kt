@@ -37,12 +37,6 @@ class ProfileViewModel
         super.onCleared()
     }
 
-    fun test() {
-        matchRepo.findAllByHost("user2")
-//        matchRepo.fetchExploreMatches()
-//        matchRepo.create(Match(UUID.randomUUID().toString(), Sport.BASKETBALL, "eajbhb", "description lalal allalal", LocalDate.now(), LocalTime.now(), Duration.ofMinutes(60), User("user1"), emptyList(), listOf(User("user1"), User("user2"))))
-    }
-
     private fun computeLabel() =
         """
             |This is profile Fragment with user: [${currentUserRepository.getUser()?.id ?: "NO_USER"}] 

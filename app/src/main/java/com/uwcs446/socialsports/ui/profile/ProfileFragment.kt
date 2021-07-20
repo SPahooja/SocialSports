@@ -42,7 +42,6 @@ class ProfileFragment : Fragment() {
                 textView.text = it
             }
         )
-        viewModel.test()
 
         println(
             location.getAddress(
