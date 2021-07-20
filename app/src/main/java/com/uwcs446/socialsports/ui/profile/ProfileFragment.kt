@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.databinding.FragmentProfileBinding
 import com.uwcs446.socialsports.services.LocationService
-import com.uwcs446.socialsports.services.user.UserLoginService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,7 +34,6 @@ class ProfileFragment : Fragment() {
         val root: View = binding.root
 
         binding.logoutButton.setOnClickListener { viewModel.handleLogout() }
-        binding.loginButton.setOnClickListener { UserLoginService.login(requireActivity()) }
 
         val textView: TextView = binding.textProfile
         viewModel.text.observe(
