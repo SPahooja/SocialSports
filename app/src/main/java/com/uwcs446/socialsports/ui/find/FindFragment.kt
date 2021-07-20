@@ -50,6 +50,13 @@ class FindFragment : Fragment() {
         binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
+        // Observer which updates the recyclerview when match data changes
+        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
+            recyclerViewData.clear()
+            recyclerViewData.addAll(matchList)
+            recyclerViewAdapter.notifyDataSetChanged()
+        }
+
         // set up date and time pickers for filter toolbar
         datepickerSetup(binding.layoutListFilterToolbar.edittextFilterDate, parentFragmentManager)
         timepickerSetup(binding.layoutListFilterToolbar.edittextFilterTime, parentFragmentManager)
@@ -81,16 +88,6 @@ class FindFragment : Fragment() {
         autoCompleteTextView.setText(getString(R.string.type_all), false)
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Observer which updates the recyclerview when match data changes
-        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
-            recyclerViewData.clear()
-            recyclerViewData.addAll(matchList)
-            recyclerViewAdapter.notifyDataSetChanged()
-        }
     }
 
     /*
