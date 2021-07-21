@@ -42,4 +42,8 @@
     <string name="date_filter_hint">Date</string>
     <string name="time_filter_hint">Time</string>
 
+    <!-- game details view -->
+    <string name="team_one">Team 1</string>
+    <string name="team_two">Team 2</string>
+
 </resources>
