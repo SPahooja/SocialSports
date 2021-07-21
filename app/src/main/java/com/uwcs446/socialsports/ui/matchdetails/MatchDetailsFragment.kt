@@ -68,7 +68,6 @@ class MatchDetailsFragment : Fragment() {
         val teamOne = listOf("John Smith", "John Smith", "John Smith")
         val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
 
-
         val teamOneViewAdapter = TeamListAdapter(teamOne, teamSize)
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
