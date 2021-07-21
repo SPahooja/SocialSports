@@ -16,8 +16,8 @@ data class Match(
     val time: LocalTime,
     val duration: Duration,
     val host: User,
-    val teamOne: List<User>,
-    val teamTwo: List<User>
+    val teamOne: List<String>,
+    val teamTwo: List<String>
 ) {
     fun teamSize() = this.sport.teamSize
 
