@@ -71,7 +71,6 @@ class MatchDetailsFragment : Fragment() {
         val teamOneViewAdapter = TeamListAdapter(teamOne, teamSize)
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
-        binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
