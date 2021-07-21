@@ -3,15 +3,39 @@ package com.uwcs446.socialsports.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.uwcs446.socialsports.domain.match.Match
-import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
+import com.uwcs446.socialsports.domain.match.MatchRepository
+import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val currentUserRepository: CurrentUserRepository,
+    private val matchRepository: MatchRepository,
+) : ViewModel() {
 
-    // TODO: update matchList to hold the current user's matches
-    private val _userMatchList = MutableLiveData<List<Match>>().apply {
-        this.value = MatchListUtils.genFakeMatchData(2)
+    private val currentUser = currentUserRepository.getUser()!!
+
+    private val _matches = MutableLiveData<List<Match>>(emptyList())
+
+    val matches: LiveData<List<Match>> = _matches
+
+    init {
+        viewModelScope.launch {
+            _matches.value = matchRepository.findJoinedByUser(currentUser.id)
+        }
     }
 
-    val userMatchList: LiveData<List<Match>> = _userMatchList
+    fun filterMatches(filter: MatchFilter) {
+        viewModelScope.launch {
+            _matches.value = when (filter) {
+                MatchFilter.JOINED -> matchRepository.findJoinedByUser(currentUser.id)
+                MatchFilter.HOSTING -> matchRepository.findAllByHost(currentUser.id)
+                MatchFilter.PAST -> matchRepository.findPastWithUser(currentUser.id)
+            }
+        }
+    }
 }

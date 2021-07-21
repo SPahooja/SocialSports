@@ -39,8 +39,8 @@ class HostDetailsViewModel @Inject constructor(
             duration = Duration.parse("PT8H"),
             host = User("testUser"),
             location = HostLocation("", LatLng(0.0, 0.0)),
-            teamOne = listOf(User("1")),
-            teamTwo = listOf(User("2")),
+            teamOne = listOf("1"),
+            teamTwo = listOf("1")
         )
     }
 

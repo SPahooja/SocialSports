@@ -12,7 +12,7 @@ import kotlin.math.min
 
 class MatchListUtils {
     companion object {
-        val mockEntries = listOf(
+        private val mockEntries = listOf(
             Match(
                 id = "1",
                 sport = Sport.SOCCER,
@@ -23,8 +23,8 @@ class MatchListUtils {
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 location = HostLocation("", LatLng(0.0, 0.0)),
-                teamOne = listOf(User("1")),
-                teamTwo = listOf(User("1"))
+                teamOne = listOf("1"),
+                teamTwo = listOf("1")
             ),
             Match(
                 id = "2",
@@ -36,8 +36,8 @@ class MatchListUtils {
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 location = HostLocation("", LatLng(0.0, 0.0)),
-                teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"))
+                teamOne = listOf("1", "1"),
+                teamTwo = listOf("1")
             ),
             Match(
                 id = "3",
@@ -49,8 +49,8 @@ class MatchListUtils {
                 duration = Duration.parse("PT1H"),
                 host = User("1"),
                 location = HostLocation("", LatLng(0.0, 0.0)),
-                teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"), User("1"))
+                teamOne = listOf("1", "1"),
+                teamTwo = listOf("1", "1")
             ),
             Match(
                 id = "4",
@@ -61,9 +61,9 @@ class MatchListUtils {
                 time = LocalTime.parse("15:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"), User("1"), User("1")),
                 location = HostLocation("", LatLng(0.0, 0.0)),
+                teamOne = listOf("1", "1"),
+                teamTwo = listOf("1", "1", "1"),
             ),
             Match(
                 id = "5",
@@ -75,8 +75,8 @@ class MatchListUtils {
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 location = HostLocation("", LatLng(0.0, 0.0)),
-                teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"), User("1"), User("1"))
+                teamOne = listOf("1", "1"),
+                teamTwo = listOf("1", "1", "1")
             )
         )
 

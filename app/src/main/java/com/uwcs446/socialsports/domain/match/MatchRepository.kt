@@ -8,9 +8,13 @@ interface MatchRepository {
 
     val matchesByHost: LiveData<Pair<String, List<Match>>>
 
-    fun fetchExploreMatches()
+    suspend fun fetchExploreMatches(sport: Sport): List<Match>?
 
-    fun findAllByHost(hostId: String)
+    suspend fun findAllByHost(hostId: String): List<Match>?
+
+    suspend fun findJoinedByUser(userId: String): List<Match>?
+
+    suspend fun findPastWithUser(userId: String): List<Match>?
 
     fun create(match: Match)
 

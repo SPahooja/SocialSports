@@ -3,19 +3,29 @@ package com.uwcs446.socialsports.ui.find
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class FindViewModel : ViewModel() {
+@HiltViewModel
+class FindViewModel @Inject constructor(
+    private val matchRepository: MatchRepository,
+) : ViewModel() {
 
-    // TODO: update matchList to hold data for all matches
-    private val _matchList = MutableLiveData<List<Match>>().apply {
-        this.value = MatchListUtils.genFakeMatchData(5)
+    val _matches = MutableLiveData<List<Match>>(emptyList())
+
+    val matches: LiveData<List<Match>> = _matches
+
+    init {
+        viewModelScope.launch {
+            _matches.value = matchRepository.fetchExploreMatches(Sport.ANY)
+        }
     }
-
-    val matchList: LiveData<List<Match>> = _matchList
 
     // TODO: filter match by date, remove filtering if time is null
     fun filterMatchByDate(time: LocalDate?) {}
@@ -24,11 +34,9 @@ class FindViewModel : ViewModel() {
     fun filterMatchByTime(hour: Int, minute: Int) {}
 
     /**
-     * Filters matches by sport. Shows all matches if sport is `null`.
+     * Filters matches by sport.
      */
-    fun filterMatchBySport(sport: Sport?) {
-        _matchList.value = MatchListUtils.genFakeMatchData(5).filter {
-            if (it.sport == null) true else it.sport == sport
-        }
+    suspend fun filterMatchBySport(sport: Sport) {
+        _matches.value = matchRepository.fetchExploreMatches(sport)
     }
 }
