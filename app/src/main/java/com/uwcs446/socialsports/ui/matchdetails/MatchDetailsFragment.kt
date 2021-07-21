@@ -63,10 +63,11 @@ class MatchDetailsFragment : Fragment() {
         }
 
         // set up recycler view for two teams
-        // TODO: replace mock
+        val teamSize = match.sport.teamSize
+        // TODO: replace mocks - get player name or some other identifier from match.teamOne and match.teamTwo
         val teamOne = listOf("John Smith", "John Smith", "John Smith")
         val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
-        val teamSize = 10
+
 
         val teamOneViewAdapter = TeamListAdapter(teamOne, teamSize)
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
