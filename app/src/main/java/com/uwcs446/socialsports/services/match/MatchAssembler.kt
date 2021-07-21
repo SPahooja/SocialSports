@@ -3,8 +3,6 @@ package com.uwcs446.socialsports.services.match
 import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
-import com.uwcs446.socialsports.domain.user.User
-import com.uwcs446.socialsports.services.user.UserEntity
 import com.uwcs446.socialsports.services.user.toDomain
 import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
@@ -24,16 +22,15 @@ fun Match.toEntity() =
         time = time.atDate(date).toString(),
         location = LocationEntity(lat = location.latLng.latitude, lng = location.latLng.longitude),
         duration = duration.toMinutes(),
-        teamOne = teamOne.map { it.id },
-        teamTwo = teamTwo.map { it.id }
+        teamOne = teamOne,
+        teamTwo = teamTwo
     )
 
-fun Collection<MatchEntity>.toDomain(users: List<UserEntity>): List<Match> {
-    val domainUsers = users.toDomain()
-    return this.map { it.toDomain(domainUsers) }
+fun Collection<MatchEntity>.toDomain(): List<Match> {
+    return this.map { it.toDomain() }
 }
 
-fun MatchEntity.toDomain(users: List<User>) =
+fun MatchEntity.toDomain() =
     Match(
         id = id,
         sport = sport,
@@ -49,6 +46,6 @@ fun MatchEntity.toDomain(users: List<User>) =
                 location.lng
             )
         ),
-        teamOne = users.filter { teamOne.contains(it.id) },
-        teamTwo = users.filter { teamTwo.contains(it.id) }
+        teamOne = teamOne,
+        teamTwo = teamTwo
     )

@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports.domain.user
 
 interface UserRepository {
-    fun findAll(): List<User>
+
+    suspend fun findById(ids: List<String>): List<User>
 }
