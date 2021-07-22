@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports.ui.find
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.Filter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -69,8 +71,9 @@ class FindFragment : Fragment() {
             getString(R.string.type_ultimate_frisbee)
         )
 
-        val typeListAdapter = ArrayAdapter(requireContext(), R.layout.type_filter_list_item, items)
+        val typeListAdapter = NoFilterAdapter(requireContext(), R.layout.type_filter_list_item, items)
         val autoCompleteTextView = binding.layoutListFilterToolbar.matchTypeDropdown
+        autoCompleteTextView.freezesText = true
         (autoCompleteTextView as? AutoCompleteTextView)?.setAdapter(typeListAdapter)
 
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
@@ -161,5 +164,18 @@ class FindFragment : Fragment() {
             }
             timePicker.show(fragmentManager, "timePicker")
         }
+    }
+
+    // override ArrayAdapter filter to avoid spinner options disappearing when navigating back from details page
+    class NoFilterAdapter(context: Context, layout: Int, val items: List<String>) :
+        ArrayAdapter<String>(context, layout, items) {
+
+        private val noOpFilter = object : Filter() {
+            private val noOpResult = FilterResults()
+            override fun performFiltering(constraint: CharSequence?) = noOpResult
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {}
+        }
+
+        override fun getFilter() = noOpFilter
     }
 }
