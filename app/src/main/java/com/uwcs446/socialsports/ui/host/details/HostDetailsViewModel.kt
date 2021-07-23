@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports.ui.host.details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -29,9 +30,10 @@ class HostDetailsViewModel @Inject constructor(
     private val state: SavedStateHandle,
     private val locationService: LocationService
 ) : ViewModel() {
+    private val TAG = this::class.simpleName
     // To edit an existing match, pass matchId to HostDetailsFragment as arguments and
     // use SavedStateHandle to handle fragment arguments to fill the form with existing match info
-    private val selectedHostLocation = state.get<MatchLocation>("hostLocation")
+    private val selectedMatchLocation = state.get<MatchLocation>("matchLocation")
     private val editMatchId = state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
 
     // Mock match data
@@ -56,12 +58,16 @@ class HostDetailsViewModel @Inject constructor(
     val locationName: LiveData<String> = _locationName
     private val _locationAddress = MutableLiveData<String>().apply { value = "" }
     val locationAddress: LiveData<String> = _locationAddress
-    var locationId = selectedHostLocation?.placeId ?: ""
+    var locationId = selectedMatchLocation?.placeId ?: ""
     init {
         viewModelScope.launch {
-            val response = locationService.getPlace(locationId).await()
-            _locationName.value = response.place.name
-            _locationAddress.value = response.place.address
+            try {
+                val response = locationService.getPlace(locationId).await()
+                _locationName.value = response.place.name
+                _locationAddress.value = response.place.address
+            } catch (e: Exception) {
+                Log.e(TAG, "Something went wrong while fetching place response", e)
+            }
         }
     }
 
@@ -88,7 +94,7 @@ class HostDetailsViewModel @Inject constructor(
                 sport = Sport.valueOf(sportType.toString()),
                 date = LocalDate.parse(matchDate),
                 time = LocalTime.parse(matchTime),
-                location = selectedHostLocation!!,
+                location = selectedMatchLocation!!,
                 duration = durationHour + durationMin,
                 description = matchDescription
             )

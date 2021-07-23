@@ -60,8 +60,8 @@ class HostLocationFragment : Fragment() {
         locationSearchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
                 // println("Place: ${place.name}, ${place.address}, ${place.latLng}, ${place.id}")
-                val hostLocation = MatchLocation(place.id!!, place.latLng!!)
-                val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(hostLocation)
+                val matchLocation = MatchLocation(place.id!!, place.latLng!!)
+                val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(matchLocation)
                 Navigation.findNavController(requireView()).navigate(action)
             }
             override fun onError(status: Status) {

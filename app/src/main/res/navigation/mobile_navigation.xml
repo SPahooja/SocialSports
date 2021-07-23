@@ -48,7 +48,7 @@
         android:label="@string/title_host"
         tools:layout="@layout/fragment_host_edit_details" >
         <argument
-            android:name="hostLocation"
+            android:name="matchLocation"
             app:argType="com.uwcs446.socialsports.domain.match.MatchLocation"
             app:nullable="true" />
         <argument
