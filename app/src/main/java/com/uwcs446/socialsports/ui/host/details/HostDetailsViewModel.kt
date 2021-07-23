@@ -21,6 +21,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,7 +80,7 @@ class HostDetailsViewModel @Inject constructor(
     var matchDurationHour = editMatch?.duration?.toHours() ?: ""
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
     var matchDescription = editMatch?.description ?: ""
-    var user = "NO-USER" // TODO: Fetch from user service
+    var user = currentUserRepository.getUser()
 
     fun onSaveClick() {
         val durationHour = Duration.ofHours(
@@ -98,10 +99,22 @@ class HostDetailsViewModel @Inject constructor(
                 duration = durationHour + durationMin,
                 description = matchDescription
             )
-            // TODO[BACKEND]: Update match information
+            matchRepository.create(updatedMatch!!)
         } else {
-            // val newMatch = Match()
-            // TODO[BACKEND]: Save new match information
+            val newMatch = Match(
+                id = UUID.randomUUID().toString(),
+                title = matchTitle,
+                sport = Sport.valueOf(sportType.toString()),
+                date = LocalDate.parse(matchDate),
+                time = LocalTime.parse(matchTime),
+                location = selectedMatchLocation!!,
+                duration = durationHour + durationMin,
+                description = matchDescription,
+                host = user!!,
+                teamOne = emptyList(),
+                teamTwo = emptyList()
+            )
+            matchRepository.create(newMatch)
         }
     }
 }
