@@ -12,12 +12,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostEditDetailsBinding
 import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.services.LocationService
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -25,7 +23,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Calendar
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HostDetailsFragment : Fragment() {
@@ -33,9 +30,6 @@ class HostDetailsFragment : Fragment() {
     private val hostDetailsViewModel: HostDetailsViewModel by viewModels()
     private var _binding: FragmentHostEditDetailsBinding? = null
     private val binding get() = _binding!!
-
-    @Inject
-    lateinit var locationService: LocationService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,17 +54,12 @@ class HostDetailsFragment : Fragment() {
         val hostGameButton: Button = binding.hostButtonHost
 
         // Location and match details of saved context
-        val placeId = hostDetailsViewModel.locationId
-        locationService
-            .getPlace(placeId)
-            .addOnSuccessListener { response: FetchPlaceResponse ->
-                val place = response.place
-                locationTitleTextView.text = place.name ?: ""
-                locationAddressTextView.text = place.address ?: ""
-            }.addOnFailureListener {
-                // TODO: handle failure
-            }
-
+        hostDetailsViewModel.locationName.observe(viewLifecycleOwner) {
+            locationTitleTextView.text = it
+        }
+        hostDetailsViewModel.locationAddress.observe(viewLifecycleOwner) {
+            locationAddressTextView.text = it
+        }
         titleTextView.setText(hostDetailsViewModel.matchTitle)
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         dateTextView.setText(hostDetailsViewModel.matchDate)
@@ -110,7 +99,7 @@ class HostDetailsFragment : Fragment() {
             timePicker.show(parentFragmentManager, "timePicker")
         }
 
-        // Click HostLocation card on host details fragment to edit selected location
+        // Click MatchLocation card on host details fragment to edit selected location
         locationCard.setOnClickListener {
             val action = HostDetailsFragmentDirections.actionHostEditDetailsToNavigationHost()
             Navigation.findNavController(requireView()).navigate(action)

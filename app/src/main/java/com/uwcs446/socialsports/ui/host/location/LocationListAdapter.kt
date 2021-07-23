@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.LocationItemBinding
-import com.uwcs446.socialsports.domain.match.HostLocation
+import com.uwcs446.socialsports.domain.match.MatchLocation
 
 class LocationListAdapter() :
-    ListAdapter<HostLocation, LocationListAdapter.LocationItemViewHolder>(DiffCallback()) {
+    ListAdapter<MatchLocation, LocationListAdapter.LocationItemViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationItemViewHolder {
         val binding =
@@ -38,7 +38,7 @@ class LocationListAdapter() :
             }
         }
 
-        fun bind(location: HostLocation) {
+        fun bind(location: MatchLocation) {
 
             binding.apply {
                 // TODO: fetch place name and address through placeId
@@ -49,11 +49,11 @@ class LocationListAdapter() :
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<HostLocation>() {
-        override fun areItemsTheSame(oldItem: HostLocation, newItem: HostLocation) =
+    class DiffCallback : DiffUtil.ItemCallback<MatchLocation>() {
+        override fun areItemsTheSame(oldItem: MatchLocation, newItem: MatchLocation) =
             oldItem.placeId == newItem.placeId // TODO: maybe add a primary key id?
 
-        override fun areContentsTheSame(oldItem: HostLocation, newItem: HostLocation) =
+        override fun areContentsTheSame(oldItem: MatchLocation, newItem: MatchLocation) =
             oldItem == newItem
     }
 }

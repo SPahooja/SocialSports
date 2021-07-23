@@ -1,15 +1,21 @@
 package com.uwcs446.socialsports.ui.host.details
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.match.HostLocation
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.CurrentUserRepository
 import com.uwcs446.socialsports.domain.user.User
+import com.uwcs446.socialsports.services.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
@@ -20,14 +26,15 @@ import javax.inject.Inject
 class HostDetailsViewModel @Inject constructor(
     private val currentUserRepository: CurrentUserRepository,
     private val matchRepository: MatchRepository,
-    private val state: SavedStateHandle
+    private val state: SavedStateHandle,
+    private val locationService: LocationService
 ) : ViewModel() {
     // To edit an existing match, pass matchId to HostDetailsFragment as arguments and
     // use SavedStateHandle to handle fragment arguments to fill the form with existing match info
-    private val selectedHostLocation = state.get<HostLocation>("hostLocation")
+    private val selectedHostLocation = state.get<MatchLocation>("hostLocation")
     private val editMatchId = state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
 
-    // mock match data
+    // Mock match data
     private var editMatch = editMatchId?.let {
         Match(
             id = "id_of_existing_match",
@@ -38,15 +45,27 @@ class HostDetailsViewModel @Inject constructor(
             time = LocalTime.now(),
             duration = Duration.parse("PT8H"),
             host = User("testUser"),
-            location = HostLocation("", LatLng(0.0, 0.0)),
+            location = MatchLocation("", LatLng(0.0, 0.0)),
             teamOne = listOf("1"),
             teamTwo = listOf("1")
         )
     }
 
-    // Initialize with existing match info if applicable
+    // Setup location card
+    private val _locationName = MutableLiveData<String>().apply { value = "" }
+    val locationName: LiveData<String> = _locationName
+    private val _locationAddress = MutableLiveData<String>().apply { value = "" }
+    val locationAddress: LiveData<String> = _locationAddress
     var locationId = selectedHostLocation?.placeId ?: ""
-    var locationLatLng = selectedHostLocation?.latLng ?: LatLng(0.0, 0.0)
+    init {
+        viewModelScope.launch {
+            val response = locationService.getPlace(locationId).await()
+            _locationName.value = response.place.name
+            _locationAddress.value = response.place.address
+        }
+    }
+
+    // Initialize with existing match info if applicable
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.sport ?: ""
     var matchDate = editMatch?.date?.toString() ?: ""
@@ -54,7 +73,6 @@ class HostDetailsViewModel @Inject constructor(
     var matchDurationHour = editMatch?.duration?.toHours() ?: ""
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
     var matchDescription = editMatch?.description ?: ""
-
     var user = "NO-USER" // TODO: Fetch from user service
 
     fun onSaveClick() {

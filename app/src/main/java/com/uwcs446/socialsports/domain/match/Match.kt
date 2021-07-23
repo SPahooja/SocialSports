@@ -13,7 +13,7 @@ data class Match(
     val sport: Sport,
     val title: String,
     val description: String,
-    val location: HostLocation,
+    val location: MatchLocation,
     val date: LocalDate,
     val time: LocalTime,
     val duration: Duration,
@@ -29,7 +29,7 @@ data class Match(
 }
 
 @Parcelize
-data class HostLocation(
+data class MatchLocation(
     val placeId: String,
     val latLng: LatLng
 ) : Parcelable

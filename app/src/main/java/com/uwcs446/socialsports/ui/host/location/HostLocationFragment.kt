@@ -16,7 +16,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostLocationBinding
-import com.uwcs446.socialsports.domain.match.HostLocation
+import com.uwcs446.socialsports.domain.match.MatchLocation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -60,7 +60,7 @@ class HostLocationFragment : Fragment() {
         locationSearchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
                 // println("Place: ${place.name}, ${place.address}, ${place.latLng}, ${place.id}")
-                val hostLocation = HostLocation(place.id!!, place.latLng!!)
+                val hostLocation = MatchLocation(place.id!!, place.latLng!!)
                 val action = HostLocationFragmentDirections.actionNavigationHostToHostEditDetails(hostLocation)
                 Navigation.findNavController(requireView()).navigate(action)
             }

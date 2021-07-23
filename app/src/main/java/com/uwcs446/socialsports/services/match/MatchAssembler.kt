@@ -1,8 +1,8 @@
 package com.uwcs446.socialsports.services.match
 
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.match.HostLocation
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.services.user.toDomain
 import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
@@ -40,7 +40,7 @@ fun MatchEntity.toDomain() =
         time = LocalTime.from(LocalDateTime.parse(time)),
         duration = Duration.ofMinutes(duration),
         host = host.toDomain(),
-        location = HostLocation(
+        location = MatchLocation(
             location.placeId,
             LatLng(
                 location.lat,

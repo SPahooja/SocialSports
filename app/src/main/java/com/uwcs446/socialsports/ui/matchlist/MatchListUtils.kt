@@ -1,8 +1,8 @@
 package com.uwcs446.socialsports.ui.matchlist
 
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.match.HostLocation
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.User
 import java.time.Duration
@@ -22,7 +22,7 @@ class MatchListUtils {
                 time = LocalTime.parse("12:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = HostLocation("", LatLng(0.0, 0.0)),
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1"),
                 teamTwo = listOf("1")
             ),
@@ -35,7 +35,7 @@ class MatchListUtils {
                 time = LocalTime.parse("10:00:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = HostLocation("", LatLng(0.0, 0.0)),
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1")
             ),
@@ -48,7 +48,7 @@ class MatchListUtils {
                 time = LocalTime.parse("18:00:00"),
                 duration = Duration.parse("PT1H"),
                 host = User("1"),
-                location = HostLocation("", LatLng(0.0, 0.0)),
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1")
             ),
@@ -61,7 +61,7 @@ class MatchListUtils {
                 time = LocalTime.parse("15:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = HostLocation("", LatLng(0.0, 0.0)),
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1"),
             ),
@@ -74,7 +74,7 @@ class MatchListUtils {
                 time = LocalTime.parse("15:00:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                location = HostLocation("", LatLng(0.0, 0.0)),
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1")
             )
