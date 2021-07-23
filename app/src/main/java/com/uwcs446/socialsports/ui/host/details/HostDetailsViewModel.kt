@@ -32,12 +32,11 @@ class HostDetailsViewModel @Inject constructor(
     private val locationService: LocationService
 ) : ViewModel() {
     private val TAG = this::class.simpleName
-    // To edit an existing match, pass matchId to HostDetailsFragment as arguments and
-    // use SavedStateHandle to handle fragment arguments to fill the form with existing match info
-    private val selectedMatchLocation = state.get<MatchLocation>("matchLocation")
-    private val editMatchId = state.get<String>("matchId") // TODO: Get match model from matchRepository by matchId
 
-    // Mock match data
+    private val selectedMatchLocation = state.get<MatchLocation>("matchLocation")
+    private val editMatchId = state.get<String>("matchId")
+
+    // Mock match data TODO: Get match model from matchRepository by matchId
     private var editMatch = editMatchId?.let {
         Match(
             id = "id_of_existing_match",
@@ -54,25 +53,6 @@ class HostDetailsViewModel @Inject constructor(
         )
     }
 
-    // Setup location card
-    private val _locationName = MutableLiveData<String>().apply { value = "" }
-    val locationName: LiveData<String> = _locationName
-    private val _locationAddress = MutableLiveData<String>().apply { value = "" }
-    val locationAddress: LiveData<String> = _locationAddress
-    var locationId = selectedMatchLocation?.placeId ?: ""
-    init {
-        viewModelScope.launch {
-            try {
-                val response = locationService.getPlace(locationId).await()
-                _locationName.value = response.place.name
-                _locationAddress.value = response.place.address
-            } catch (e: Exception) {
-                Log.e(TAG, "Something went wrong while fetching place response", e)
-            }
-        }
-    }
-
-    // Initialize with existing match info if applicable
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.sport ?: ""
     var matchDate = editMatch?.date?.toString() ?: ""
@@ -81,6 +61,24 @@ class HostDetailsViewModel @Inject constructor(
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
     var matchDescription = editMatch?.description ?: ""
     var user = currentUserRepository.getUser()
+
+    // Setup location card
+    var locationId = selectedMatchLocation?.placeId ?: editMatch?.location?.placeId ?: ""
+    private val _locationName = MutableLiveData<String>().apply { value = "" }
+    val locationName: LiveData<String> = _locationName
+    private val _locationAddress = MutableLiveData<String>().apply { value = "" }
+    val locationAddress: LiveData<String> = _locationAddress
+    init {
+        viewModelScope.launch {
+            try {
+                val response = locationService.getPlace(locationId!!).await()
+                _locationName.value = response.place.name
+                _locationAddress.value = response.place.address
+            } catch (e: Exception) {
+                Log.e(TAG, "Something went wrong while fetching place response", e)
+            }
+        }
+    }
 
     fun onSaveClick() {
         val durationHour = Duration.ofHours(
@@ -99,7 +97,7 @@ class HostDetailsViewModel @Inject constructor(
                 duration = durationHour + durationMin,
                 description = matchDescription
             )
-            matchRepository.create(updatedMatch!!)
+            matchRepository.edit(updatedMatch!!)
         } else {
             val newMatch = Match(
                 id = UUID.randomUUID().toString(),
