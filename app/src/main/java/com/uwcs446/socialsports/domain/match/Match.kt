@@ -8,6 +8,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 
+@Parcelize
 data class Match(
     val id: String,
     val sport: Sport,
@@ -20,7 +21,7 @@ data class Match(
     val host: User,
     val teamOne: List<String>,
     val teamTwo: List<String>
-) {
+) : Parcelable {
     fun teamSize() = this.sport.teamSize
 
     fun maxPlayerCount() = this.sport.teamSize * 2
