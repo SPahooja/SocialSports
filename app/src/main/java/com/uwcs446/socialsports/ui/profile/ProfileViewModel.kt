@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.uwcs446.socialsports.domain.match.MatchRepository
-import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel
 @Inject constructor(
-    private val currentUserRepository: CurrentUserRepository,
+    private val currentUserRepository: CurrentAuthUserRepository,
     private val matchRepo: MatchRepository
 ) : ViewModel() {
 

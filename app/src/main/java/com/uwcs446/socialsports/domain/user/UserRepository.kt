@@ -1,6 +1,10 @@
 package com.uwcs446.socialsports.domain.user
 
+import androidx.lifecycle.LiveData
+
 interface UserRepository {
 
-    suspend fun findById(ids: List<String>): List<User>
+    val user: LiveData<User>
+
+    suspend fun findByIds(ids: List<String>): List<User>
 }

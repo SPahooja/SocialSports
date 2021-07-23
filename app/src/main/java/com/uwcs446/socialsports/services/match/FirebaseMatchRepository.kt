@@ -23,13 +23,9 @@ class FirebaseMatchRepository
 
     private val TAG = this::class.simpleName
 
-    private val _exploreMatches = MutableLiveData<List<Match>>()
+    private val _myGames = MutableLiveData<List<Match>>()
 
-    override val exploreMatches: LiveData<List<Match>> = _exploreMatches
-
-    private val _matchesByHost = MutableLiveData<Pair<String, List<Match>>>()
-
-    override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
+    override val myGames: LiveData<List<Match>> = _myGames
 
     // TODO Add filtering for future timestamp
     override suspend fun fetchExploreMatches(sport: Sport): List<Match>? {
@@ -142,7 +138,7 @@ class FirebaseMatchRepository
     }
 
     override suspend fun join(matchId: String, userId: String, team: Int) {
-        val match = matchById(matchId) ?: return
+        val match = findById(listOf(matchId)).firstOrNull() ?: return
         if (match.blacklist.contains(userId)) {
             throw UserBannedException()
         }
@@ -152,21 +148,18 @@ class FirebaseMatchRepository
         //TODO add match to user
     }
 
-    override suspend fun addTobBlacklist(matchId: String, userId: String) {
-        //TODO UI should only call if current user is host
-    }
+    override suspend fun findByIds(ids: List<String>): List<Match?> =
+        findById(ids).mapNotNull { it?.toDomain() }
 
-    override suspend fun removeFrombBlacklist(matchId: String, userId: String) {
-        //TODO UI should only call if current user is host
-    }
-
-    private suspend fun matchById(id: String): MatchEntity? =
+    private suspend fun findById(ids: List<String>): List<MatchEntity?> =
         matchesCollection
-            .whereEqualTo(MatchEntity::id.name, id)
+            .whereIn(MatchEntity::id.name, ids)
             .get()
             .await()
             .documents
-            .firstOrNull()?.toMatchEntity()
+            .map {
+                it.toMatchEntity()
+            }
 
 
     private fun addUserToTeam(match: MatchEntity, userId: String, team: Int): MatchEntity {
@@ -192,7 +185,9 @@ class FirebaseMatchRepository
     }
 
     private fun createOrSave(match: MatchEntity) {
-        matchesCollection.document(match.id).set(match)
+        matchesCollection
+            .document(match.id)
+            .set(match)
             .addOnSuccessListener {
                 Log.d(TAG, "Saved match ${match.id}")
             }

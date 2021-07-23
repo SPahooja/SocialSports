@@ -8,7 +8,7 @@ import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Duration
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HostDetailsViewModel @Inject constructor(
-    private val currentUserRepository: CurrentUserRepository,
+    private val currentUserRepository: CurrentAuthUserRepository,
     private val matchRepository: MatchRepository,
     private val state: SavedStateHandle
 ) : ViewModel() {
