@@ -93,16 +93,6 @@ class FindFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Observer which updates the recyclerview when match data changes
-        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
-            recyclerViewData.clear()
-            recyclerViewData.addAll(matchList)
-            recyclerViewAdapter.notifyDataSetChanged()
-        }
-    }
-
     /*
         1. set edit text to display the selected date
         2. filter matches by selected date
