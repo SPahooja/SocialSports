@@ -42,9 +42,6 @@ class FirebaseMatchRepository
                 .await()
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -62,9 +59,6 @@ class FirebaseMatchRepository
                 .await()
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -89,9 +83,6 @@ class FirebaseMatchRepository
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
             val matches = (teamOneMatches + teamTwoMatches)
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -123,9 +114,6 @@ class FirebaseMatchRepository
                 .mapNotNull { document -> document.toMatchEntity() }
             val matches =
                 (hostMatches + teamOneMatches + teamTwoMatches).distinctBy { match -> match.id }
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
