@@ -15,6 +15,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,10 +41,10 @@ class HostDetailsViewModel @Inject constructor(
             date = LocalDate.now(),
             time = LocalTime.now(),
             duration = Duration.parse("PT8H"),
-            host = User("testUser"),
+            hostId = UUID.randomUUID().toString(),
             location = Location(LatLng(0.0, 0.0)),
-            teamOne = listOf("1"),
-            teamTwo = listOf("2"),
+            teamOne = listOf(UUID.randomUUID().toString()),
+            teamTwo = listOf(UUID.randomUUID().toString()),
             // TODO: location
         )
     }

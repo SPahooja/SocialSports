@@ -8,6 +8,7 @@ import com.uwcs446.socialsports.domain.user.User
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.UUID
 import kotlin.math.min
 
 class MatchListUtils {
@@ -21,7 +22,7 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-10"),
                 time = LocalTime.parse("12:30:00"),
                 duration = Duration.parse("PT2H"),
-                host = User("1"),
+                hostId = UUID.randomUUID().toString(),
                 location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1"),
                 teamTwo = listOf("1")
@@ -34,7 +35,7 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-20"),
                 time = LocalTime.parse("10:00:00"),
                 duration = Duration.parse("PT2H"),
-                host = User("1"),
+                hostId = UUID.randomUUID().toString(),
                 location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1")
@@ -47,7 +48,7 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-17"),
                 time = LocalTime.parse("18:00:00"),
                 duration = Duration.parse("PT1H"),
-                host = User("1"),
+                hostId = UUID.randomUUID().toString(),
                 location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1")
@@ -60,7 +61,7 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-22"),
                 time = LocalTime.parse("15:30:00"),
                 duration = Duration.parse("PT2H"),
-                host = User("1"),
+                hostId = UUID.randomUUID().toString(),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1"),
                 location = Location(LatLng(0.0, 0.0)),
@@ -73,7 +74,7 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-11"),
                 time = LocalTime.parse("15:00:00"),
                 duration = Duration.parse("PT2H"),
-                host = User("1"),
+                hostId = UUID.randomUUID().toString(),
                 location = Location(LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1")

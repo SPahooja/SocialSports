@@ -16,6 +16,8 @@ interface MatchRepository {
 
     suspend fun findPastWithUser(userId: String): List<Match>?
 
+    suspend fun fetchMatchWithUsers(userId: String): Match?
+
     fun create(match: Match)
 
     fun edit(match: Match)

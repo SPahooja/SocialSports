@@ -6,17 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
+import com.uwcs446.socialsports.ui.find.FindViewModel
 import com.uwcs446.socialsports.ui.matchlist.MatchListUtils
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+@AndroidEntryPoint
 class MatchDetailsFragment : Fragment() {
 
     private val args: MatchDetailsFragmentArgs by navArgs()
+    private val matchDetailsViewModel: MatchDetailsViewModel by viewModels()
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
     private val isHost: Boolean = true // TODO: set boolean

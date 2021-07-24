@@ -57,13 +57,7 @@ class FirebaseMatchRepository
     override suspend fun findAllByHost(hostId: String): List<Match>? {
         try {
             val matches = matchesCollection
-                .whereEqualTo(
-                    of(
-                        MatchEntity::host.name,
-                        UserEntity::id.name
-                    ),
-                    hostId
-                )
+                .whereEqualTo(of(MatchEntity::hostId.name), hostId)
                 .get()
                 .await()
                 .documents
@@ -110,7 +104,7 @@ class FirebaseMatchRepository
     override suspend fun findPastWithUser(userId: String): List<Match>? {
         try {
             val hostMatches = matchesCollection
-                .whereEqualTo(of(MatchEntity::host.name, UserEntity::id.name), userId)
+                .whereEqualTo(of(MatchEntity::hostId.name), userId)
                 .get()
                 .await()
                 .documents
@@ -138,6 +132,10 @@ class FirebaseMatchRepository
             Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
         }
         return null
+    }
+
+    override suspend fun fetchMatchWithUsers(userId: String): Match? {
+        TODO("Not yet implemented")
     }
 
     override fun create(match: Match) = createOrSave(match.toEntity())

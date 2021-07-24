@@ -15,7 +15,7 @@ data class Match(
     val date: LocalDate,
     val time: LocalTime,
     val duration: Duration,
-    val host: User,
+    val hostId: String,
     val teamOne: List<String>,
     val teamTwo: List<String>
 ) {
