@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -38,6 +39,7 @@ class MatchDetailsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             binding.matchProgressBar.visibility = VISIBLE
+            binding.matchDetailsViews.visibility = INVISIBLE
             matchDetailsViewModel.fetchMatch(args.matchId!!)
         }
 
@@ -71,23 +73,9 @@ class MatchDetailsFragment : Fragment() {
                     binding.matchDescription.setText(match.description)
                     binding.matchHostName.setText(host.name)
 
-                    // Get rid of the progress bar
+                    // Switch visibility of views
                     binding.matchProgressBar.visibility = GONE
-
-                    // Make everything visible
-                    binding.matchTitle.visibility = VISIBLE
-                    binding.matchSportIcon.visibility = VISIBLE
-                    binding.matchType.visibility = VISIBLE
-                    binding.matchPlayerCountIcon.visibility = VISIBLE
-                    binding.matchPlayerCount.visibility = VISIBLE
-                    binding.matchDate.visibility = VISIBLE
-                    binding.matchTime.visibility = VISIBLE
-                    binding.matchLocationName.visibility = VISIBLE
-                    binding.matchAddress.visibility = VISIBLE
-                    binding.matchDescription.visibility = VISIBLE
-                    binding.matchHostIcon.visibility = VISIBLE
-                    binding.matchHostName.visibility = VISIBLE
-                    binding.matchHostLabel.visibility = VISIBLE
+                    binding.matchDetailsViews.visibility = VISIBLE
 
                     // TODO get the team from firestore
                     // set up recycler view for two teams

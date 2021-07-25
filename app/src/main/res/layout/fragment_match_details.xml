@@ -27,6 +27,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/match_details_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="match_title, match_date, match_time, match_type,
+                match_sport_icon, match_player_count_icon, match_player_count,
+                match_location_name, match_address, match_description, match_host_icon,
+                match_host_label, match_host_name, edit_button_match_details, team_linear_layout"
+                />
+
             <TextView
                 android:id="@+id/match_title"
                 android:layout_width="match_parent"
@@ -35,7 +47,6 @@
                 android:layout_marginTop="24dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 android:textStyle="bold"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Pro Players Only" />
@@ -47,7 +58,6 @@
                 android:layout_marginEnd="24dp"
                 android:text="June 12, 2021"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/match_type" />
 
@@ -58,7 +68,6 @@
                 android:layout_marginTop="8dp"
                 android:text="12pm"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="@+id/match_date"
                 app:layout_constraintTop_toBottomOf="@+id/match_date" />
 
@@ -69,7 +78,6 @@
                 android:layout_marginStart="8dp"
                 android:text="Soccer"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/match_sport_icon"
                 app:layout_constraintStart_toEndOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toTopOf="@+id/match_sport_icon" />
@@ -80,7 +88,6 @@
                 android:layout_height="wrap_content"
                 android:text="4/10"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/match_player_count_icon"
                 app:layout_constraintStart_toStartOf="@+id/match_type"
                 app:layout_constraintTop_toTopOf="@+id/match_player_count_icon" />
@@ -93,7 +100,6 @@
                 android:text="High Park"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textStyle="bold"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_player_count_icon" />
 
@@ -104,7 +110,6 @@
                 android:layout_marginTop="8dp"
                 android:text="1873 Bloor St W, Toronto, ON M6R 2Z3"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_location_name" />
 
@@ -115,7 +120,6 @@
                 android:layout_marginTop="8dp"
                 android:text="Some notes from the host about the game"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_map_placeholder" />
 
@@ -124,7 +128,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/match_title"
                 app:srcCompat="@drawable/ic_baseline_sports_soccer_50"
@@ -135,7 +138,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_host_label"
                 app:srcCompat="@drawable/ic_baseline_account_circle_50"
@@ -146,7 +148,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_sport_icon"
                 app:srcCompat="@drawable/ic_baseline_directions_run_50"
@@ -172,7 +173,6 @@
                 android:text="Host"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textStyle="bold"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_sport_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_description" />
 
@@ -182,7 +182,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="John Smith"
-                android:visibility="invisible"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintStart_toEndOf="@+id/match_host_icon"
                 app:layout_constraintTop_toTopOf="@+id/match_host_icon" />
@@ -199,12 +198,11 @@
 
             <!-- team lists -->
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/team_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/match_host_icon"
                 app:layout_constraintTop_toBottomOf="@+id/match_host_icon">
 
@@ -216,6 +214,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/match_team_one_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/team_one"
@@ -236,6 +235,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/match_team_two_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/team_two"
