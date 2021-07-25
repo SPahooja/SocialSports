@@ -21,6 +21,7 @@ data class MatchEntity(
 )
 
 data class LocationEntity(
+    val placeId: String = "",
     val lat: Double = 0.0,
     val lng: Double = 0.0,
     val geohash: String = GeoFireUtils.getGeoHashForLocation(GeoLocation(lat, lng)),
