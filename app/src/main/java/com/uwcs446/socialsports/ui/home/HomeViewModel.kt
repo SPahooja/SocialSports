@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
 
     fun filterMatches(filter: MatchFilter) {
         if (currentUser == null) {
-            _matches.value = matches.value  // no-op
+            _matches.value = matches.value // no-op
             return
         }
 

@@ -43,7 +43,6 @@ class HomeFragment : Fragment() {
         binding.homeProgressBar.visibility = VISIBLE
         binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
 
-
         // Observer which updates the recyclerview when match data changes
         homeViewModel.matches.observe(viewLifecycleOwner) { matchList ->
             recyclerViewData.clear()
