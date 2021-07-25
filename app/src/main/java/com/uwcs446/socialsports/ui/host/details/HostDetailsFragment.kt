@@ -54,8 +54,12 @@ class HostDetailsFragment : Fragment() {
         val hostGameButton: Button = binding.hostButtonHost
 
         // Location and match details of saved context
-        locationTitleTextView.text = hostDetailsViewModel.locationTitle
-        locationAddressTextView.text = hostDetailsViewModel.locationAddress
+        hostDetailsViewModel.locationName.observe(viewLifecycleOwner) {
+            locationTitleTextView.text = it
+        }
+        hostDetailsViewModel.locationAddress.observe(viewLifecycleOwner) {
+            locationAddressTextView.text = it
+        }
         titleTextView.setText(hostDetailsViewModel.matchTitle)
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         dateTextView.setText(hostDetailsViewModel.matchDate)
@@ -95,7 +99,7 @@ class HostDetailsFragment : Fragment() {
             timePicker.show(parentFragmentManager, "timePicker")
         }
 
-        // Click HostLocation card on host details fragment to edit selected location
+        // Click MatchLocation card on host details fragment to edit selected location
         locationCard.setOnClickListener {
             val action = HostDetailsFragmentDirections.actionHostEditDetailsToNavigationHost()
             Navigation.findNavController(requireView()).navigate(action)
