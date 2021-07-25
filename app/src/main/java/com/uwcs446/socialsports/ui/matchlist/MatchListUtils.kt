@@ -1,8 +1,8 @@
 package com.uwcs446.socialsports.ui.matchlist
 
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.Sport
 import java.time.Duration
 import java.time.LocalDate
@@ -21,8 +21,8 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-10"),
                 time = LocalTime.parse("12:30:00"),
                 duration = Duration.parse("PT2H"),
-                hostId = UUID.randomUUID().toString(),
-                location = Location(LatLng(0.0, 0.0)),
+                hostId = "1",
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1"),
                 teamTwo = listOf("1")
             ),
@@ -34,8 +34,8 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-20"),
                 time = LocalTime.parse("10:00:00"),
                 duration = Duration.parse("PT2H"),
-                hostId = UUID.randomUUID().toString(),
-                location = Location(LatLng(0.0, 0.0)),
+                hostId = "1",
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1")
             ),
@@ -47,8 +47,8 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-17"),
                 time = LocalTime.parse("18:00:00"),
                 duration = Duration.parse("PT1H"),
-                hostId = UUID.randomUUID().toString(),
-                location = Location(LatLng(0.0, 0.0)),
+                hostId = "1",
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1")
             ),
@@ -60,10 +60,10 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-22"),
                 time = LocalTime.parse("15:30:00"),
                 duration = Duration.parse("PT2H"),
-                hostId = UUID.randomUUID().toString(),
+                hostId = "1",
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1"),
-                location = Location(LatLng(0.0, 0.0)),
             ),
             Match(
                 id = "5",
@@ -73,8 +73,8 @@ class MatchListUtils {
                 date = LocalDate.parse("2021-07-11"),
                 time = LocalTime.parse("15:00:00"),
                 duration = Duration.parse("PT2H"),
-                hostId = UUID.randomUUID().toString(),
-                location = Location(LatLng(0.0, 0.0)),
+                hostId = "1",
+                location = MatchLocation("", LatLng(0.0, 0.0)),
                 teamOne = listOf("1", "1"),
                 teamTwo = listOf("1", "1", "1")
             )

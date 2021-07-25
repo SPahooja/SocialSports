@@ -1,30 +1,24 @@
 package com.uwcs446.socialsports.services
 
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
-import com.google.android.gms.maps.model.LatLng
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.scopes.ActivityScoped
-import java.util.Locale
+import com.google.android.gms.tasks.Task
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FetchPlaceResponse
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ActivityScoped
+@ViewModelScoped
 class LocationService @Inject constructor(
-    @ActivityContext private val activity: Context
+    @ApplicationContext private val activity: Context
 ) {
+    suspend fun getPlace(placeId: String): Task<FetchPlaceResponse> {
+        val placesClient = Places.createClient(activity)
+        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS)
+        val request = FetchPlaceRequest.newInstance(placeId!!, placeFields)
 
-    private val DEFAULT_ADDRESS = Address(Locale.getDefault())
-
-    fun getAddress(latLng: LatLng): Address {
-
-        val geocoder = Geocoder(activity, Locale.getDefault())
-
-        return geocoder
-            .getFromLocation(
-                latLng.latitude,
-                latLng.longitude,
-                1
-            ).firstOrNull() ?: DEFAULT_ADDRESS
+        return placesClient.fetchPlace(request)
     }
 }
