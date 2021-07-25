@@ -7,7 +7,6 @@ import com.uwcs446.socialsports.domain.match.Sport
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.UUID
 import kotlin.math.min
 
 class MatchListUtils {
