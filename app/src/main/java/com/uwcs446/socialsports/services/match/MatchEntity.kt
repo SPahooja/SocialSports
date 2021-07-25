@@ -3,7 +3,6 @@ package com.uwcs446.socialsports.services.match
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.services.user.UserEntity
 import java.time.LocalDateTime
 import java.util.UUID
 

@@ -1,7 +1,6 @@
 package com.uwcs446.socialsports.domain.match
 
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.user.User
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime

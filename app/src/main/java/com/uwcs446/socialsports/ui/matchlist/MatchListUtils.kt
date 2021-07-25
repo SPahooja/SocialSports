@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.domain.user.User
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime

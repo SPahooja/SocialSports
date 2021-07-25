@@ -10,7 +10,6 @@ import com.uwcs446.socialsports.di.module.MatchesCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.services.user.UserEntity
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -122,8 +121,13 @@ class FirebaseMatchRepository
         return null
     }
 
-    override suspend fun fetchMatchWithUsers(userId: String): Match? {
-        TODO("Not yet implemented")
+    override suspend fun fetchMatchById(matchId: String): Match? {
+        return try {
+            matchesCollection.document(matchId).get().await().toMatchEntity()?.toDomain()
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching match $matchId", e)
+            null
+        }
     }
 
     override fun create(match: Match) = createOrSave(match.toEntity())

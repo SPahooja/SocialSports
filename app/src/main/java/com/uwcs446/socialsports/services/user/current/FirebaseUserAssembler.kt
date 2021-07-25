@@ -6,6 +6,7 @@ import com.uwcs446.socialsports.domain.user.User
 fun FirebaseUser?.toDomain(): User? {
     this ?: return null
     return User(
-        id = this.uid
+        id = this.uid,
+        name = "John Smith" // Get this from firestore
     )
 }
