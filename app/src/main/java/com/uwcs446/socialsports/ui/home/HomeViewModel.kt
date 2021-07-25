@@ -17,19 +17,26 @@ class HomeViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
 ) : ViewModel() {
 
-    private val currentUser = currentUserRepository.getUser()!!
+    private val currentUser = currentUserRepository.getUser()
 
     private val _matches = MutableLiveData<List<Match>>(emptyList())
 
     val matches: LiveData<List<Match>> = _matches
 
     init {
-        viewModelScope.launch {
-            _matches.value = matchRepository.findJoinedByUser(currentUser.id)
+        if (currentUser != null) {
+            viewModelScope.launch {
+                _matches.value = matchRepository.findJoinedByUser(currentUser.id)
+            }
         }
     }
 
     fun filterMatches(filter: MatchFilter) {
+        if (currentUser == null) {
+            _matches.value = matches.value  // no-op
+            return
+        }
+
         viewModelScope.launch {
             _matches.value = when (filter) {
                 MatchFilter.JOINED -> matchRepository.findJoinedByUser(currentUser.id)
