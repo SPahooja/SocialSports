@@ -10,12 +10,8 @@
     <string name="top_label_find">Find a Game</string>
     <string name="bottom_label_find">Find</string>
 
-    <!--  host location search -->
+    <!--  host games -->
     <string name="host_hint_search_location">Search for a Location</string>
-    <string name="host_location_suggestions">Suggestions</string>
-    <string name="host_location_search_result">Search Result</string>
-
-    <!--  host match details -->
     <string name="host_selected_location">Location</string>
     <string name="host_game_information">Game Information</string>
     <string name="host_hint_game_title">Game Title</string>
