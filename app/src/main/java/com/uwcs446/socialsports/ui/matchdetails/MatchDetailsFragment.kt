@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -83,6 +84,10 @@ class MatchDetailsFragment : Fragment() {
         // display the edit button if current user is the match host
         if (isHost) {
             binding.editButtonMatchDetails.visibility = View.VISIBLE
+            binding.editButtonMatchDetails.setOnClickListener {
+                val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match.id)
+                it.findNavController().navigate(action)
+            }
         }
 
         return root
