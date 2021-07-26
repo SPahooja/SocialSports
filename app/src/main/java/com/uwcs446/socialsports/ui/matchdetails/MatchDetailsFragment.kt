@@ -37,6 +37,10 @@ class MatchDetailsFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentMatchDetailsBinding.inflate(inflater, container, false)
 
+        // Remove visibility of location in the summary
+        binding.matchSummary.textMatchLocationName.visibility = GONE
+        binding.matchSummary.textMatchAddress.visibility = GONE
+
         viewLifecycleOwner.lifecycleScope.launch {
             binding.matchProgressBar.visibility = VISIBLE
             binding.matchDetailsViews.visibility = INVISIBLE
@@ -62,14 +66,15 @@ class MatchDetailsFragment : Fragment() {
                 val host = matchDetailsViewModel.host.value
 
                 if (match != null && host != null) {
-                    binding.matchTitle.setText(match.title)
-                    binding.matchSportIcon.setImageResource(match.sport.imageResource)
-                    binding.matchType.setText(match.sport.toString())
-                    binding.matchPlayerCount.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
-                    binding.matchDate.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
-                    binding.matchTime.setText(match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
-                    binding.matchLocationName.setText("High Park") // TODO: add location name field
-                    binding.matchAddress.setText("1873 Bloor St W, Toronto, ON M6R 2Z") // TODO: add location address field
+                    binding.matchSummary.textMatchTitle.setText(match.title)
+                    binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
+                    binding.matchSummary.textMatchType.setText(match.sport.name)
+                    binding.matchSummary.textMatchPlayerCount.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
+                    binding.matchSummary.textMatchDate.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
+                    binding.matchSummary.textMatchTime.setText(match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
+                    binding.matchLocation.locationItemTitle.setText("High Park") // TODO: add location name field
+                    binding.matchLocation.locationItemAddress.setText("1873 Bloor St W, Toronto, ON M6R 2Z") // TODO: add location address field
+                    binding.matchLocation.locationItemDistance.setText("10km") // TODO: add distance
                     binding.matchDescription.setText(match.description)
                     binding.matchHostName.setText(host.name)
 
