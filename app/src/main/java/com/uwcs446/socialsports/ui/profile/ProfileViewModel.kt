@@ -17,12 +17,16 @@ class ProfileViewModel
     private val matchRepo: MatchRepository
 ) : ViewModel() {
 
-    private val userObserver = Observer<User> {
-        _text.setValue(computeLabel())
-    }
+    private val _username = MutableLiveData<String>()
+    val username: LiveData<String> = _username
 
-    private val _text = MutableLiveData(computeLabel())
-    val text: LiveData<String> = _text
+    private val _rating = MutableLiveData<Float>()
+    val rating: LiveData<Float> = _rating
+
+    private val userObserver = Observer<User> {
+        _username.setValue(currentUserRepository.getUser()?.id ?: "NO_USER") // TODO: fetch username
+        _rating.setValue(3.5F) // TODO: fetch user rating
+    }
 
     init {
         currentUserRepository.user.observeForever(userObserver)
@@ -36,9 +40,4 @@ class ProfileViewModel
         currentUserRepository.user.removeObserver(userObserver)
         super.onCleared()
     }
-
-    private fun computeLabel() =
-        """
-            |This is profile Fragment with user: [${currentUserRepository.getUser()?.id ?: "NO_USER"}] 
-        """.trimMargin()
 }

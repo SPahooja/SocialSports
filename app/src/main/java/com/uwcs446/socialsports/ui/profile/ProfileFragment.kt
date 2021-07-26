@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,11 +30,19 @@ class ProfileFragment : Fragment() {
 
         binding.logoutButton.setOnClickListener { viewModel.handleLogout() }
 
-        val textView: TextView = binding.textProfile
-        viewModel.text.observe(
+        val textView: TextView = binding.userProfileUsername
+        viewModel.username.observe(
             viewLifecycleOwner,
             {
                 textView.text = it
+            }
+        )
+
+        val ratingBarView: RatingBar = binding.userProfileRating
+        viewModel.rating.observe(
+            viewLifecycleOwner,
+            {
+                ratingBarView.rating = it
             }
         )
 
