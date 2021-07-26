@@ -14,6 +14,7 @@ class FirebaseUserRepository(
 ) : UserRepository {
 
     private val TAG = this::class.simpleName
+
     override suspend fun findById(id: String): User? {
         return try {
             usersCollection
