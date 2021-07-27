@@ -27,8 +27,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -113,7 +111,7 @@ class HostDetailsFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener {
                 val date = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
                 val formattedDate =
-                    date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                    date.format(DateTimePicker().getDateFormatter())
                 dateTextView.setText(formattedDate)
             }
             datePicker.show(parentFragmentManager, "datePicker")

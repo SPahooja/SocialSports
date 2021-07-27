@@ -85,7 +85,7 @@ class MatchDetailsFragment : Fragment() {
         if (isHost) {
             binding.editButtonMatchDetails.visibility = View.VISIBLE
             binding.editButtonMatchDetails.setOnClickListener {
-                val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match.id)
+                val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match)
                 it.findNavController().navigate(action)
             }
         }
