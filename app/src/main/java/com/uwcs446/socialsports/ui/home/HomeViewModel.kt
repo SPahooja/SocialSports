@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
-import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val currentUserRepository: CurrentUserRepository,
+    private val currentUserRepository: CurrentAuthUserRepository,
     private val matchRepository: MatchRepository,
 ) : ViewModel() {
 
@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
     init {
         if (currentUser != null) {
             viewModelScope.launch {
-                _matches.value = matchRepository.findJoinedByUser(currentUser.id)
+                _matches.value = matchRepository.findJoinedByUser(currentUser.uid)
             }
         }
     }
@@ -39,9 +39,10 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             _matches.value = when (filter) {
-                MatchFilter.JOINED -> matchRepository.findJoinedByUser(currentUser.id)
-                MatchFilter.HOSTING -> matchRepository.findAllByHost(currentUser.id)
-                MatchFilter.PAST -> matchRepository.findPastWithUser(currentUser.id)
+                // Instead of using uid of firebase user, fetch current user from our domain and use it's id
+                MatchFilter.JOINED -> matchRepository.findJoinedByUser(currentUser.uid)
+                MatchFilter.HOSTING -> matchRepository.findAllByHost(currentUser.uid)
+                MatchFilter.PAST -> matchRepository.findPastWithUser(currentUser.uid)
             }
         }
     }
