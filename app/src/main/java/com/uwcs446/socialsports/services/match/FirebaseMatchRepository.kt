@@ -7,11 +7,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath.of
 import com.uwcs446.socialsports.di.module.MatchesCollection
-import com.uwcs446.socialsports.domain.exceptions.UserBannedException
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.services.user.UserEntity
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -23,9 +21,13 @@ class FirebaseMatchRepository
 
     private val TAG = this::class.simpleName
 
-    private val _myGames = MutableLiveData<List<Match>>()
+    private val _exploreMatches = MutableLiveData<List<Match>>()
 
-    override val myGames: LiveData<List<Match>> = _myGames
+    override val exploreMatches: LiveData<List<Match>> = _exploreMatches
+
+    private val _matchesByHost = MutableLiveData<Pair<String, List<Match>>>()
+
+    override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
     // TODO Add filtering for future timestamp
     override suspend fun fetchExploreMatches(sport: Sport): List<Match>? {
@@ -39,9 +41,6 @@ class FirebaseMatchRepository
                 .await()
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -54,20 +53,11 @@ class FirebaseMatchRepository
     override suspend fun findAllByHost(hostId: String): List<Match>? {
         try {
             val matches = matchesCollection
-                .whereEqualTo(
-                    of(
-                        MatchEntity::host.name,
-                        UserEntity::id.name
-                    ),
-                    hostId
-                )
+                .whereEqualTo(of(MatchEntity::hostId.name), hostId)
                 .get()
                 .await()
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -92,9 +82,6 @@ class FirebaseMatchRepository
                 .documents
                 .mapNotNull { document -> document.toMatchEntity() }
             val matches = (teamOneMatches + teamTwoMatches)
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -107,7 +94,7 @@ class FirebaseMatchRepository
     override suspend fun findPastWithUser(userId: String): List<Match>? {
         try {
             val hostMatches = matchesCollection
-                .whereEqualTo(of(MatchEntity::host.name, UserEntity::id.name), userId)
+                .whereEqualTo(of(MatchEntity::hostId.name), userId)
                 .get()
                 .await()
                 .documents
@@ -126,9 +113,6 @@ class FirebaseMatchRepository
                 .mapNotNull { document -> document.toMatchEntity() }
             val matches =
                 (hostMatches + teamOneMatches + teamTwoMatches).distinctBy { match -> match.id }
-            if (matches.isEmpty()) {
-                return emptyList()
-            }
             Log.d(TAG, "Found ${matches.size} matches")
             return matches.toDomain()
         } catch (e: Exception) {
@@ -137,36 +121,12 @@ class FirebaseMatchRepository
         return null
     }
 
-    override suspend fun join(matchId: String, userId: String, team: Int) {
-        val match = findById(listOf(matchId)).firstOrNull() ?: return
-        if (match.blacklist.contains(userId)) {
-            throw UserBannedException()
-        }
-        createOrSave(
-            addUserToTeam(match, userId, team)
-        )
-        //TODO add match to user
-    }
-
-    override suspend fun findByIds(ids: List<String>): List<Match?> =
-        findById(ids).mapNotNull { it?.toDomain() }
-
-    private suspend fun findById(ids: List<String>): List<MatchEntity?> =
-        matchesCollection
-            .whereIn(MatchEntity::id.name, ids)
-            .get()
-            .await()
-            .documents
-            .map {
-                it.toMatchEntity()
-            }
-
-
-    private fun addUserToTeam(match: MatchEntity, userId: String, team: Int): MatchEntity {
-        return if (team == 1) {
-            match.copy(teamOne = match.teamOne.plus(userId))
-        } else {
-            match.copy(teamTwo = match.teamTwo.plus(userId))
+    override suspend fun fetchMatchById(matchId: String): Match? {
+        return try {
+            matchesCollection.document(matchId).get().await().toMatchEntity()?.toDomain()
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching match $matchId", e)
+            null
         }
     }
 
@@ -185,9 +145,7 @@ class FirebaseMatchRepository
     }
 
     private fun createOrSave(match: MatchEntity) {
-        matchesCollection
-            .document(match.id)
-            .set(match)
+        matchesCollection.document(match.id).set(match)
             .addOnSuccessListener {
                 Log.d(TAG, "Saved match ${match.id}")
             }
@@ -196,8 +154,6 @@ class FirebaseMatchRepository
             }
     }
 }
-
-private fun DocumentSnapshot.toMatch() = this.toMatchEntity()?.toDomain()
 
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
 

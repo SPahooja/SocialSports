@@ -1,8 +1,8 @@
 package com.uwcs446.socialsports.services.match
 
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.match.Location
 import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.services.user.toDomain
 import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
@@ -18,13 +18,12 @@ fun Match.toEntity() =
         title = title,
         sport = sport,
         description = description,
-        host = host.toEntity(),
+        hostId = hostId,
         time = time.atDate(date).toString(),
-        location = LocationEntity(lat = location.latLng.latitude, lng = location.latLng.longitude),
+        location = LocationEntity(placeId = location.placeId, lat = location.latLng.latitude, lng = location.latLng.longitude),
         duration = duration.toMinutes(),
         teamOne = teamOne,
-        teamTwo = teamTwo,
-        blacklist = blacklist
+        teamTwo = teamTwo
     )
 
 fun Collection<MatchEntity>.toDomain(): List<Match> {
@@ -37,17 +36,17 @@ fun MatchEntity.toDomain() =
         sport = sport,
         title = title,
         description = description,
-        location = Location(
+        date = LocalDate.from(LocalDateTime.parse(time)),
+        time = LocalTime.from(LocalDateTime.parse(time)),
+        duration = Duration.ofMinutes(duration),
+        hostId = hostId,
+        location = MatchLocation(
+            location.placeId,
             LatLng(
                 location.lat,
                 location.lng
             )
         ),
-        date = LocalDate.from(LocalDateTime.parse(time)),
-        time = LocalTime.from(LocalDateTime.parse(time)),
-        duration = Duration.ofMinutes(duration),
-        host = host.toDomain(),
         teamOne = teamOne,
-        teamTwo = teamTwo,
-        blacklist = blacklist
+        teamTwo = teamTwo
     )

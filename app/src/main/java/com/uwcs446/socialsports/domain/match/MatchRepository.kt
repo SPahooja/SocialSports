@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 
 interface MatchRepository {
 
-    val myGames: LiveData<List<Match>>
+    val exploreMatches: LiveData<List<Match>>
+
+    val matchesByHost: LiveData<Pair<String, List<Match>>>
 
     suspend fun fetchExploreMatches(sport: Sport): List<Match>?
 
@@ -14,9 +16,7 @@ interface MatchRepository {
 
     suspend fun findPastWithUser(userId: String): List<Match>?
 
-    suspend fun join(matchId: String, userId: String, team: Int)
-
-    suspend fun findByIds(ids: List<String>): List<Match?>
+    suspend fun fetchMatchById(matchId: String): Match?
 
     fun create(match: Match)
 

@@ -7,11 +7,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.libraries.places.api.Places
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.databinding.ActivityMainBinding
 import com.uwcs446.socialsports.services.user.UserLoginService
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity :
@@ -26,6 +28,8 @@ class MainActivity :
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Places.initialize(this, getString(R.string.google_api_key), Locale.CANADA)
 
         val navView: BottomNavigationView = binding.navView
 
