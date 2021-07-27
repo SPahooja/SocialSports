@@ -75,13 +75,13 @@ class MatchDetailsFragment : Fragment() {
             }
         }
 
-        val teamOneViewAdapter = TeamListAdapter(emptyList(), 0)
+        val teamOneViewAdapter = TeamListAdapter()
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
-        val teamTwoViewAdapter = TeamListAdapter(emptyList(), 0)
+        val teamTwoViewAdapter = TeamListAdapter()
         binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(true)
         binding.layoutTeamTwo.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamTwo.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)

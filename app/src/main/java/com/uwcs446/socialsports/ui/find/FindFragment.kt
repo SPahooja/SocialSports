@@ -20,9 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentFindBinding
 import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
-import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
+import com.uwcs446.socialsports.ui.matchlist.MatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -38,8 +37,7 @@ class FindFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val recyclerViewData = mutableListOf<Match>()
-    private val recyclerViewAdapter = MatchRecyclerViewAdapter(recyclerViewData)
+    private val recyclerViewAdapter = MatchListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,9 +57,7 @@ class FindFragment : Fragment() {
 
         // Observer which updates the recyclerview when match data changes
         findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
-            recyclerViewData.clear()
-            recyclerViewData.addAll(matchList)
-            recyclerViewAdapter.notifyDataSetChanged()
+            recyclerViewAdapter.updateMatchList(matchList)
 
             binding.findProgressBar.visibility = INVISIBLE
             binding.layoutMatchList.recyclerviewMatch.visibility = VISIBLE

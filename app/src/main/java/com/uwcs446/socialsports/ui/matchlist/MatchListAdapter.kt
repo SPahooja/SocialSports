@@ -1,7 +1,10 @@
 package com.uwcs446.socialsports.ui.matchlist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.MobileNavigationDirections
@@ -10,8 +13,21 @@ import com.uwcs446.socialsports.domain.match.Match
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class MatchRecyclerViewAdapter(private val matchList: List<Match>) :
-    RecyclerView.Adapter<MatchViewHolder>() {
+class MatchListAdapter() :
+    RecyclerView.Adapter<MatchListAdapter.MatchViewHolder>() {
+
+    private val matchList = mutableListOf<Match>()
+
+    class MatchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var matchTitle: TextView = itemView.findViewById(R.id.text_match_title)
+        var matchType: TextView = itemView.findViewById(R.id.text_match_type)
+        var matchTypeIcon: ImageView = itemView.findViewById(R.id.ic_match_type)
+        var matchPlayerCount: TextView = itemView.findViewById(R.id.text_match_player_count)
+        var matchDate: TextView = itemView.findViewById(R.id.text_match_date)
+        var matchTime: TextView = itemView.findViewById(R.id.text_match_time)
+        var matchLocationName: TextView = itemView.findViewById(R.id.text_match_location_name)
+        var matchAddress: TextView = itemView.findViewById(R.id.text_match_address)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchViewHolder {
         val layoutView =
@@ -46,5 +62,12 @@ class MatchRecyclerViewAdapter(private val matchList: List<Match>) :
 
     override fun getItemCount(): Int {
         return matchList.size
+    }
+
+    // Update match list
+    fun updateMatchList(newMatches: List<Match>) {
+        matchList.clear()
+        matchList.addAll(newMatches)
+        notifyDataSetChanged()
     }
 }
