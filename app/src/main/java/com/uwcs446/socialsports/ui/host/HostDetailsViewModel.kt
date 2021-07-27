@@ -59,9 +59,12 @@ class HostDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val place = locationService.getPlace(locationId!!)
-                _locationName.value = place.name
-                _locationAddress.value = place.address
+                if (editMatch != null) {
+                    _editMatchFlow.value = true
+                    val place = locationService.getPlace(locationId!!)
+                    _locationName.value = place.name
+                    _locationAddress.value = place.address
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Something went wrong while fetching place response", e)
             }
