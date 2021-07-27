@@ -1,5 +1,7 @@
 package com.uwcs446.socialsports.ui.matchdetails
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,13 +9,16 @@ import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,11 +29,12 @@ import java.time.format.FormatStyle
 class MatchDetailsFragment : Fragment() {
 
     private val args: MatchDetailsFragmentArgs by navArgs()
-    private val matchDetailsViewModel: MatchDetailsViewModel by viewModels()
+    private val matchDetailsViewModel: MatchDetailsViewModel by activityViewModels()
+
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val isHost: Boolean = true // TODO: set boolean
+    private val isHost: Boolean = false // TODO: set boolean
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +52,26 @@ class MatchDetailsFragment : Fragment() {
             binding.matchProgressBar.visibility = VISIBLE
             binding.matchDetailsViews.visibility = INVISIBLE
             matchDetailsViewModel.fetchMatch(args.matchId!!)
+        }
+
+        // Open map if permission is granted
+        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Show the map
+                val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
+                Navigation.findNavController(binding.root).navigate(action)
+            }
+        }
+
+        // Open Maps Fragment for Location
+        binding.matchLocation.locationItemWrapper.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // Show the map
+                val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
+                Navigation.findNavController(binding.root).navigate(action)
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
         }
 
         val teamOneViewAdapter = TeamListAdapter(emptyList(), 0)
@@ -89,18 +115,14 @@ class MatchDetailsFragment : Fragment() {
                     // TODO: replace mocks - get player name or some other identifier from match.teamOne and match.teamTwo
                     val teamOne = listOf("John Smith", "John Smith", "John Smith")
                     val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
-
-                    // display the edit button if current user is the match host
-                    if (isHost) {
-                        binding.editButtonMatchDetails.visibility = View.VISIBLE
-                        binding.editButtonMatchDetails.setOnClickListener {
-                            val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match)
-                            it.findNavController().navigate(action)
-                        }
-                    }
                 }
             }
         )
+
+        // display the edit button if current user is the match host
+        if (isHost) {
+            binding.editButtonMatchDetails.visibility = View.VISIBLE
+        }
 
         return binding.root
     }
