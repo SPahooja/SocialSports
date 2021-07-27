@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentHomeBinding
-import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,8 +22,7 @@ class HomeFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val recyclerViewData = mutableListOf<Match>()
-    private val recyclerViewAdapter = MatchRecyclerViewAdapter(recyclerViewData)
+    private val recyclerViewAdapter = MatchRecyclerViewAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +43,7 @@ class HomeFragment : Fragment() {
 
         // Observer which updates the recyclerview when match data changes
         homeViewModel.matches.observe(viewLifecycleOwner) { matchList ->
-            recyclerViewData.clear()
-            recyclerViewData.addAll(matchList)
-            recyclerViewAdapter.notifyDataSetChanged()
+            recyclerViewAdapter.updateMatchList(matchList)
 
             binding.homeProgressBar.visibility = INVISIBLE
             binding.layoutMatchList.recyclerviewMatch.visibility = VISIBLE
