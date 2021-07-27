@@ -18,7 +18,7 @@ fun Match.toEntity() =
         title = title,
         sport = sport,
         description = description,
-        host = host.toEntity(),
+        hostId = hostId,
         time = time.atDate(date).toString(),
         location = LocationEntity(placeId = location.placeId, lat = location.latLng.latitude, lng = location.latLng.longitude),
         duration = duration.toMinutes(),
@@ -39,7 +39,7 @@ fun MatchEntity.toDomain() =
         date = LocalDate.from(LocalDateTime.parse(time)),
         time = LocalTime.from(LocalDateTime.parse(time)),
         duration = Duration.ofMinutes(duration),
-        host = host.toDomain(),
+        hostId = hostId,
         location = MatchLocation(
             location.placeId,
             LatLng(

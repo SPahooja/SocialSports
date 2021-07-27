@@ -109,7 +109,7 @@ class HostDetailsViewModel @Inject constructor(
                 location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription,
-                host = user!!,
+                hostId = user!!.id,
                 teamOne = emptyList(),
                 teamTwo = emptyList()
             )
