@@ -45,7 +45,6 @@ class MatchDetailsViewModel @Inject constructor(
             val fetchedTeamTwo = userRepository.findByIds(fetchedMatch.teamTwo)
             val fetchedMatchedPlace = locationService.getPlace(fetchedMatch.location.placeId)
 
-
             _match.value = fetchedMatch!!
             _host.value = fetchedHost!!
             _teamOne.value = fetchedTeamOne
