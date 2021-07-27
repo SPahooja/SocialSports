@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.databinding.FragmentHomeBinding
-import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
+import com.uwcs446.socialsports.ui.matchlist.MatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +22,7 @@ class HomeFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val recyclerViewAdapter = MatchRecyclerViewAdapter()
+    private val recyclerViewAdapter = MatchListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,

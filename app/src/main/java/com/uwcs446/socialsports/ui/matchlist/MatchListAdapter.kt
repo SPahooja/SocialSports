@@ -13,8 +13,8 @@ import com.uwcs446.socialsports.domain.match.Match
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class MatchRecyclerViewAdapter() :
-    RecyclerView.Adapter<MatchRecyclerViewAdapter.MatchViewHolder>() {
+class MatchListAdapter() :
+    RecyclerView.Adapter<MatchListAdapter.MatchViewHolder>() {
 
     private val matchList = mutableListOf<Match>()
 

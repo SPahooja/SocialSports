@@ -21,7 +21,7 @@ import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentFindBinding
 import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.ui.matchlist.MatchRecyclerViewAdapter
+import com.uwcs446.socialsports.ui.matchlist.MatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -37,7 +37,7 @@ class FindFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val recyclerViewAdapter = MatchRecyclerViewAdapter()
+    private val recyclerViewAdapter = MatchListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
