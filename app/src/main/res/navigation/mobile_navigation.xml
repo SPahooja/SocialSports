@@ -38,32 +38,14 @@
 
     <fragment
         android:id="@+id/navigation_host"
-        android:name="com.uwcs446.socialsports.ui.host.location.HostLocationFragment"
-        android:label="@string/title_host"
-        tools:layout="@layout/fragment_host_location" >
-        <action
-            android:id="@+id/action_navigation_host_to_host_edit_details"
-            app:destination="@id/host_edit_details" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/host_edit_details"
-        android:name="com.uwcs446.socialsports.ui.host.details.HostDetailsFragment"
+        android:name="com.uwcs446.socialsports.ui.host.HostDetailsFragment"
         android:label="@string/title_host"
         tools:layout="@layout/fragment_host_edit_details" >
-        <argument
-            android:name="matchLocation"
-            app:argType="com.uwcs446.socialsports.domain.match.MatchLocation"
-            app:nullable="true"
-            android:defaultValue="@null" />
         <argument
             android:name="match"
             app:argType="com.uwcs446.socialsports.domain.match.Match"
             android:defaultValue="@null"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_host_edit_details_to_navigation_host"
-            app:destination="@id/navigation_host" />
     </fragment>
 
     <fragment

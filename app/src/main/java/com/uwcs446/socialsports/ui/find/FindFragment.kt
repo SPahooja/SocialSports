@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -47,6 +49,9 @@ class FindFragment : Fragment() {
 
         _binding = FragmentFindBinding.inflate(inflater, container, false)
 
+        binding.findProgressBar.visibility = VISIBLE
+        binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+
         // set up recycler view for match list
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
         binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -57,6 +62,9 @@ class FindFragment : Fragment() {
             recyclerViewData.clear()
             recyclerViewData.addAll(matchList)
             recyclerViewAdapter.notifyDataSetChanged()
+
+            binding.findProgressBar.visibility = INVISIBLE
+            binding.layoutMatchList.recyclerviewMatch.visibility = VISIBLE
         }
 
         // set up date and time pickers for filter toolbar
@@ -77,6 +85,9 @@ class FindFragment : Fragment() {
         (autoCompleteTextView as? AutoCompleteTextView)?.setAdapter(typeListAdapter)
 
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            binding.findProgressBar.visibility = VISIBLE
+            binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+
             lifecycleScope.launch {
                 when (position) {
                     0 -> findViewModel.filterMatchBySport(Sport.ANY)

@@ -10,7 +10,6 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,10 +26,11 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @AndroidEntryPoint
-class MatchDetailsFragment : Fragment(), ActivityCompat.OnRequestPermissionsResultCallback {
+class MatchDetailsFragment : Fragment() {
 
     private val args: MatchDetailsFragmentArgs by navArgs()
     private val matchDetailsViewModel: MatchDetailsViewModel by activityViewModels()
+
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
 

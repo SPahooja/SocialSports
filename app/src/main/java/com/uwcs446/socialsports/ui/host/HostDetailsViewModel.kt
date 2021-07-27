@@ -1,4 +1,4 @@
-package com.uwcs446.socialsports.ui.host.details
+package com.uwcs446.socialsports.ui.host
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.MatchRepository
@@ -30,17 +31,31 @@ class HostDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val TAG = this::class.simpleName
 
-    private val selectedMatchLocation = state.get<MatchLocation>("matchLocation")
-    private val editMatch = state.get<Match>("match")
-
     var user = currentUserRepository.getUser()
 
-    // Setup location card
-    private var locationId = selectedMatchLocation?.placeId ?: editMatch?.location?.placeId ?: ""
+    // Pre-fill the form with existing match information for match editing flow
+    private val editMatch = state.get<Match>("match")
+    /* // Test data for editMatch
+    val editMatch = Match(
+        id = "1",
+        title = "matchTitle",
+        sport = Sport.valueOf("SOCCER"),
+        date = LocalDate.parse("2021-07-10"),
+        time = LocalTime.parse("12:30:00"),
+        location = MatchLocation("ChIJl6dkQKv2K4gRqZLt-DxGG7U", LatLng(0.0,0.0)),
+        duration = Duration.parse("PT2H"),
+        description = "matchDescription",
+        host = user!!,
+        teamOne = emptyList(),
+        teamTwo = emptyList()
+    ) */
+    private var locationId = editMatch?.location?.placeId ?: ""
     private val _locationName = MutableLiveData<String>().apply { value = "" }
     val locationName: LiveData<String> = _locationName
     private val _locationAddress = MutableLiveData<String>().apply { value = "" }
     val locationAddress: LiveData<String> = _locationAddress
+    private var _editMatchFlow = MutableLiveData<Boolean>(false)
+    val editMatchFlow: LiveData<Boolean> = _editMatchFlow
     init {
         viewModelScope.launch {
             try {
@@ -53,7 +68,7 @@ class HostDetailsViewModel @Inject constructor(
         }
     }
 
-    // Pre-fill the form with existing match information for match editing flow
+    var matchLocation = editMatch?.location ?: MatchLocation("", LatLng(0.0, 0.0))
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.sport ?: ""
     var matchDate = editMatch?.date?.toString() ?: ""
@@ -75,7 +90,7 @@ class HostDetailsViewModel @Inject constructor(
                 sport = Sport.valueOf(sportType.toString()),
                 date = LocalDate.parse(matchDate),
                 time = LocalTime.parse(matchTime),
-                location = selectedMatchLocation!!,
+                location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription
             )
@@ -87,7 +102,7 @@ class HostDetailsViewModel @Inject constructor(
                 sport = Sport.valueOf(sportType.toString()),
                 date = LocalDate.parse(matchDate),
                 time = LocalTime.parse(matchTime),
-                location = selectedMatchLocation!!,
+                location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription,
                 hostId = user!!.id,
