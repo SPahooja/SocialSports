@@ -15,21 +15,37 @@ class FirebaseUserRepository(
 
     private val TAG = this::class.simpleName
 
-    override suspend fun findById(ids: List<String>): List<User> {
+    override suspend fun findById(id: String): User? {
         return try {
             usersCollection
+                .document(id)
+                .get()
+                .await()
+                .toUserEntity()
+                ?.toDomain()
+        } catch (e: Exception) {
+            Log.e(TAG, "Something went wrong while fetching user $id", e)
+            null
+        }
+    }
+
+    override suspend fun findByIds(ids: List<String>): List<User> {
+        if (ids.isEmpty()) {
+            return emptyList()
+        }
+        return try {
+            val users = usersCollection
                 .whereIn(User::id.name, ids)
                 .get()
                 .await()
                 .documents
-                .mapNotNull { document -> document.toUser() }
+                .mapNotNull { document -> document.toUserEntity() }
+            return users.toDomain()
         } catch (e: Exception) {
             Log.e(TAG, "Something went wrong while fetching users $ids", e)
             emptyList()
         }
     }
 }
-
-private fun DocumentSnapshot.toUser(): User? = this.toUserEntity()?.toDomain()
 
 private fun DocumentSnapshot.toUserEntity() = this.toObject(UserEntity::class.java)

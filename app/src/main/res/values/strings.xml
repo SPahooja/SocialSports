@@ -10,12 +10,8 @@
     <string name="top_label_find">Find a Game</string>
     <string name="bottom_label_find">Find</string>
 
-    <!--  host location search -->
-    <string name="host_hint_choose_a_location">Choose a Location</string>
-    <string name="host_location_suggestions">Suggestions</string>
-    <string name="host_location_search_result">Search Result</string>
-
-    <!--  host match details -->
+    <!--  host games -->
+    <string name="host_hint_search_location">Search for a Location</string>
     <string name="host_selected_location">Location</string>
     <string name="host_game_information">Game Information</string>
     <string name="host_hint_game_title">Game Title</string>
@@ -41,5 +37,11 @@
     <!--  filter toolbar  -->
     <string name="date_filter_hint">Date</string>
     <string name="time_filter_hint">Time</string>
+
+    <!-- game details view -->
+    <string name="team_one">Team 1</string>
+    <string name="team_two">Team 2</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

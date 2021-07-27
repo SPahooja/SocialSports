@@ -1,12 +1,16 @@
 package com.uwcs446.socialsports.ui.find
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.Filter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -45,6 +49,9 @@ class FindFragment : Fragment() {
 
         _binding = FragmentFindBinding.inflate(inflater, container, false)
 
+        binding.findProgressBar.visibility = VISIBLE
+        binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+
         // set up recycler view for match list
         binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
         binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -55,6 +62,9 @@ class FindFragment : Fragment() {
             recyclerViewData.clear()
             recyclerViewData.addAll(matchList)
             recyclerViewAdapter.notifyDataSetChanged()
+
+            binding.findProgressBar.visibility = INVISIBLE
+            binding.layoutMatchList.recyclerviewMatch.visibility = VISIBLE
         }
 
         // set up date and time pickers for filter toolbar
@@ -69,11 +79,15 @@ class FindFragment : Fragment() {
             getString(R.string.type_ultimate_frisbee)
         )
 
-        val typeListAdapter = ArrayAdapter(requireContext(), R.layout.type_filter_list_item, items)
+        val typeListAdapter = NoFilterAdapter(requireContext(), R.layout.type_filter_list_item, items)
         val autoCompleteTextView = binding.layoutListFilterToolbar.matchTypeDropdown
+        autoCompleteTextView.freezesText = true
         (autoCompleteTextView as? AutoCompleteTextView)?.setAdapter(typeListAdapter)
 
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            binding.findProgressBar.visibility = VISIBLE
+            binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+
             lifecycleScope.launch {
                 when (position) {
                     0 -> findViewModel.filterMatchBySport(Sport.ANY)
@@ -88,16 +102,6 @@ class FindFragment : Fragment() {
         autoCompleteTextView.setText(getString(R.string.type_all), false)
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Observer which updates the recyclerview when match data changes
-        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
-            recyclerViewData.clear()
-            recyclerViewData.addAll(matchList)
-            recyclerViewAdapter.notifyDataSetChanged()
-        }
     }
 
     /*
@@ -161,5 +165,18 @@ class FindFragment : Fragment() {
             }
             timePicker.show(fragmentManager, "timePicker")
         }
+    }
+
+    // override ArrayAdapter filter to avoid spinner options disappearing when navigating back from details page
+    class NoFilterAdapter(context: Context, layout: Int, val items: List<String>) :
+        ArrayAdapter<String>(context, layout, items) {
+
+        private val noOpFilter = object : Filter() {
+            private val noOpResult = FilterResults()
+            override fun performFiltering(constraint: CharSequence?) = noOpResult
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {}
+        }
+
+        override fun getFilter() = noOpFilter
     }
 }

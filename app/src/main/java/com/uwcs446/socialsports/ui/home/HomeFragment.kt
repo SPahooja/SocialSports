@@ -3,6 +3,8 @@ package com.uwcs446.socialsports.ui.home
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,11 +39,18 @@ class HomeFragment : Fragment() {
         binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
+        // Initial loading data
+        binding.homeProgressBar.visibility = VISIBLE
+        binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+
         // Observer which updates the recyclerview when match data changes
         homeViewModel.matches.observe(viewLifecycleOwner) { matchList ->
             recyclerViewData.clear()
             recyclerViewData.addAll(matchList)
             recyclerViewAdapter.notifyDataSetChanged()
+
+            binding.homeProgressBar.visibility = INVISIBLE
+            binding.layoutMatchList.recyclerviewMatch.visibility = VISIBLE
         }
 
         // List of game filter toggle buttons
@@ -66,6 +75,9 @@ class HomeFragment : Fragment() {
                     filter.toString() == _button.text
                 }
                 if (checked) {
+                    binding.homeProgressBar.visibility = VISIBLE
+                    binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+
                     homeViewModel.filterMatches(filter!!)
                 }
             }
