@@ -117,7 +117,7 @@ class MatchDetailsFragment : Fragment() {
                     val teamOne = listOf("John Smith", "John Smith", "John Smith")
                     val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
 
-                    // display the edit button if current user is the match host
+                    // display the edit button if current user is the host
                     if (isHost) {
                         binding.editButtonMatchDetails.visibility = View.VISIBLE
                         binding.editButtonMatchDetails.setOnClickListener {
