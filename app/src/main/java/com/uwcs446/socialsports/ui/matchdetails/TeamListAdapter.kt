@@ -7,8 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.TeamPositionRowBinding
 
-class TeamListAdapter(private val joinedUsers: List<String>, private val teamSize: Int) :
+class TeamListAdapter() :
     RecyclerView.Adapter<TeamListAdapter.TeamPositionViewHolder>() {
+
+    private val joinedUsers = mutableListOf<String>()
+    private var teamSize = 0
 
     // View Holder class
     class TeamPositionViewHolder(val binding: TeamPositionRowBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -49,4 +52,17 @@ class TeamListAdapter(private val joinedUsers: List<String>, private val teamSiz
 
     // Return the size of your dataset
     override fun getItemCount() = teamSize
+
+    // Update joinedUsers
+    fun updateTeamMembers(users: List<String>) {
+        joinedUsers.clear()
+        joinedUsers.addAll(users)
+        notifyDataSetChanged()
+    }
+
+    // Update team size
+    fun updateTeamSize(size: Int) {
+        teamSize = size
+        notifyDataSetChanged()
+    }
 }
