@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,7 @@ class MatchDetailsFragment : Fragment() {
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val isHost: Boolean = false // TODO: set boolean
+    private val isHost: Boolean = true // TODO: set boolean
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,14 +116,18 @@ class MatchDetailsFragment : Fragment() {
                     // TODO: replace mocks - get player name or some other identifier from match.teamOne and match.teamTwo
                     val teamOne = listOf("John Smith", "John Smith", "John Smith")
                     val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
+
+                    // display the edit button if current user is the match host
+                    if (isHost) {
+                        binding.editButtonMatchDetails.visibility = View.VISIBLE
+                        binding.editButtonMatchDetails.setOnClickListener {
+                            val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match)
+                            it.findNavController().navigate(action)
+                        }
+                    }
                 }
             }
         )
-
-        // display the edit button if current user is the match host
-        if (isHost) {
-            binding.editButtonMatchDetails.visibility = View.VISIBLE
-        }
 
         return binding.root
     }
