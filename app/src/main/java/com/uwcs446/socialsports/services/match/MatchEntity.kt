@@ -16,7 +16,8 @@ data class MatchEntity(
     val duration: Long = 0,
     val hostId: String = "",
     val teamOne: List<String> = emptyList(),
-    val teamTwo: List<String> = emptyList()
+    val teamTwo: List<String> = emptyList(),
+    val blacklist: List<String>
 )
 
 data class LocationEntity(

@@ -3,8 +3,6 @@ package com.uwcs446.socialsports.services.match
 import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchLocation
-import com.uwcs446.socialsports.services.user.toDomain
-import com.uwcs446.socialsports.services.user.toEntity
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,10 +18,15 @@ fun Match.toEntity() =
         description = description,
         hostId = hostId,
         time = time.atDate(date).toString(),
-        location = LocationEntity(placeId = location.placeId, lat = location.latLng.latitude, lng = location.latLng.longitude),
+        location = LocationEntity(
+            placeId = location.placeId,
+            lat = location.latLng.latitude,
+            lng = location.latLng.longitude
+        ),
         duration = duration.toMinutes(),
         teamOne = teamOne,
-        teamTwo = teamTwo
+        teamTwo = teamTwo,
+        blacklist = emptyList() // TODO
     )
 
 fun Collection<MatchEntity>.toDomain(): List<Match> {
