@@ -74,13 +74,13 @@ class MatchDetailsFragment : Fragment() {
             }
         }
 
-        val teamOneViewAdapter = TeamListAdapter(emptyList(), 0)
+        val teamOneViewAdapter = TeamListAdapter()
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
-        val teamTwoViewAdapter = TeamListAdapter(emptyList(), 0)
+        val teamTwoViewAdapter = TeamListAdapter()
         binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(true)
         binding.layoutTeamTwo.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamTwo.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
@@ -91,6 +91,8 @@ class MatchDetailsFragment : Fragment() {
             {
                 val match = matchDetailsViewModel.match.value
                 val host = matchDetailsViewModel.host.value
+                val teamOne = matchDetailsViewModel.teamOne.value
+                val teamTwo = matchDetailsViewModel.teamTwo.value
 
                 if (match != null && host != null) {
                     binding.matchSummary.textMatchTitle.setText(match.title)
@@ -109,12 +111,14 @@ class MatchDetailsFragment : Fragment() {
                     binding.matchProgressBar.visibility = GONE
                     binding.matchDetailsViews.visibility = VISIBLE
 
-                    // TODO get the team from firestore
-                    // set up recycler view for two teams
+                    // Set team size
                     val teamSize = match.sport.teamSize
-                    // TODO: replace mocks - get player name or some other identifier from match.teamOne and match.teamTwo
-                    val teamOne = listOf("John Smith", "John Smith", "John Smith")
-                    val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
+                    teamOneViewAdapter.updateTeamSize(teamSize)
+                    teamTwoViewAdapter.updateTeamSize(teamSize)
+
+                    // Pass names from teams one and two to recycle view adapter
+                    if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
+                    if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
                 }
             }
         )
