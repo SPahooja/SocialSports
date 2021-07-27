@@ -1,0 +1,60 @@
+package com.uwcs446.socialsports.ui.matchdetails
+
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.uwcs446.socialsports.domain.match.Match
+import com.uwcs446.socialsports.domain.match.MatchRepository
+import com.uwcs446.socialsports.domain.user.User
+import com.uwcs446.socialsports.domain.user.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class MatchDetailsViewModel @Inject constructor(
+    private val matchRepository: MatchRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
+    private val _match = MutableLiveData<Match>()
+
+    val match: LiveData<Match> = _match
+
+    private val _host = MutableLiveData<User>()
+
+    val host: LiveData<User> = _host
+
+    private val _teamOne = MutableLiveData<List<User>>(emptyList())
+
+    val teamOne: LiveData<List<User>> = _teamOne
+
+    private val _teamTwo = MutableLiveData<List<User>>(emptyList())
+
+    val teamTwo: LiveData<List<User>> = _teamTwo
+
+    private val _ready = MutableLiveData<Boolean>(false)
+
+    val ready: LiveData<Boolean> = _ready
+
+    suspend fun fetchMatch(matchId: String) {
+        val fetchedMatch = matchRepository.fetchMatchById(matchId)
+        if (fetchedMatch != null) {
+            val fetchedHost = userRepository.findById(fetchedMatch.hostId)
+            val fetchedTeamOne = userRepository.findByIds(fetchedMatch.teamOne)
+            val fetchedTeamTwo = userRepository.findByIds(fetchedMatch.teamTwo)
+
+            Log.d("matchdetails", "${fetchedMatch.hostId}")
+            if (fetchedHost != null) {
+                Log.d("matchdetails", "${fetchedHost.id}")
+            } else {
+                Log.d("matchdetails", "cannot find host")
+            }
+
+            _match.value = fetchedMatch!!
+            _host.value = fetchedHost!!
+            _teamOne.value = fetchedTeamOne
+            _teamTwo.value = fetchedTeamTwo
+            _ready.value = true
+        }
+    }
+}

@@ -4,12 +4,14 @@ import com.uwcs446.socialsports.domain.user.User
 
 fun User.toEntity() =
     UserEntity(
-        id = id
+        id = id,
+        name = name
     )
 
 fun Collection<UserEntity>.toDomain() = this.map { it.toDomain() }
 
 fun UserEntity.toDomain() =
     User(
-        id = id
+        id = id,
+        name = name
     )
