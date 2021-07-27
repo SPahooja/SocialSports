@@ -24,12 +24,14 @@ class ProfileViewModel
     val rating: LiveData<Float> = _rating
 
     private val userObserver = Observer<User> {
-        _username.setValue(currentUserRepository.getUser()?.id ?: "NO_USER") // TODO: fetch username
+        _username.setValue(
+            currentUserRepository.getUser()?.uid ?: "NO_USER"
+        ) // TODO: fetch username
         _rating.setValue(3.5F) // TODO: fetch user rating
     }
 
     init {
-        currentUserRepository.user.observeForever(userObserver)
+//        currentUserRepository.user.observeForever(userObserver)
     }
 
     fun handleLogout() {
@@ -37,7 +39,7 @@ class ProfileViewModel
     }
 
     override fun onCleared() {
-        currentUserRepository.user.removeObserver(userObserver)
-        super.onCleared()
+//        currentUserRepository.user.removeObserver(userObserver)
+//        super.onCleared()
     }
 }

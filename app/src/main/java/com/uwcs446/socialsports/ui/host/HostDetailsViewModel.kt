@@ -11,7 +11,7 @@ import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
-import com.uwcs446.socialsports.domain.user.CurrentUserRepository
+import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.services.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HostDetailsViewModel @Inject constructor(
-    private val currentUserRepository: CurrentUserRepository,
+    private val currentUserRepository: CurrentAuthUserRepository,
     private val matchRepository: MatchRepository,
     private val state: SavedStateHandle,
     private val locationService: LocationService
@@ -35,6 +35,7 @@ class HostDetailsViewModel @Inject constructor(
 
     // Pre-fill the form with existing match information for match editing flow
     private val editMatch = state.get<Match>("match")
+
     /* // Test data for editMatch
     val editMatch = Match(
         id = "1",
@@ -56,6 +57,7 @@ class HostDetailsViewModel @Inject constructor(
     val locationAddress: LiveData<String> = _locationAddress
     private var _editMatchFlow = MutableLiveData<Boolean>(false)
     val editMatchFlow: LiveData<Boolean> = _editMatchFlow
+
     init {
         viewModelScope.launch {
             try {
@@ -105,7 +107,7 @@ class HostDetailsViewModel @Inject constructor(
                 location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription,
-                hostId = user!!.id,
+                hostId = user!!.uid,
                 teamOne = emptyList(),
                 teamTwo = emptyList()
             )

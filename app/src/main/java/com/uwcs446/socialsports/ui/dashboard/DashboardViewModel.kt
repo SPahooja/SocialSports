@@ -14,7 +14,7 @@ class DashboardViewModel
 ) : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
         value =
-            "This is dashboard Fragment with user: [${userRepository.getUser()?.id ?: "NO_USER"}]"
+            "This is dashboard Fragment with user: [${userRepository.getUser()?.uid ?: "NO_USER"}]"
     }
 
     val text: LiveData<String> = _text
