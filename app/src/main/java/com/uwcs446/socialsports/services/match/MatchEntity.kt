@@ -3,7 +3,6 @@ package com.uwcs446.socialsports.services.match
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.uwcs446.socialsports.domain.match.Sport
-import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -13,8 +12,8 @@ data class MatchEntity(
     val title: String = "",
     val location: LocationEntity = LocationEntity(),
     val description: String = "",
-    val startTime: LocalDateTime = LocalDateTime.now(),
-    val duration: Duration = Duration.ZERO,
+    val time: String = LocalDateTime.now().toString(),
+    val duration: Long = 0,
     val hostId: String = "",
     val teamOne: List<String> = emptyList(),
     val teamTwo: List<String> = emptyList()

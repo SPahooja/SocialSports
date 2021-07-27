@@ -4,7 +4,8 @@ import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.parcel.Parcelize
 import java.time.Duration
-import java.time.LocalDateTime
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Parcelize
 data class Match(
@@ -13,7 +14,8 @@ data class Match(
     val title: String,
     val description: String,
     val location: MatchLocation,
-    val startTime: LocalDateTime,
+    val date: LocalDate,
+    val time: LocalTime,
     val duration: Duration,
     val hostId: String,
     val teamOne: List<String>,
