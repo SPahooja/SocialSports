@@ -15,7 +15,6 @@ import com.uwcs446.socialsports.domain.user.CurrentUserRepository
 import com.uwcs446.socialsports.services.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
@@ -60,12 +59,9 @@ class HostDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                if (editMatch != null) {
-                    _editMatchFlow.value = true
-                    val response = locationService.getPlace(locationId!!).await()
-                    _locationName.value = response.place.name
-                    _locationAddress.value = response.place.address
-                }
+                val place = locationService.getPlace(locationId!!)
+                _locationName.value = place.name
+                _locationAddress.value = place.address
             } catch (e: Exception) {
                 Log.e(TAG, "Something went wrong while fetching place response", e)
             }
