@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports.services.user
 
+import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.uwcs446.socialsports.di.module.UsersCollection
@@ -11,6 +12,8 @@ class FirebaseUserRepository(
     @UsersCollection
     private val usersCollection: CollectionReference
 ) : UserRepository {
+
+    private val TAG = this::class.simpleName
 
     override suspend fun findById(id: String): User? {
         return usersCollection
@@ -31,6 +34,18 @@ class FirebaseUserRepository(
             .documents
             .mapNotNull { document -> document.toUserEntity() }
             .toDomain()
+    }
+
+    override fun upsert(_user: User): User {
+        val user = _user.toEntity()
+        usersCollection.document(user.id).set(user)
+            .addOnSuccessListener {
+                Log.d(TAG, "Saved user ${user.id}")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Failed to save user ${user.id}")
+            }
+        return _user
     }
 }
 

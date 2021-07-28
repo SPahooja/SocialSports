@@ -9,9 +9,6 @@ interface CurrentAuthUserRepository {
 
     /**
      * Returns current logged-in user.
-     *
-     * Note: A user's real name cannot be determined from FirebaseUser. Query the
-     *   users collection with this user's UID to find their real name.
      */
     fun getUser(): FirebaseUser?
 

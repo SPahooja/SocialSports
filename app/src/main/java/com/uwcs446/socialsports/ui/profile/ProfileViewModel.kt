@@ -23,7 +23,7 @@ class ProfileViewModel
 
     private val userObserver = Observer<FirebaseUser> {
         // TODO: fetch user's real name
-        _username.value = currentUserRepository.getUser()?.uid ?: "Logged out."
+        _username.value = currentUserRepository.getUser()?.displayName ?: "Logged out."
         // TODO: fetch user's rating
         _rating.value = 3.5F
     }

@@ -14,4 +14,9 @@ interface UserRepository {
      *   input array if users with a given ID do not exist.
      */
     suspend fun findByIds(ids: List<String>): List<User>
+
+    /**
+     * Upsert (update or insert) a user
+     */
+    fun upsert(user: User): User
 }
