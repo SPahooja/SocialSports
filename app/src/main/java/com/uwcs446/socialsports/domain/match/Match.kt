@@ -19,7 +19,8 @@ data class Match(
     val duration: Duration,
     val hostId: String,
     val teamOne: List<String>,
-    val teamTwo: List<String>
+    val teamTwo: List<String>,
+    val blacklist: List<String>
 ) : Parcelable {
     fun teamSize() = this.sport.teamSize
 

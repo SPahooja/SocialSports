@@ -1,4 +1,4 @@
-package com.uwcs446.socialsports.services
+package com.uwcs446.socialsports.services.location
 
 import android.content.Context
 import com.google.android.libraries.places.api.Places
@@ -16,7 +16,7 @@ class LocationService @Inject constructor(
     suspend fun getPlace(placeId: String): Place {
         val placesClient = Places.createClient(activity)
         val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
-        val request = FetchPlaceRequest.newInstance(placeId!!, placeFields)
+        val request = FetchPlaceRequest.newInstance(placeId, placeFields)
 
         return placesClient.fetchPlace(request).await().place
     }
