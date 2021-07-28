@@ -22,112 +22,97 @@ class FirebaseMatchRepository
     private val TAG = this::class.simpleName
 
     private val _exploreMatches = MutableLiveData<List<Match>>()
-
     override val exploreMatches: LiveData<List<Match>> = _exploreMatches
 
     private val _matchesByHost = MutableLiveData<Pair<String, List<Match>>>()
-
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
     // TODO Add filtering for future timestamp
-    override suspend fun fetchExploreMatches(sport: Sport): List<Match>? {
-        try {
-            val matches = matchesCollection
-                .whereIn(
-                    Match::sport.name,
-                    if (sport == Sport.ANY) Sport.values().toList() else listOf(sport)
-                )
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain()
-        } catch (e: Exception) {
-            Log.e(TAG, "Something went wrong while fetching explore matches", e)
-        }
-        return null
+    override suspend fun fetchExploreMatches(sport: Sport): List<Match> {
+        val sportsToMatch = if (sport == Sport.ANY) Sport.values().toList() else listOf(sport)
+
+        val matches = matchesCollection
+            .whereIn(Match::sport.name, sportsToMatch)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+            .toDomain()
+
+        Log.d(TAG, "Found ${matches.size} matches")
+
+        return matches
     }
 
     // TODO: Add filtering for future timestamp
-    override suspend fun findAllByHost(hostId: String): List<Match>? {
-        try {
-            val matches = matchesCollection
-                .whereEqualTo(of(MatchEntity::hostId.name), hostId)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain()
-        } catch (e: Exception) {
-            Log.e(TAG, "Something went wrong while fetching all matches by host $hostId", e)
-        }
-        return null
+    override suspend fun findAllByHost(hostId: String): List<Match> {
+        val matches = matchesCollection
+            .whereEqualTo(of(MatchEntity::hostId.name), hostId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+            .toDomain()
+
+        Log.d(TAG, "Found ${matches.size} matches")
+
+        return matches
     }
 
     // TODO: Add filtering for future timestamp
-    override suspend fun findJoinedByUser(userId: String): List<Match>? {
-        try {
-            val teamOneMatches = matchesCollection
-                .whereArrayContains(MatchEntity::teamOne.name, userId)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            val teamTwoMatches = matchesCollection
-                .whereArrayContains(Match::teamTwo.name, userId)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            val matches = (teamOneMatches + teamTwoMatches)
-            Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain()
-        } catch (e: Exception) {
-            Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
-        }
-        return null
+    override suspend fun findJoinedByUser(userId: String): List<Match> {
+        val teamOneMatches = matchesCollection
+            .whereArrayContains(MatchEntity::teamOne.name, userId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+        val teamTwoMatches = matchesCollection
+            .whereArrayContains(Match::teamTwo.name, userId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+
+        val matches = (teamOneMatches + teamTwoMatches).toDomain()
+
+        Log.d(TAG, "Found ${matches.size} matches")
+
+        return matches
     }
 
     // TODO: Add filtering for past timestamp
-    override suspend fun findPastWithUser(userId: String): List<Match>? {
-        try {
-            val hostMatches = matchesCollection
-                .whereEqualTo(of(MatchEntity::hostId.name), userId)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            val teamOneMatches = matchesCollection
-                .whereArrayContains(MatchEntity::teamOne.name, userId)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            val teamTwoMatches = matchesCollection
-                .whereArrayContains(Match::teamTwo.name, userId)
-                .get()
-                .await()
-                .documents
-                .mapNotNull { document -> document.toMatchEntity() }
-            val matches =
-                (hostMatches + teamOneMatches + teamTwoMatches).distinctBy { match -> match.id }
-            Log.d(TAG, "Found ${matches.size} matches")
-            return matches.toDomain()
-        } catch (e: Exception) {
-            Log.e(TAG, "Something went wrong while fetching matches for user $userId", e)
-        }
-        return null
+    override suspend fun findPastWithUser(userId: String): List<Match> {
+        val hostMatches = matchesCollection
+            .whereEqualTo(of(MatchEntity::hostId.name), userId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+        val teamOneMatches = matchesCollection
+            .whereArrayContains(MatchEntity::teamOne.name, userId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+        val teamTwoMatches = matchesCollection
+            .whereArrayContains(Match::teamTwo.name, userId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+
+        val matches = (hostMatches + teamOneMatches + teamTwoMatches)
+            .distinctBy { match -> match.id }
+            .toDomain()
+
+        Log.d(TAG, "Found ${matches.size} matches")
+
+        return matches
     }
 
     override suspend fun fetchMatchById(matchId: String): Match? {
-        return try {
-            matchesCollection.document(matchId).get().await().toMatchEntity()?.toDomain()
-        } catch (e: Exception) {
-            Log.e(TAG, "Something went wrong while fetching match $matchId", e)
-            null
-        }
+        return matchesCollection.document(matchId).get().await().toMatchEntity()?.toDomain()
     }
 
     override fun create(match: Match) = createOrSave(match.toEntity())

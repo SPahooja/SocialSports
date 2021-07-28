@@ -1,6 +1,8 @@
 package com.uwcs446.socialsports.services.user.current
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
@@ -13,21 +15,29 @@ class FirebaseCurrentUserRepository
 
     private val TAG = this::class.simpleName
 
+    private val _currentUser = MutableLiveData<FirebaseUser>(firebaseAuth.currentUser)
+    override val user: LiveData<FirebaseUser> = _currentUser
+
     override fun getUser(): FirebaseUser? {
         return firebaseAuth.currentUser
-            .also {
-                Log.d(TAG, "Fetch logged in user: ${it?.uid}")
-            }
+            .also { Log.d(TAG, "Fetched logged in user: ${it?.uid}") }
     }
 
     override fun logout() {
         firebaseAuth
             .signOut()
+            .also { updateCurrentUser() }
             .also { Log.d(TAG, "User logged out") }
     }
 
     override fun handleAuthChange() {
-        // TODO handle user data changes, enforce signing in
-//        refreshUser()
+        updateCurrentUser()
+    }
+
+    /**
+     * Update the current logged-in user
+     */
+    private fun updateCurrentUser() {
+        _currentUser.postValue(firebaseAuth.currentUser)
     }
 }
