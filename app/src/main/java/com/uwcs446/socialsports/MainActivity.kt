@@ -1,5 +1,6 @@
 package com.uwcs446.socialsports
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +58,20 @@ class MainActivity :
 
         // This forces the user to log in, so that they can't use the app logged out.
         UserLoginService.login(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Handle sign in activity completion
+        if (requestCode == RC_SIGN_IN) {
+            UserLoginService.isLoginActivityActive = false
+
+            // Retry login if user did not log in successfully
+            if (resultCode != RESULT_OK) {
+                UserLoginService.login(this)
+            }
+        }
     }
 
     // Support back button in action bar
