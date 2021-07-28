@@ -26,7 +26,7 @@ fun Match.toEntity() =
         duration = duration.toMinutes(),
         teamOne = teamOne,
         teamTwo = teamTwo,
-        blacklist = emptyList() // TODO
+        blacklist = emptyList()
     )
 
 fun Collection<MatchEntity>.toDomain(): List<Match> {
@@ -51,5 +51,6 @@ fun MatchEntity.toDomain() =
             )
         ),
         teamOne = teamOne,
-        teamTwo = teamTwo
+        teamTwo = teamTwo,
+        blacklist = emptyList()
     )

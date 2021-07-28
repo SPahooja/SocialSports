@@ -12,7 +12,7 @@ import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
-import com.uwcs446.socialsports.services.LocationService
+import com.uwcs446.socialsports.services.location.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -51,17 +51,20 @@ class HostDetailsViewModel @Inject constructor(
         teamTwo = emptyList()
     ) */
     private var locationId = editMatch?.location?.placeId ?: ""
+
     private val _locationName = MutableLiveData<String>().apply { value = "" }
     val locationName: LiveData<String> = _locationName
+
     private val _locationAddress = MutableLiveData<String>().apply { value = "" }
     val locationAddress: LiveData<String> = _locationAddress
+
     private var _editMatchFlow = MutableLiveData<Boolean>(false)
     val editMatchFlow: LiveData<Boolean> = _editMatchFlow
 
     init {
         viewModelScope.launch {
             try {
-                val place = locationService.getPlace(locationId!!)
+                val place = locationService.getPlace(locationId)
                 _locationName.value = place.name
                 _locationAddress.value = place.address
             } catch (e: Exception) {
@@ -87,7 +90,7 @@ class HostDetailsViewModel @Inject constructor(
             if (matchDurationMinute == "") 0 else matchDurationMinute.toString().toLong()
         )
         if (editMatch != null) {
-            val updatedMatch = editMatch?.copy(
+            val updatedMatch = editMatch.copy(
                 title = matchTitle,
                 sport = Sport.valueOf(sportType.toString()),
                 date = LocalDate.parse(matchDate),
@@ -96,7 +99,7 @@ class HostDetailsViewModel @Inject constructor(
                 duration = durationHour + durationMin,
                 description = matchDescription
             )
-            matchRepository.edit(updatedMatch!!)
+            matchRepository.edit(updatedMatch)
         } else {
             val newMatch = Match(
                 id = UUID.randomUUID().toString(),
@@ -109,7 +112,8 @@ class HostDetailsViewModel @Inject constructor(
                 description = matchDescription,
                 hostId = user!!.uid,
                 teamOne = emptyList(),
-                teamTwo = emptyList()
+                teamTwo = emptyList(),
+                blacklist = emptyList()
             )
             matchRepository.create(newMatch)
         }

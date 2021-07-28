@@ -93,17 +93,17 @@ class MatchDetailsFragment : Fragment() {
                 val host = matchDetailsViewModel.host.value
 
                 if (match != null && host != null) {
-                    binding.matchSummary.textMatchTitle.setText(match.title)
+                    binding.matchSummary.textMatchTitle.text = match.title
                     binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
-                    binding.matchSummary.textMatchType.setText(match.sport.name)
-                    binding.matchSummary.textMatchPlayerCount.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
-                    binding.matchSummary.textMatchDate.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
-                    binding.matchSummary.textMatchTime.setText(match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
-                    binding.matchLocation.locationItemTitle.setText("High Park") // TODO: add location name field
-                    binding.matchLocation.locationItemAddress.setText("1873 Bloor St W, Toronto, ON M6R 2Z") // TODO: add location address field
-                    binding.matchLocation.locationItemDistance.setText("10km") // TODO: add distance
-                    binding.matchDescription.setText(match.description)
-                    binding.matchHostName.setText(host.name)
+                    binding.matchSummary.textMatchType.text = match.sport.name
+                    binding.matchSummary.textMatchPlayerCount.text = "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
+                    binding.matchSummary.textMatchDate.text = match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    binding.matchSummary.textMatchTime.text = match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    binding.matchLocation.locationItemTitle.text = "High Park" // TODO: add location name field
+                    binding.matchLocation.locationItemAddress.text = "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+                    binding.matchLocation.locationItemDistance.text = "10km" // TODO: add distance
+                    binding.matchDescription.text = match.description
+                    binding.matchHostName.text = host.name
 
                     // Switch visibility of views
                     binding.matchProgressBar.visibility = GONE
@@ -121,7 +121,7 @@ class MatchDetailsFragment : Fragment() {
 
         // display the edit button if current user is the match host
         if (isHost) {
-            binding.editButtonMatchDetails.visibility = View.VISIBLE
+            binding.editButtonMatchDetails.visibility = VISIBLE
         }
 
         return binding.root
