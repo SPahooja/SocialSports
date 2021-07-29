@@ -18,8 +18,8 @@ class UserModule {
 
     @Provides
     @Singleton
-    fun currentUserRepository(firebaseAuth: FirebaseAuth): FirebaseCurrentUserRepository =
-        FirebaseCurrentUserRepository(firebaseAuth)
+    fun currentUserRepository(firebaseAuth: FirebaseAuth, userRepository: UserRepository): FirebaseCurrentUserRepository =
+        FirebaseCurrentUserRepository(firebaseAuth, userRepository)
 
     @Provides
     @Singleton

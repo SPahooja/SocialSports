@@ -76,13 +76,13 @@ class MatchDetailsFragment : Fragment() {
         }
 
         val teamOneViewAdapter = TeamListAdapter()
-        binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
+        binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
         val teamTwoViewAdapter = TeamListAdapter()
-        binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(true)
+        binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamTwo.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamTwo.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamTwo.recyclerviewTeam.adapter = teamTwoViewAdapter
@@ -93,30 +93,41 @@ class MatchDetailsFragment : Fragment() {
                 val match = matchDetailsViewModel.match.value
                 val place = matchDetailsViewModel.place.value
                 val host = matchDetailsViewModel.host.value
+                val teamOne = matchDetailsViewModel.teamOne.value
+                val teamTwo = matchDetailsViewModel.teamTwo.value
 
                 if (match != null && host != null && place != null) {
                     binding.matchSummary.textMatchTitle.text = match.title
                     binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
                     binding.matchSummary.textMatchType.text = match.sport.name
-                    binding.matchSummary.textMatchPlayerCount.text = "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
-                    binding.matchSummary.textMatchDate.text = match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                    binding.matchSummary.textMatchTime.text = match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-                    binding.matchLocation.locationItemTitle.text = place.name // TODO: add location name field
-                    binding.matchLocation.locationItemAddress.text = place.address // TODO: add location address field
+                    binding.matchSummary.textMatchPlayerCount.text =
+                        "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
+                    binding.matchSummary.textMatchDate.text =
+                        match.startTime.atZone(ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    binding.matchSummary.textMatchTime.text =
+                        match.startTime.atZone(ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    binding.matchLocation.locationItemTitle.text =
+                        place.name // TODO: add location name field
+                    binding.matchLocation.locationItemAddress.text =
+                        place.address // TODO: add location address field
                     binding.matchLocation.locationItemDistance.text = "10km" // TODO: add distance
                     binding.matchDescription.text = match.description
                     binding.matchHostName.text = host.name
 
+                    // Set team size
+                    val teamSize = match.sport.teamSize
+                    teamOneViewAdapter.updateTeamSize(teamSize)
+                    teamTwoViewAdapter.updateTeamSize(teamSize)
+
+                    // Pass names from teams one and two to recycle view adapter
+                    if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
+                    if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
+
                     // Switch visibility of views
                     binding.matchProgressBar.visibility = GONE
                     binding.matchDetailsViews.visibility = VISIBLE
-
-                    // TODO get the team from firestore
-                    // set up recycler view for two teams
-                    val teamSize = match.sport.teamSize
-                    // TODO: replace mocks - get player name or some other identifier from match.teamOne and match.teamTwo
-                    val teamOne = listOf("John Smith", "John Smith", "John Smith")
-                    val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
                 }
             }
         )

@@ -22,6 +22,9 @@ class HomeViewModel @Inject constructor(
     private val _matches = MutableLiveData<List<Match>>(emptyList())
     val matches: LiveData<List<Match>> = _matches
 
+    private val _filterType = MutableLiveData(MatchFilter.JOINED)
+    val filterType: LiveData<MatchFilter> = _filterType
+
     init {
         if (currentUser != null) {
             viewModelScope.launch {
@@ -30,7 +33,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun filterMatches(filter: MatchFilter) {
+    fun setFilterType(filter: MatchFilter) {
+        filterMatches(filter)
+
+        if (_filterType.value == filter) return
+        _filterType.value = filter
+    }
+
+    private fun filterMatches(filter: MatchFilter) {
         if (currentUser == null) {
             _matches.value = matches.value // no-op
             return

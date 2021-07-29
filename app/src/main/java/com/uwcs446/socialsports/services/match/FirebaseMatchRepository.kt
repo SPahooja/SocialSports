@@ -48,6 +48,7 @@ class FirebaseMatchRepository
     override suspend fun findAllByHost(hostId: String): List<Match> {
         val matches = matchesCollection
             .whereEqualTo(of(MatchEntity::hostId.name), hostId)
+            .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
             .documents
