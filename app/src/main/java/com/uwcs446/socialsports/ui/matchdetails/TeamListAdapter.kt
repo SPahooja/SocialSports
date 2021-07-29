@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.TeamPositionRowBinding
+import java.lang.Integer.min
 
 class TeamListAdapter() :
     RecyclerView.Adapter<TeamListAdapter.TeamPositionViewHolder>() {
@@ -40,7 +41,12 @@ class TeamListAdapter() :
     override fun onBindViewHolder(holder: TeamPositionViewHolder, position: Int) {
         if (position < joinedUsers.size) {
             holder.bind(joinedUsers[position])
-        } else if (position < teamSize) {
+
+            // TODO: onClick for joining
+            holder.itemView.setOnClickListener {
+                Log.d("join", "Existing user!")
+            }
+        } else if (position < teamSize && position == joinedUsers.size) {
             holder.bind("")
 
             // TODO: onClick for joining
@@ -51,7 +57,7 @@ class TeamListAdapter() :
     }
 
     // Return the size of your dataset
-    override fun getItemCount() = teamSize
+    override fun getItemCount() = min(teamSize, joinedUsers.size + 1)
 
     // Update joinedUsers
     fun updateTeamMembers(users: List<String>) {
