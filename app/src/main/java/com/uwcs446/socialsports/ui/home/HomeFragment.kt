@@ -56,6 +56,11 @@ class HomeFragment : Fragment() {
             binding.layoutHomeFilterToolbar.toggleButtonPastMatches
         )
 
+        // Default match filtering is to view joined matches
+        if (toggleButtons.none { button -> button.isChecked }) {
+            binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches.isChecked = true
+        }
+
         // Set up toggle button listeners
         toggleButtons.forEach { button ->
             // Ensure that exactly one toggle button is active at a time
@@ -78,9 +83,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
-        // Default match filtering is to view joined matches
-        binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches.isChecked = true
 
         return binding.root
     }

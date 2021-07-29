@@ -22,6 +22,7 @@ import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -90,17 +91,18 @@ class MatchDetailsFragment : Fragment() {
             viewLifecycleOwner,
             {
                 val match = matchDetailsViewModel.match.value
+                val place = matchDetailsViewModel.place.value
                 val host = matchDetailsViewModel.host.value
 
-                if (match != null && host != null) {
+                if (match != null && host != null && place != null) {
                     binding.matchSummary.textMatchTitle.text = match.title
                     binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
                     binding.matchSummary.textMatchType.text = match.sport.name
                     binding.matchSummary.textMatchPlayerCount.text = "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
-                    binding.matchSummary.textMatchDate.text = match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                    binding.matchSummary.textMatchTime.text = match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-                    binding.matchLocation.locationItemTitle.text = "High Park" // TODO: add location name field
-                    binding.matchLocation.locationItemAddress.text = "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+                    binding.matchSummary.textMatchDate.text = match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    binding.matchSummary.textMatchTime.text = match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    binding.matchLocation.locationItemTitle.text = place.name // TODO: add location name field
+                    binding.matchLocation.locationItemAddress.text = place.address // TODO: add location address field
                     binding.matchLocation.locationItemDistance.text = "10km" // TODO: add distance
                     binding.matchDescription.text = match.description
                     binding.matchHostName.text = host.name

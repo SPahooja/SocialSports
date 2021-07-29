@@ -31,11 +31,11 @@ class MatchDetailsViewModel @Inject constructor(
     private val _teamTwo = MutableLiveData<List<User>>(emptyList())
     val teamTwo: LiveData<List<User>> = _teamTwo
 
+    private val _place = MutableLiveData<Place>()
+    val place: LiveData<Place> = _place
+
     private val _ready = MutableLiveData<Boolean>(false)
     val ready: LiveData<Boolean> = _ready
-
-    private val _matchPlace = MutableLiveData<Place>()
-    val matchPlace: LiveData<Place> = _matchPlace
 
     suspend fun fetchMatch(matchId: String) {
         val fetchedMatch = matchRepository.fetchMatchById(matchId)
@@ -49,7 +49,7 @@ class MatchDetailsViewModel @Inject constructor(
             _host.value = fetchedHost!!
             _teamOne.value = fetchedTeamOne
             _teamTwo.value = fetchedTeamTwo
-            _matchPlace.value = fetchedMatchedPlace
+            _place.value = fetchedMatchedPlace
 
             _ready.value = true
         }

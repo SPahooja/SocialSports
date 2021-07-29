@@ -3,10 +3,7 @@ package com.uwcs446.socialsports.services.match
 import com.google.android.gms.maps.model.LatLng
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchLocation
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import java.time.Instant
 
 fun Collection<Match>.toEntity() = this.map { it.toEntity() }
 
@@ -17,13 +14,13 @@ fun Match.toEntity() =
         sport = sport,
         description = description,
         hostId = hostId,
-        time = time.atDate(date).toString(),
+        startTime = startTime.toEpochMilli(),
+        endTime = startTime.toEpochMilli(),
         location = LocationEntity(
             placeId = location.placeId,
             lat = location.latLng.latitude,
             lng = location.latLng.longitude
         ),
-        duration = duration.toMinutes(),
         teamOne = teamOne,
         teamTwo = teamTwo,
         blacklist = emptyList()
@@ -39,10 +36,8 @@ fun MatchEntity.toDomain() =
         sport = sport,
         title = title,
         description = description,
-        date = LocalDate.from(LocalDateTime.parse(time)),
-        time = LocalTime.from(LocalDateTime.parse(time)),
-        duration = Duration.ofMinutes(duration),
-        hostId = hostId,
+        startTime = Instant.ofEpochMilli(startTime),
+        endTime = Instant.ofEpochMilli(startTime),
         location = MatchLocation(
             location.placeId,
             LatLng(
@@ -50,6 +45,7 @@ fun MatchEntity.toDomain() =
                 location.lng
             )
         ),
+        hostId = hostId,
         teamOne = teamOne,
         teamTwo = teamTwo,
         blacklist = emptyList()

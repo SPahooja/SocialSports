@@ -20,7 +20,6 @@ class HomeViewModel @Inject constructor(
     private val currentUser = currentUserRepository.getUser()
 
     private val _matches = MutableLiveData<List<Match>>(emptyList())
-
     val matches: LiveData<List<Match>> = _matches
 
     init {
