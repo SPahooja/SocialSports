@@ -127,14 +127,14 @@ class FirebaseMatchRepository
             1 -> match.copy(teamOne = match.teamOne.plus(userId))
             2 -> match.copy(teamTwo = match.teamTwo.plus(userId))
             else -> {
-                Log.d(TAG, "Failed to add user $userId to team $team in match ${matchId}. Team must be either 1 or 2.")
+                Log.d(TAG, "Failed to add user $userId to team $team in match $matchId. Team must be either 1 or 2.")
                 return false
             }
         }
 
         // Check if new match's team is still within size limits
         if (newMatch.teamOne.size > teamSize || newMatch.teamTwo.size > teamSize) {
-            Log.d(TAG, "Failed to add user $userId to team $team in match ${matchId}. No space left")
+            Log.d(TAG, "Failed to add user $userId to team $team in match $matchId. No space left")
             return false
         }
 
@@ -152,7 +152,7 @@ class FirebaseMatchRepository
             1 -> match.copy(teamOne = match.teamOne.minus(userId))
             2 -> match.copy(teamTwo = match.teamTwo.minus(userId))
             else -> {
-                Log.d(TAG, "Failed to remove user $userId from team $team in match ${matchId}. Team must be either 1 or 2.")
+                Log.d(TAG, "Failed to remove user $userId from team $team in match $matchId. Team must be either 1 or 2.")
                 return false
             }
         }
