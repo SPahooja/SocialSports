@@ -35,8 +35,6 @@ class MatchDetailsFragment : Fragment() {
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val isHost: Boolean = true // TODO: set boolean
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -95,6 +93,7 @@ class MatchDetailsFragment : Fragment() {
                     val host = matchDetailsViewModel.host.value
                     val teamOne = matchDetailsViewModel.teamOne.value
                     val teamTwo = matchDetailsViewModel.teamTwo.value
+                    val isHost = matchDetailsViewModel.isHost.value ?: false
 
                     if (match != null && host != null) {
                         binding.matchSummary.textMatchTitle.text = match.title
