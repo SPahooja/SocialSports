@@ -38,6 +38,8 @@ class MatchDetailsViewModel @Inject constructor(
     val matchPlace: LiveData<Place> = _matchPlace
 
     suspend fun fetchMatch(matchId: String) {
+        _ready.value = false
+
         val fetchedMatch = matchRepository.fetchMatchById(matchId)
         if (fetchedMatch != null) {
             val fetchedHost = userRepository.findById(fetchedMatch.hostId)

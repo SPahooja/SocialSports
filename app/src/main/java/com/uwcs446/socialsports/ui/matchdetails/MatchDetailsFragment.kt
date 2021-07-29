@@ -75,50 +75,58 @@ class MatchDetailsFragment : Fragment() {
         }
 
         val teamOneViewAdapter = TeamListAdapter()
-        binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(true)
+        binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
         val teamTwoViewAdapter = TeamListAdapter()
-        binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(true)
+        binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamTwo.recyclerviewTeam.stopNestedScroll()
         binding.layoutTeamTwo.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamTwo.recyclerviewTeam.adapter = teamTwoViewAdapter
 
         matchDetailsViewModel.ready.observe(
             viewLifecycleOwner,
-            {
-                val match = matchDetailsViewModel.match.value
-                val host = matchDetailsViewModel.host.value
-                val teamOne = matchDetailsViewModel.teamOne.value
-                val teamTwo = matchDetailsViewModel.teamTwo.value
+            { ready ->
+                if (ready) {
+                    val match = matchDetailsViewModel.match.value
+                    val host = matchDetailsViewModel.host.value
+                    val teamOne = matchDetailsViewModel.teamOne.value
+                    val teamTwo = matchDetailsViewModel.teamTwo.value
 
-                if (match != null && host != null) {
-                    binding.matchSummary.textMatchTitle.text = match.title
-                    binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
-                    binding.matchSummary.textMatchType.text = match.sport.name
-                    binding.matchSummary.textMatchPlayerCount.text = "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
-                    binding.matchSummary.textMatchDate.text = match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                    binding.matchSummary.textMatchTime.text = match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-                    binding.matchLocation.locationItemTitle.text = "High Park" // TODO: add location name field
-                    binding.matchLocation.locationItemAddress.text = "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
-                    binding.matchLocation.locationItemDistance.text = "10km" // TODO: add distance
-                    binding.matchDescription.text = match.description
-                    binding.matchHostName.text = host.name
+                    if (match != null && host != null) {
+                        binding.matchSummary.textMatchTitle.text = match.title
+                        binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
+                        binding.matchSummary.textMatchType.text = match.sport.name
+                        binding.matchSummary.textMatchPlayerCount.text =
+                            "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
+                        binding.matchSummary.textMatchDate.text =
+                            match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                        binding.matchSummary.textMatchTime.text =
+                            match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                        binding.matchLocation.locationItemTitle.text =
+                            "High Park" // TODO: add location name field
+                        binding.matchLocation.locationItemAddress.text =
+                            "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+                        binding.matchLocation.locationItemDistance.text =
+                            "10km" // TODO: add distance
+                        binding.matchDescription.text = match.description
+                        binding.matchHostName.text = host.name
 
-                    // Switch visibility of views
-                    binding.matchProgressBar.visibility = GONE
-                    binding.matchDetailsViews.visibility = VISIBLE
+                        // Set team size
+                        val teamSize = match.sport.teamSize
+                        teamOneViewAdapter.updateTeamSize(teamSize)
+                        teamTwoViewAdapter.updateTeamSize(teamSize)
 
-                    // Set team size
-                    val teamSize = match.sport.teamSize
-                    teamOneViewAdapter.updateTeamSize(teamSize)
-                    teamTwoViewAdapter.updateTeamSize(teamSize)
+                        // Pass names from teams one and two to recycle view adapter
+                        if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
+                        if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
 
-                    // Pass names from teams one and two to recycle view adapter
-                    if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
-                    if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
+                        // Switch visibility of views
+                        binding.matchProgressBar.visibility = GONE
+                        binding.matchDetailsViews.visibility = VISIBLE
+                    }
                 }
             }
         )
