@@ -3,18 +3,23 @@ package com.uwcs446.socialsports.ui.matchdetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.Place
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
+import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.domain.user.UserRepository
 import com.uwcs446.socialsports.services.location.LocationService
+import com.uwcs446.socialsports.services.user.current.FirebaseCurrentUserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MatchDetailsViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
+    private val currentUserRepository: CurrentAuthUserRepository,
     private val userRepository: UserRepository,
     private val locationService: LocationService
 ) : ViewModel() {
@@ -54,6 +59,39 @@ class MatchDetailsViewModel @Inject constructor(
             _matchPlace.value = fetchedMatchedPlace
 
             _ready.value = true
+        }
+    }
+
+    fun isInTeam(team: Int): Boolean {
+        val currentUser = currentUserRepository.getUser() ?: return false
+        val match = _match.value ?: return false
+        return when (team) {
+            1 -> match.teamOne.contains(currentUser.uid)
+            2-> match.teamTwo.contains(currentUser.uid)
+            else -> false
+        }
+
+    }
+
+    fun isInMatch(): Boolean {
+        return isInTeam(1) || isInTeam(2)
+    }
+
+    fun joinMatch(team: Int) {
+        val currentUser = currentUserRepository.getUser() ?: return
+        val match = _match.value ?: return
+        viewModelScope.launch {
+            matchRepository.joinMatch(match.id, currentUser.uid, team)
+            fetchMatch(match.id)
+        }
+    }
+
+    fun leaveMatch(team: Int) {
+        val currentUser = currentUserRepository.getUser() ?: return
+        val match = _match.value ?: return
+        viewModelScope.launch {
+            matchRepository.leaveMatch(match.id, currentUser.uid, team)
+            fetchMatch(match.id)
         }
     }
 }

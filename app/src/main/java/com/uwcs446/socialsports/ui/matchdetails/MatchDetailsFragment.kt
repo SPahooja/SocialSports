@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_match_details.match_team_one_join_button
+import kotlinx.android.synthetic.main.fragment_match_details.match_team_two_join_button
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -122,6 +124,36 @@ class MatchDetailsFragment : Fragment() {
                         // Pass names from teams one and two to recycle view adapter
                         if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
                         if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
+
+                        // Enable or disable join buttons
+                        if (matchDetailsViewModel.isInTeam(1)) {
+                            // Enable leave team one button
+                            binding.matchTeamOneJoinButton.text = "Leave"
+                            binding.matchTeamOneJoinButton.isEnabled = true
+                            binding.matchTeamOneJoinButton.setOnClickListener { matchDetailsViewModel.leaveMatch(1) }
+                            // Disable join team two button
+                            binding.matchTeamTwoJoinButton.text = "Join"
+                            binding.matchTeamTwoJoinButton.isEnabled = false
+                            binding.matchTeamTwoJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(2) }
+                        } else if (matchDetailsViewModel.isInTeam(2)) {
+                            // Disable join team one button
+                            binding.matchTeamOneJoinButton.text = "Join"
+                            binding.matchTeamOneJoinButton.isEnabled = false
+                            binding.matchTeamOneJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(1) }
+                            // Enable leave team two button
+                            binding.matchTeamTwoJoinButton.text = "Leave"
+                            binding.matchTeamTwoJoinButton.isEnabled = true
+                            binding.matchTeamTwoJoinButton.setOnClickListener { matchDetailsViewModel.leaveMatch(2) }
+                        } else {
+                            // Enable join team one button
+                            binding.matchTeamOneJoinButton.text = "Join"
+                            binding.matchTeamOneJoinButton.isEnabled = true
+                            binding.matchTeamOneJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(1) }
+                            // Enable join team two button
+                            binding.matchTeamTwoJoinButton.text = "Join"
+                            binding.matchTeamTwoJoinButton.isEnabled = true
+                            binding.matchTeamTwoJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(2) }
+                        }
 
                         // Switch visibility of views
                         binding.matchProgressBar.visibility = GONE
