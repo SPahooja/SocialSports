@@ -9,9 +9,13 @@ import com.uwcs446.socialsports.utils.RC_SIGN_IN
 
 object UserLoginService {
 
+    var isLoginActivityActive = false
+
     fun login(activity: Activity) {
 
-        if (FirebaseAuth.getInstance().currentUser != null) return
+        if (FirebaseAuth.getInstance().currentUser != null || isLoginActivityActive) return
+
+        isLoginActivityActive = true
 
         ActivityCompat.startActivityForResult(
             activity,
