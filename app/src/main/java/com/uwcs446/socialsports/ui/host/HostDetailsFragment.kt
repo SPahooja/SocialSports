@@ -177,8 +177,16 @@ class HostDetailsFragment : Fragment() {
 
             // Handle click in view model
             hostDetailsViewModel.onSaveClick()
-            Navigation.findNavController(requireView())
-                .navigate(R.id.navigation_home)
+
+            val editMatchFlow = hostDetailsViewModel.editMatchFlow.value ?: false
+            if (editMatchFlow) {
+                // return to previous page (which is the details page) when finishing the editing flow
+                requireActivity().onBackPressed()
+            } else {
+                // return to home page when finishing the hosting flow
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.navigation_home)
+            }
         }
 
         return root
