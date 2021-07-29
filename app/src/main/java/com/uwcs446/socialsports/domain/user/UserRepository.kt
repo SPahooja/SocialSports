@@ -18,5 +18,5 @@ interface UserRepository {
     /**
      * Upsert (update or insert) a user
      */
-    fun upsert(user: User): User
+    suspend fun upsert(user: User): User
 }

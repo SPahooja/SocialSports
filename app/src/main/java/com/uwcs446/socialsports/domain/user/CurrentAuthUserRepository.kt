@@ -17,5 +17,5 @@ interface CurrentAuthUserRepository {
      */
     fun logout()
 
-    fun handleAuthChange()
+    suspend fun handleAuthChange()
 }

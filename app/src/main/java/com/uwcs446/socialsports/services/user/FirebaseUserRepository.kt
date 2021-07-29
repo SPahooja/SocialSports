@@ -36,15 +36,9 @@ class FirebaseUserRepository(
             .toDomain()
     }
 
-    override fun upsert(_user: User): User {
+    override suspend fun upsert(_user: User): User {
         val user = _user.toEntity()
-        usersCollection.document(user.id).set(user)
-            .addOnSuccessListener {
-                Log.d(TAG, "Saved user ${user.id}")
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "Failed to save user ${user.id}")
-            }
+        usersCollection.document(user.id).set(user).await()
         return _user
     }
 }

@@ -33,7 +33,7 @@ class FirebaseCurrentUserRepository
             .also { Log.d(TAG, "User logged out") }
     }
 
-    override fun handleAuthChange() {
+    override suspend fun handleAuthChange() {
         updateCurrentUser()
         upsertUserCollection()
     }
@@ -48,7 +48,7 @@ class FirebaseCurrentUserRepository
     /**
      * Upsert this user into the users collection
      */
-    private fun upsertUserCollection() {
+    private suspend fun upsertUserCollection() {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null)
             userRepository.upsert(User(currentUser.uid, currentUser.displayName ?: "NO_NAME"))
