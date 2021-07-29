@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.MatchRepository
@@ -18,7 +19,6 @@ import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -64,9 +64,12 @@ class HostDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val place = locationService.getPlace(locationId)
-                _locationName.value = place.name
-                _locationAddress.value = place.address
+                if (editMatch != null) {
+                    _editMatchFlow.value = true
+                    val place = locationService.getPlace(locationId!!)
+                    _locationName.value = place.name
+                    _locationAddress.value = place.address
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Something went wrong while fetching place response", e)
             }
@@ -76,8 +79,8 @@ class HostDetailsViewModel @Inject constructor(
     var matchLocation = editMatch?.location ?: MatchLocation("", LatLng(0.0, 0.0))
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.sport ?: ""
-    var matchDate = editMatch?.date?.toString() ?: ""
-    var matchTime = editMatch?.time?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
+    var matchDate = editMatch?.date?.format(DateTimePicker().getDateFormatter()) ?: ""
+    var matchTime = editMatch?.time?.format(DateTimePicker().getTimeFormatter()) ?: ""
     var matchDurationHour = editMatch?.duration?.toHours() ?: ""
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
     var matchDescription = editMatch?.description ?: ""
@@ -93,8 +96,8 @@ class HostDetailsViewModel @Inject constructor(
             val updatedMatch = editMatch.copy(
                 title = matchTitle,
                 sport = Sport.valueOf(sportType.toString()),
-                date = LocalDate.parse(matchDate),
-                time = LocalTime.parse(matchTime),
+                date = LocalDate.parse(matchDate, DateTimePicker().getDateFormatter()),
+                time = LocalTime.parse(matchTime, DateTimePicker().getTimeFormatter()),
                 location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription
@@ -105,8 +108,8 @@ class HostDetailsViewModel @Inject constructor(
                 id = UUID.randomUUID().toString(),
                 title = matchTitle,
                 sport = Sport.valueOf(sportType.toString()),
-                date = LocalDate.parse(matchDate),
-                time = LocalTime.parse(matchTime),
+                date = LocalDate.parse(matchDate, DateTimePicker().getDateFormatter()),
+                time = LocalTime.parse(matchTime, DateTimePicker().getTimeFormatter()),
                 location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription,

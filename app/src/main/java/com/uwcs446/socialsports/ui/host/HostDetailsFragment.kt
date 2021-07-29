@@ -27,8 +27,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -113,7 +111,7 @@ class HostDetailsFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener {
                 val date = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
                 val formattedDate =
-                    date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                    date.format(DateTimePicker().getDateFormatter())
                 dateTextView.setText(formattedDate)
             }
             datePicker.show(parentFragmentManager, "datePicker")
@@ -179,8 +177,16 @@ class HostDetailsFragment : Fragment() {
 
             // Handle click in view model
             hostDetailsViewModel.onSaveClick()
-            Navigation.findNavController(requireView())
-                .navigate(R.id.navigation_home)
+
+            val editMatchFlow = hostDetailsViewModel.editMatchFlow.value ?: false
+            if (editMatchFlow) {
+                // return to previous page (which is the details page) when finishing the editing flow
+                requireActivity().onBackPressed()
+            } else {
+                // return to home page when finishing the hosting flow
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.navigation_home)
+            }
         }
 
         return root
