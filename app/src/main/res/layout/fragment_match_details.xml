@@ -103,11 +103,10 @@
                 android:layout_gravity="top|right"
                 android:visibility="gone"
                 android:translationZ="90dp"
-                app:layout_constraintTop_toTopOf="@+id/match_summary"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:fabSize="mini"
-                android:backgroundTint="@color/grey"
-                app:srcCompat="@drawable/ic_baseline_edit_24dp"/>
+                app:srcCompat="@drawable/ic_baseline_edit_24dp"
+                app:layout_constraintTop_toTopOf="@+id/match_summary"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- team lists -->
             <LinearLayout
