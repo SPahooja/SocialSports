@@ -115,6 +115,54 @@ class FirebaseMatchRepository
         return matchesCollection.document(matchId).get().await().toMatchEntity()?.toDomain()
     }
 
+    override suspend fun joinMatch(matchId: String, userId: String, team: Int): Boolean {
+        val match = fetchMatchById(matchId) ?: return false
+        val teamSize = match.teamSize()
+
+        // No-op if user already part of match
+        if ((match.teamOne + match.teamTwo).contains(userId)) return false
+
+        // Create new match with added user
+        val newMatch = when (team) {
+            1 -> match.copy(teamOne = match.teamOne.plus(userId))
+            2 -> match.copy(teamTwo = match.teamTwo.plus(userId))
+            else -> {
+                Log.d(TAG, "Failed to add user $userId to team $team in match ${matchId}. Team must be either 1 or 2.")
+                return false
+            }
+        }
+
+        // Check if new match's team is still within size limits
+        if (newMatch.teamOne.size > teamSize || newMatch.teamTwo.size > teamSize) {
+            Log.d(TAG, "Failed to add user $userId to team $team in match ${matchId}. No space left")
+            return false
+        }
+
+        // Write new match to db
+        edit(newMatch)
+
+        return true
+    }
+
+    override suspend fun leaveMatch(matchId: String, userId: String, team: Int): Boolean {
+        val match = fetchMatchById(matchId) ?: return false
+
+        // Create new match with removed user
+        val newMatch = when (team) {
+            1 -> match.copy(teamOne = match.teamOne.minus(userId))
+            2 -> match.copy(teamTwo = match.teamTwo.minus(userId))
+            else -> {
+                Log.d(TAG, "Failed to remove user $userId from team $team in match ${matchId}. Team must be either 1 or 2.")
+                return false
+            }
+        }
+
+        // Write new match to db
+        edit(newMatch)
+
+        return true
+    }
+
     override fun create(match: Match) = createOrSave(match.toEntity())
 
     override fun edit(match: Match) = createOrSave(match.toEntity())
