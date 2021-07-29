@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // set up recycler view for match list
-        binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(true)
+        binding.layoutMatchList.recyclerviewMatch.setHasFixedSize(false)
         binding.layoutMatchList.recyclerviewMatch.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
@@ -56,31 +56,31 @@ class HomeFragment : Fragment() {
             binding.layoutHomeFilterToolbar.toggleButtonPastMatches
         )
 
+        homeViewModel.filterType.observe(viewLifecycleOwner) { filterType ->
+            toggleButtons.forEach { it.isChecked = false }
+            when (filterType) {
+                MatchFilter.JOINED ->
+                    binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches.isChecked = true
+                MatchFilter.HOSTING ->
+                    binding.layoutHomeFilterToolbar.toggleButtonHostingMatches.isChecked = true
+                MatchFilter.PAST ->
+                    binding.layoutHomeFilterToolbar.toggleButtonPastMatches.isChecked = true
+            }
+        }
+
         // Set up toggle button listeners
         toggleButtons.forEach { button ->
-            // Ensure that exactly one toggle button is active at a time
-            button.setOnClickListener {
-                for (toggleButton in toggleButtons) {
-                    toggleButton.isChecked = false || toggleButton == button
-                }
-            }
-
             // Filter matches based on toggle selection
             button.setOnCheckedChangeListener { _button, checked ->
-                val filter = MatchFilter.values().find { filter ->
-                    filter.toString() == _button.text
-                }
+                val filter = MatchFilter.values().find { it.toString() == _button.text }
                 if (checked) {
                     binding.homeProgressBar.visibility = VISIBLE
                     binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
 
-                    homeViewModel.filterMatches(filter!!)
+                    homeViewModel.setFilterType(filter!!)
                 }
             }
         }
-
-        // Default match filtering is to view joined matches
-        binding.layoutHomeFilterToolbar.toggleButtonJoinedMatches.isChecked = true
 
         return binding.root
     }
