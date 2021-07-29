@@ -147,7 +147,8 @@ class MatchDetailsFragment : Fragment() {
                         }
                     }
                 }
-            })
+            }
+        )
 
         return binding.root
     }

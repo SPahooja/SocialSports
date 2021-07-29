@@ -103,8 +103,11 @@ class HostDetailsFragment : Fragment() {
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
 
-        dateTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(
-            DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
+        dateTextView.setText(
+            matchStartTime?.atZone(ZoneId.systemDefault())?.format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+            )
+        )
         timeTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
 
         var duration: Duration
