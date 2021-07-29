@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.libraries.places.api.model.Place
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
+import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.domain.user.UserRepository
 import com.uwcs446.socialsports.services.location.LocationService
@@ -16,8 +17,11 @@ import javax.inject.Inject
 class MatchDetailsViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
     private val userRepository: UserRepository,
-    private val locationService: LocationService
+    private val locationService: LocationService,
+    private val currentUserRepository: CurrentAuthUserRepository
 ) : ViewModel() {
+
+    private val currentUser = currentUserRepository.getUser()
 
     private val _match = MutableLiveData<Match>()
     val match: LiveData<Match> = _match
@@ -37,6 +41,12 @@ class MatchDetailsViewModel @Inject constructor(
     private val _ready = MutableLiveData<Boolean>(false)
     val ready: LiveData<Boolean> = _ready
 
+    private val _matchPlace = MutableLiveData<Place>()
+    val matchPlace: LiveData<Place> = _matchPlace
+
+    private val _isHost = MutableLiveData<Boolean>(false)
+    val isHost: LiveData<Boolean> = _isHost
+
     suspend fun fetchMatch(matchId: String) {
         _ready.value = false
 
@@ -53,7 +63,18 @@ class MatchDetailsViewModel @Inject constructor(
             _teamTwo.value = fetchedTeamTwo
             _place.value = fetchedMatchedPlace
 
+            checkHost(fetchedHost.id)
+
             _ready.value = true
+        }
+    }
+
+    // check whether the current user is the match host and update isHost accordingly
+    private fun checkHost(hostId: String) {
+        if (currentUser != null) {
+            _isHost.value = (hostId == currentUser.uid)
+        } else {
+            _isHost.value = false
         }
     }
 }

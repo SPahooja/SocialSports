@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,8 +35,6 @@ class MatchDetailsFragment : Fragment() {
 
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
-
-    private val isHost: Boolean = false // TODO: set boolean
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,53 +88,66 @@ class MatchDetailsFragment : Fragment() {
 
         matchDetailsViewModel.ready.observe(
             viewLifecycleOwner,
-            {
-                val match = matchDetailsViewModel.match.value
-                val place = matchDetailsViewModel.place.value
-                val host = matchDetailsViewModel.host.value
-                val teamOne = matchDetailsViewModel.teamOne.value
-                val teamTwo = matchDetailsViewModel.teamTwo.value
+            { ready ->
+                if (ready) {
+                    val match = matchDetailsViewModel.match.value
+                    val place = matchDetailsViewModel.place.value
+                    val host = matchDetailsViewModel.host.value
+                    val teamOne = matchDetailsViewModel.teamOne.value
+                    val teamTwo = matchDetailsViewModel.teamTwo.value
+                    val isHost = matchDetailsViewModel.isHost.value ?: false
 
-                if (match != null && host != null && place != null) {
-                    binding.matchSummary.textMatchTitle.text = match.title
-                    binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
-                    binding.matchSummary.textMatchType.text = match.sport.name
-                    binding.matchSummary.textMatchPlayerCount.text =
-                        "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
-                    binding.matchSummary.textMatchDate.text =
-                        match.startTime.atZone(ZoneId.systemDefault())
-                            .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                    binding.matchSummary.textMatchTime.text =
-                        match.startTime.atZone(ZoneId.systemDefault())
-                            .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-                    binding.matchLocation.locationItemTitle.text =
-                        place.name // TODO: add location name field
-                    binding.matchLocation.locationItemAddress.text =
-                        place.address // TODO: add location address field
-                    binding.matchLocation.locationItemDistance.text = "10km" // TODO: add distance
-                    binding.matchDescription.text = match.description
-                    binding.matchHostName.text = host.name
+                    if (match != null && host != null && place != null) {
+                        binding.matchSummary.textMatchTitle.text = match.title
+                        binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
+                        binding.matchSummary.textMatchType.text = match.sport.name
+                        binding.matchSummary.textMatchPlayerCount.text =
+                            "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
+                        binding.matchSummary.textMatchDate.text =
+                            match.startTime.atZone(ZoneId.systemDefault())
+                                .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                        binding.matchSummary.textMatchTime.text =
+                            match.startTime.atZone(ZoneId.systemDefault())
+                                .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                        binding.matchLocation.locationItemTitle.text =
+                            place.name // TODO: add location name field
+                        binding.matchLocation.locationItemAddress.text =
+                            place.address // TODO: add location address field
+                        binding.matchLocation.locationItemDistance.text =
+                            "10km" // TODO: add distance
+                        binding.matchDescription.text = match.description
+                        binding.matchHostName.text = host.name
 
-                    // Set team size
-                    val teamSize = match.sport.teamSize
-                    teamOneViewAdapter.updateTeamSize(teamSize)
-                    teamTwoViewAdapter.updateTeamSize(teamSize)
+                        // Set team size
+                        val teamSize = match.sport.teamSize
+                        teamOneViewAdapter.updateTeamSize(teamSize)
+                        teamTwoViewAdapter.updateTeamSize(teamSize)
 
-                    // Pass names from teams one and two to recycle view adapter
-                    if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
-                    if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
+                        // Pass names from teams one and two to recycle view adapter
+                        if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
+                        if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
 
-                    // Switch visibility of views
-                    binding.matchProgressBar.visibility = GONE
-                    binding.matchDetailsViews.visibility = VISIBLE
+                        // Switch visibility of views
+                        binding.matchProgressBar.visibility = GONE
+                        binding.matchDetailsViews.visibility = VISIBLE
+
+                        if (isHost) {
+                            // display the edit button if current user is the match host
+                            binding.editButtonMatchDetails.visibility = VISIBLE
+                            binding.editButtonMatchDetails.setOnClickListener {
+                                val action =
+                                    MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(
+                                        match
+                                    )
+                                it.findNavController().navigate(action)
+                            }
+                        } else {
+                            // need to manually hide the button, setting visibility in xml won't work
+                            binding.editButtonMatchDetails.visibility = GONE
+                        }
+                    }
                 }
-            }
-        )
-
-        // display the edit button if current user is the match host
-        if (isHost) {
-            binding.editButtonMatchDetails.visibility = VISIBLE
-        }
+            })
 
         return binding.root
     }

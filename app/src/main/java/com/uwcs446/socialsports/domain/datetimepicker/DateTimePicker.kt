@@ -5,6 +5,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import java.time.format.DateTimeFormatter
 
 class DateTimePicker {
     fun getDatePicker(): MaterialDatePicker<Long> {
@@ -25,5 +26,13 @@ class DateTimePicker {
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .setTitleText("Select Time")
             .build()
+    }
+
+    fun getDateFormatter(): DateTimeFormatter {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    }
+
+    fun getTimeFormatter(): DateTimeFormatter {
+        return DateTimeFormatter.ofPattern("HH:mm")
     }
 }

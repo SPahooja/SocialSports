@@ -27,6 +27,9 @@
             app:argType="string"
             android:defaultValue="@null"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_match_details_to_navigation_host"
+            app:destination="@id/navigation_host" />
     </fragment>
 
     <fragment

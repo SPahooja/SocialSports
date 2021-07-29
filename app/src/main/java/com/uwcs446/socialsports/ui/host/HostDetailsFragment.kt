@@ -103,7 +103,8 @@ class HostDetailsFragment : Fragment() {
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
 
-        dateTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
+        dateTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(
+            DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
         timeTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
 
         var duration: Duration
@@ -126,7 +127,7 @@ class HostDetailsFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener {
                 val date = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
                 val formattedDate =
-                    date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                    date.format(DateTimePicker().getDateFormatter())
                 dateTextView.setText(formattedDate)
             }
             datePicker.show(parentFragmentManager, "datePicker")
@@ -154,7 +155,6 @@ class HostDetailsFragment : Fragment() {
 
         // Host Game Button
         hostGameButton.setOnClickListener {
-            // Field validation
             if (locationCard.isInvisible) {
                 locationSearchFragment.setHint("Location is required")
                 return@setOnClickListener
@@ -180,7 +180,7 @@ class HostDetailsFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val startTime = LocalDate.parse("${dateTextView.text} ${timeTextView.text}", DateTimeFormatter.ofPattern("M/dd/yy HH:mm")).atStartOfDay(
+            val startTime = LocalDate.parse("${dateTextView.text} ${timeTextView.text}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atStartOfDay(
                 ZoneId.systemDefault()
             ).toInstant()
             val duration = Duration.ofHours(durationHourTextView.text.toString().toLong()).plus(
@@ -198,8 +198,16 @@ class HostDetailsFragment : Fragment() {
 
             // Handle click in view model
             hostDetailsViewModel.onSaveClick()
-            Navigation.findNavController(requireView())
-                .navigate(R.id.navigation_home)
+
+            val editMatchFlow = hostDetailsViewModel.editMatchFlow.value ?: false
+            if (editMatchFlow) {
+                // return to previous page (which is the details page) when finishing the editing flow
+                requireActivity().onBackPressed()
+            } else {
+                // return to home page when finishing the hosting flow
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.navigation_home)
+            }
         }
 
         return root
