@@ -6,11 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
+import com.uwcs446.socialsports.domain.user.User
+import com.uwcs446.socialsports.domain.user.UserRepository
 import javax.inject.Inject
 
 class FirebaseCurrentUserRepository
 @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val userRepository: UserRepository
 ) : CurrentAuthUserRepository {
 
     private val TAG = this::class.simpleName
@@ -30,8 +33,9 @@ class FirebaseCurrentUserRepository
             .also { Log.d(TAG, "User logged out") }
     }
 
-    override fun handleAuthChange() {
+    override suspend fun handleAuthChange() {
         updateCurrentUser()
+        upsertUserCollection()
     }
 
     /**
@@ -39,5 +43,14 @@ class FirebaseCurrentUserRepository
      */
     private fun updateCurrentUser() {
         _currentUser.postValue(firebaseAuth.currentUser)
+    }
+
+    /**
+     * Upsert this user into the users collection
+     */
+    private suspend fun upsertUserCollection() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null)
+            userRepository.upsert(User(currentUser.uid, currentUser.displayName ?: "NO_NAME"))
     }
 }
