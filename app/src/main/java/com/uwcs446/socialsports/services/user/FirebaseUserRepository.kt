@@ -32,6 +32,12 @@ class FirebaseUserRepository(
             .mapNotNull { document -> document.toUserEntity() }
             .toDomain()
     }
+
+    override suspend fun upsert(_user: User): User {
+        val user = _user.toEntity()
+        usersCollection.document(user.id).set(user).await()
+        return _user
+    }
 }
 
 private fun DocumentSnapshot.toUserEntity() = this.toObject(UserEntity::class.java)
