@@ -14,7 +14,7 @@ class TeamListAdapter() :
     private var teamSize = 0
 
     // View Holder class
-    class TeamPositionViewHolder(val binding: TeamPositionRowBinding) : RecyclerView.ViewHolder(binding.root) {
+    class TeamPositionViewHolder(private val binding: TeamPositionRowBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(identifier: String) {
             with(binding) {
                 if (identifier.isEmpty()) {
@@ -44,7 +44,7 @@ class TeamListAdapter() :
             holder.bind("")
 
             // TODO: onClick for joining
-            holder.itemView.setOnClickListener { view ->
+            holder.itemView.setOnClickListener {
                 Log.d("join", "Joined!")
             }
         }

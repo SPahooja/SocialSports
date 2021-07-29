@@ -8,7 +8,7 @@ import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.domain.user.UserRepository
-import com.uwcs446.socialsports.services.LocationService
+import com.uwcs446.socialsports.services.location.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +34,7 @@ class MatchDetailsFragment : Fragment() {
     private var _binding: FragmentMatchDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val isHost: Boolean = true // TODO: set boolean
+    private val isHost: Boolean = false // TODO: set boolean
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,17 +93,17 @@ class MatchDetailsFragment : Fragment() {
                 val host = matchDetailsViewModel.host.value
 
                 if (match != null && host != null) {
-                    binding.matchSummary.textMatchTitle.setText(match.title)
+                    binding.matchSummary.textMatchTitle.text = match.title
                     binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
-                    binding.matchSummary.textMatchType.setText(match.sport.name)
-                    binding.matchSummary.textMatchPlayerCount.setText("${match.currentPlayerCount()} / ${match.maxPlayerCount()}")
-                    binding.matchSummary.textMatchDate.setText(match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
-                    binding.matchSummary.textMatchTime.setText(match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
-                    binding.matchLocation.locationItemTitle.setText("High Park") // TODO: add location name field
-                    binding.matchLocation.locationItemAddress.setText("1873 Bloor St W, Toronto, ON M6R 2Z") // TODO: add location address field
-                    binding.matchLocation.locationItemDistance.setText("10km") // TODO: add distance
-                    binding.matchDescription.setText(match.description)
-                    binding.matchHostName.setText(host.name)
+                    binding.matchSummary.textMatchType.text = match.sport.name
+                    binding.matchSummary.textMatchPlayerCount.text = "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
+                    binding.matchSummary.textMatchDate.text = match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    binding.matchSummary.textMatchTime.text = match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    binding.matchLocation.locationItemTitle.text = "High Park" // TODO: add location name field
+                    binding.matchLocation.locationItemAddress.text = "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+                    binding.matchLocation.locationItemDistance.text = "10km" // TODO: add distance
+                    binding.matchDescription.text = match.description
+                    binding.matchHostName.text = host.name
 
                     // Switch visibility of views
                     binding.matchProgressBar.visibility = GONE
@@ -116,18 +115,14 @@ class MatchDetailsFragment : Fragment() {
                     // TODO: replace mocks - get player name or some other identifier from match.teamOne and match.teamTwo
                     val teamOne = listOf("John Smith", "John Smith", "John Smith")
                     val teamTwo = listOf("John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith", "John Smith")
-
-                    // display the edit button if current user is the match host
-                    if (isHost) {
-                        binding.editButtonMatchDetails.visibility = View.VISIBLE
-                        binding.editButtonMatchDetails.setOnClickListener {
-                            val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match)
-                            it.findNavController().navigate(action)
-                        }
-                    }
                 }
             }
         )
+
+        // display the edit button if current user is the match host
+        if (isHost) {
+            binding.editButtonMatchDetails.visibility = VISIBLE
+        }
 
         return binding.root
     }

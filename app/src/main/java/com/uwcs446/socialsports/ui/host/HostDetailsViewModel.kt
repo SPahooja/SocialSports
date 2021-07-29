@@ -7,18 +7,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
-import com.uwcs446.socialsports.services.LocationService
+import com.uwcs446.socialsports.services.location.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -51,22 +51,22 @@ class HostDetailsViewModel @Inject constructor(
         teamTwo = emptyList()
     ) */
     private var locationId = editMatch?.location?.placeId ?: ""
+
     private val _locationName = MutableLiveData<String>().apply { value = "" }
     val locationName: LiveData<String> = _locationName
+
     private val _locationAddress = MutableLiveData<String>().apply { value = "" }
     val locationAddress: LiveData<String> = _locationAddress
+
     private var _editMatchFlow = MutableLiveData<Boolean>(false)
     val editMatchFlow: LiveData<Boolean> = _editMatchFlow
 
     init {
         viewModelScope.launch {
             try {
-                if (editMatch != null) {
-                    _editMatchFlow.value = true
-                    val place = locationService.getPlace(locationId!!)
-                    _locationName.value = place.name
-                    _locationAddress.value = place.address
-                }
+                val place = locationService.getPlace(locationId)
+                _locationName.value = place.name
+                _locationAddress.value = place.address
             } catch (e: Exception) {
                 Log.e(TAG, "Something went wrong while fetching place response", e)
             }
@@ -76,8 +76,8 @@ class HostDetailsViewModel @Inject constructor(
     var matchLocation = editMatch?.location ?: MatchLocation("", LatLng(0.0, 0.0))
     var matchTitle = editMatch?.title ?: ""
     var sportType = editMatch?.sport ?: ""
-    var matchDate = editMatch?.date?.format(DateTimePicker().getDateFormatter()) ?: ""
-    var matchTime = editMatch?.time?.format(DateTimePicker().getTimeFormatter()) ?: ""
+    var matchDate = editMatch?.date?.toString() ?: ""
+    var matchTime = editMatch?.time?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: ""
     var matchDurationHour = editMatch?.duration?.toHours() ?: ""
     var matchDurationMinute = editMatch?.duration?.toMinutes()?.rem(60) ?: ""
     var matchDescription = editMatch?.description ?: ""
@@ -90,29 +90,30 @@ class HostDetailsViewModel @Inject constructor(
             if (matchDurationMinute == "") 0 else matchDurationMinute.toString().toLong()
         )
         if (editMatch != null) {
-            val updatedMatch = editMatch?.copy(
+            val updatedMatch = editMatch.copy(
                 title = matchTitle,
                 sport = Sport.valueOf(sportType.toString()),
-                date = LocalDate.parse(matchDate, DateTimePicker().getDateFormatter()),
-                time = LocalTime.parse(matchTime, DateTimePicker().getTimeFormatter()),
+                date = LocalDate.parse(matchDate),
+                time = LocalTime.parse(matchTime),
                 location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription
             )
-            matchRepository.edit(updatedMatch!!)
+            matchRepository.edit(updatedMatch)
         } else {
             val newMatch = Match(
                 id = UUID.randomUUID().toString(),
                 title = matchTitle,
                 sport = Sport.valueOf(sportType.toString()),
-                date = LocalDate.parse(matchDate, DateTimePicker().getDateFormatter()),
-                time = LocalTime.parse(matchTime, DateTimePicker().getTimeFormatter()),
+                date = LocalDate.parse(matchDate),
+                time = LocalTime.parse(matchTime),
                 location = matchLocation,
                 duration = durationHour + durationMin,
                 description = matchDescription,
                 hostId = user!!.uid,
                 teamOne = emptyList(),
-                teamTwo = emptyList()
+                teamTwo = emptyList(),
+                blacklist = emptyList()
             )
             matchRepository.create(newMatch)
         }
