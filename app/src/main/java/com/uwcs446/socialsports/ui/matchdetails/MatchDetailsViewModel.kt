@@ -11,7 +11,6 @@ import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.domain.user.UserRepository
 import com.uwcs446.socialsports.services.location.LocationService
-import com.uwcs446.socialsports.services.user.current.FirebaseCurrentUserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,7 +51,7 @@ class MatchDetailsViewModel @Inject constructor(
             val fetchedTeamTwo = userRepository.findByIds(fetchedMatch.teamTwo)
             val fetchedMatchedPlace = locationService.getPlace(fetchedMatch.location.placeId)
 
-            _match.value = fetchedMatch!!
+            _match.value = fetchedMatch
             _host.value = fetchedHost!!
             _teamOne.value = fetchedTeamOne
             _teamTwo.value = fetchedTeamTwo
@@ -67,10 +66,9 @@ class MatchDetailsViewModel @Inject constructor(
         val match = _match.value ?: return false
         return when (team) {
             1 -> match.teamOne.contains(currentUser.uid)
-            2-> match.teamTwo.contains(currentUser.uid)
+            2 -> match.teamTwo.contains(currentUser.uid)
             else -> false
         }
-
     }
 
     fun isInMatch(): Boolean {

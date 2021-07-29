@@ -21,8 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_match_details.match_team_one_join_button
-import kotlinx.android.synthetic.main.fragment_match_details.match_team_two_join_button
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -57,17 +55,22 @@ class MatchDetailsFragment : Fragment() {
         }
 
         // Open map if permission is granted
-        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                // Show the map
-                val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
-                Navigation.findNavController(binding.root).navigate(action)
+        val requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    // Show the map
+                    val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
+                    Navigation.findNavController(binding.root).navigate(action)
+                }
             }
-        }
 
         // Open Maps Fragment for Location
         binding.matchLocation.locationItemWrapper.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 // Show the map
                 val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
                 Navigation.findNavController(binding.root).navigate(action)
@@ -79,13 +82,15 @@ class MatchDetailsFragment : Fragment() {
         val teamOneViewAdapter = TeamListAdapter()
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
-        binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutTeamOne.recyclerviewTeam.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
         val teamTwoViewAdapter = TeamListAdapter()
         binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamTwo.recyclerviewTeam.stopNestedScroll()
-        binding.layoutTeamTwo.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutTeamTwo.recyclerviewTeam.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamTwo.recyclerviewTeam.adapter = teamTwoViewAdapter
 
         matchDetailsViewModel.ready.observe(
@@ -130,29 +135,53 @@ class MatchDetailsFragment : Fragment() {
                             // Enable leave team one button
                             binding.matchTeamOneJoinButton.text = "Leave"
                             binding.matchTeamOneJoinButton.isEnabled = true
-                            binding.matchTeamOneJoinButton.setOnClickListener { matchDetailsViewModel.leaveMatch(1) }
+                            binding.matchTeamOneJoinButton.setOnClickListener {
+                                matchDetailsViewModel.leaveMatch(
+                                    1
+                                )
+                            }
                             // Disable join team two button
                             binding.matchTeamTwoJoinButton.text = "Join"
                             binding.matchTeamTwoJoinButton.isEnabled = false
-                            binding.matchTeamTwoJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(2) }
+                            binding.matchTeamTwoJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    2
+                                )
+                            }
                         } else if (matchDetailsViewModel.isInTeam(2)) {
                             // Disable join team one button
                             binding.matchTeamOneJoinButton.text = "Join"
                             binding.matchTeamOneJoinButton.isEnabled = false
-                            binding.matchTeamOneJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(1) }
+                            binding.matchTeamOneJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    1
+                                )
+                            }
                             // Enable leave team two button
                             binding.matchTeamTwoJoinButton.text = "Leave"
                             binding.matchTeamTwoJoinButton.isEnabled = true
-                            binding.matchTeamTwoJoinButton.setOnClickListener { matchDetailsViewModel.leaveMatch(2) }
+                            binding.matchTeamTwoJoinButton.setOnClickListener {
+                                matchDetailsViewModel.leaveMatch(
+                                    2
+                                )
+                            }
                         } else {
                             // Enable join team one button
                             binding.matchTeamOneJoinButton.text = "Join"
                             binding.matchTeamOneJoinButton.isEnabled = true
-                            binding.matchTeamOneJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(1) }
+                            binding.matchTeamOneJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    1
+                                )
+                            }
                             // Enable join team two button
                             binding.matchTeamTwoJoinButton.text = "Join"
                             binding.matchTeamTwoJoinButton.isEnabled = true
-                            binding.matchTeamTwoJoinButton.setOnClickListener { matchDetailsViewModel.joinMatch(2) }
+                            binding.matchTeamTwoJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    2
+                                )
+                            }
                         }
 
                         // Switch visibility of views
