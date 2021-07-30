@@ -25,8 +25,11 @@ import com.uwcs446.socialsports.domain.match.MatchLocation
 import com.uwcs446.socialsports.domain.match.Sport
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -92,13 +95,24 @@ class HostDetailsFragment : Fragment() {
         hostDetailsViewModel.locationAddress.observe(viewLifecycleOwner) {
             locationAddressTextView.text = it
         }
+        val matchStartTime = hostDetailsViewModel.matchStartTime
+        val matchEndTime = hostDetailsViewModel.matchEndTime
+
         titleTextView.setText(hostDetailsViewModel.matchTitle)
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
-        dateTextView.setText(hostDetailsViewModel.matchDate)
-        timeTextView.setText(hostDetailsViewModel.matchTime)
-        durationHourTextView.setText(hostDetailsViewModel.matchDurationHour.toString())
-        durationMinuteTextView.setText(hostDetailsViewModel.matchDurationMinute.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
+
+        dateTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimePicker().getDateFormatter()))
+        timeTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimePicker().getTimeFormatter()))
+
+        var duration: Duration
+        if (matchStartTime != null && matchEndTime != null) {
+            duration = Duration.between(matchStartTime, matchEndTime)
+        } else {
+            duration = Duration.ZERO
+        }
+        durationHourTextView.setText(duration.toHours().toString())
+        durationMinuteTextView.setText((duration.toMinutes() - duration.toHours() * 60).toString())
 
         // Populate sport type list
         val typeListAdapter =
@@ -139,7 +153,6 @@ class HostDetailsFragment : Fragment() {
 
         // Host Game Button
         hostGameButton.setOnClickListener {
-            // Field validation
             if (locationCard.isInvisible) {
                 locationSearchFragment.setHint("Location is required")
                 return@setOnClickListener
@@ -165,14 +178,23 @@ class HostDetailsFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            val startTime = LocalDateTime.parse(
+                "${dateTextView.text} ${timeTextView.text}",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            )
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+            val duration = Duration.ofHours(durationHourTextView.text.toString().toLong()).plus(
+                Duration.ofMinutes(durationMinuteTextView.text.toString().toLong())
+            )
+            val endTime = startTime.plus(duration)
+
             // Update user input in view model
             if (matchLocation != null) hostDetailsViewModel.matchLocation = matchLocation as MatchLocation
             hostDetailsViewModel.matchTitle = titleTextView.text.toString()
             hostDetailsViewModel.sportType = sportTextView.text.toString()
-            hostDetailsViewModel.matchDate = dateTextView.text.toString()
-            hostDetailsViewModel.matchTime = timeTextView.text.toString()
-            hostDetailsViewModel.matchDurationHour = durationHourTextView.text.toString()
-            hostDetailsViewModel.matchDurationMinute = durationMinuteTextView.text.toString()
+            hostDetailsViewModel.matchStartTime = startTime
+            hostDetailsViewModel.matchEndTime = endTime
             hostDetailsViewModel.matchDescription = rulesTextView.text.toString()
 
             // Handle click in view model

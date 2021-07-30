@@ -23,6 +23,7 @@ import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -90,25 +91,28 @@ class MatchDetailsFragment : Fragment() {
             { ready ->
                 if (ready) {
                     val match = matchDetailsViewModel.match.value
+                    val place = matchDetailsViewModel.place.value
                     val host = matchDetailsViewModel.host.value
                     val teamOne = matchDetailsViewModel.teamOne.value
                     val teamTwo = matchDetailsViewModel.teamTwo.value
                     val isHost = matchDetailsViewModel.isHost.value ?: false
 
-                    if (match != null && host != null) {
+                    if (match != null && host != null && place != null) {
                         binding.matchSummary.textMatchTitle.text = match.title
                         binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
                         binding.matchSummary.textMatchType.text = match.sport.name
                         binding.matchSummary.textMatchPlayerCount.text =
                             "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
                         binding.matchSummary.textMatchDate.text =
-                            match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                            match.startTime.atZone(ZoneId.systemDefault())
+                                .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
                         binding.matchSummary.textMatchTime.text =
-                            match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                            match.startTime.atZone(ZoneId.systemDefault())
+                                .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
                         binding.matchLocation.locationItemTitle.text =
-                            "High Park" // TODO: add location name field
+                            place.name // TODO: add location name field
                         binding.matchLocation.locationItemAddress.text =
-                            "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+                            place.address // TODO: add location address field
                         binding.matchLocation.locationItemDistance.text =
                             "10km" // TODO: add distance
                         binding.matchDescription.text = match.description
@@ -131,7 +135,10 @@ class MatchDetailsFragment : Fragment() {
                             // display the edit button if current user is the match host
                             binding.editButtonMatchDetails.visibility = VISIBLE
                             binding.editButtonMatchDetails.setOnClickListener {
-                                val action = MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(match)
+                                val action =
+                                    MatchDetailsFragmentDirections.actionMatchDetailsToNavigationHost(
+                                        match
+                                    )
                                 it.findNavController().navigate(action)
                             }
                         } else {

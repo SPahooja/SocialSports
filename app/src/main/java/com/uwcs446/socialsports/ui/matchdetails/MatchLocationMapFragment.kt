@@ -31,7 +31,7 @@ class MatchLocationMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val place = matchDetailsViewModel.matchPlace.value!!
+        val place = matchDetailsViewModel.place.value!!
 
         Log.d(this::class.simpleName, place.toString())
 
@@ -39,7 +39,7 @@ class MatchLocationMapFragment : Fragment() {
         mapFragment.getMapAsync { googleMap ->
             googleMap.addMarker(
                 MarkerOptions()
-                    .position(place.latLng)
+                    .position(place.latLng!!)
                     .title(place.name)
                     .snippet(place.address)
             )

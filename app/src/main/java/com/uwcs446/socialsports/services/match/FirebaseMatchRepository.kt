@@ -11,6 +11,7 @@ import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
 import kotlinx.coroutines.tasks.await
+import java.time.Instant
 import javax.inject.Inject
 
 class FirebaseMatchRepository
@@ -27,12 +28,13 @@ class FirebaseMatchRepository
     private val _matchesByHost = MutableLiveData<Pair<String, List<Match>>>()
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
-    // TODO Add filtering for future timestamp
     override suspend fun fetchExploreMatches(sport: Sport): List<Match> {
         val sportsToMatch = if (sport == Sport.ANY) Sport.values().toList() else listOf(sport)
 
         val matches = matchesCollection
             .whereIn(Match::sport.name, sportsToMatch)
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
             .documents
@@ -44,10 +46,11 @@ class FirebaseMatchRepository
         return matches
     }
 
-    // TODO: Add filtering for future timestamp
     override suspend fun findAllByHost(hostId: String): List<Match> {
         val matches = matchesCollection
-            .whereEqualTo(of(MatchEntity::hostId.name), hostId)
+            .whereEqualTo(MatchEntity::hostId.name, hostId)
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
             .documents
@@ -59,16 +62,19 @@ class FirebaseMatchRepository
         return matches
     }
 
-    // TODO: Add filtering for future timestamp
     override suspend fun findJoinedByUser(userId: String): List<Match> {
         val teamOneMatches = matchesCollection
             .whereArrayContains(MatchEntity::teamOne.name, userId)
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
             .documents
             .mapNotNull { document -> document.toMatchEntity() }
         val teamTwoMatches = matchesCollection
             .whereArrayContains(Match::teamTwo.name, userId)
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
             .documents
@@ -81,29 +87,32 @@ class FirebaseMatchRepository
         return matches
     }
 
-    // TODO: Add filtering for past timestamp
     override suspend fun findPastWithUser(userId: String): List<Match> {
         val hostMatches = matchesCollection
             .whereEqualTo(of(MatchEntity::hostId.name), userId)
+            .whereLessThan(MatchEntity::startTime.name, Instant.now().toEpochMilli())
             .get()
             .await()
             .documents
             .mapNotNull { document -> document.toMatchEntity() }
         val teamOneMatches = matchesCollection
             .whereArrayContains(MatchEntity::teamOne.name, userId)
+            .whereLessThan(MatchEntity::startTime.name, Instant.now().toEpochMilli())
             .get()
             .await()
             .documents
             .mapNotNull { document -> document.toMatchEntity() }
         val teamTwoMatches = matchesCollection
             .whereArrayContains(Match::teamTwo.name, userId)
+            .whereLessThan(MatchEntity::startTime.name, Instant.now().toEpochMilli())
             .get()
             .await()
             .documents
             .mapNotNull { document -> document.toMatchEntity() }
 
         val matches = (hostMatches + teamOneMatches + teamTwoMatches)
-            .distinctBy { match -> match.id }
+            .distinctBy { matchEntity -> matchEntity.id }
+            .sortedBy { matchEntity -> matchEntity.startTime }
             .toDomain()
 
         Log.d(TAG, "Found ${matches.size} matches")
@@ -141,12 +150,3 @@ class FirebaseMatchRepository
 }
 
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
-
-// TODO add this logic to fetch users from match (in match details view)
-// private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
-//    return matches.map { allUsersFromMatch(it) }.flatten().distinct()
-// }
-//
-// private fun allUsersFromMatch(match: MatchEntity): List<String> {
-//    return match.teamOne.plus(match.teamTwo)
-// }
