@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.libraries.places.api.model.Place
 import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.domain.match.Match
@@ -17,7 +18,7 @@ import java.time.format.FormatStyle
 class MatchListAdapter() :
     RecyclerView.Adapter<MatchListAdapter.MatchViewHolder>() {
 
-    private val matchList = mutableListOf<Match>()
+    private val matchList = mutableListOf<Pair<Match, Place>>()
 
     class MatchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var matchTitle: TextView = itemView.findViewById(R.id.text_match_title)
@@ -38,7 +39,7 @@ class MatchListAdapter() :
 
     override fun onBindViewHolder(holder: MatchViewHolder, position: Int) {
         if (position < matchList.size) {
-            val match = matchList[position]
+            val (match, place) = matchList[position]
 
             // TODO: update mapping based on the game item structure in gameList
             holder.matchTitle.text = match.title
@@ -50,9 +51,8 @@ class MatchListAdapter() :
                 match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
             holder.matchTime.text =
                 match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-            holder.matchLocationName.text = "High Park" // TODO: add location name field
-            holder.matchAddress.text =
-                "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field
+            holder.matchLocationName.text = place.name
+            holder.matchAddress.text = place.address
 
             holder.itemView.setOnClickListener { view ->
                 val action = MobileNavigationDirections.actionGlobalToMatchDetails(match.id)
@@ -66,9 +66,9 @@ class MatchListAdapter() :
     }
 
     // Update match list
-    fun updateMatchList(newMatches: List<Match>) {
+    fun updateMatchList(newMatchPlaces: List<Pair<Match, Place>>) {
         matchList.clear()
-        matchList.addAll(newMatches)
+        matchList.addAll(newMatchPlaces)
         notifyDataSetChanged()
     }
 }

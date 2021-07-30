@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.libraries.places.api.model.Place
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
+import com.uwcs446.socialsports.services.location.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -15,15 +17,15 @@ import javax.inject.Inject
 @HiltViewModel
 class FindViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
+    private val locationService: LocationService,
 ) : ViewModel() {
 
-    val _matches = MutableLiveData<List<Match>>(emptyList())
-
-    val matches: LiveData<List<Match>> = _matches
+    val _matchPlaces = MutableLiveData<List<Pair<Match, Place>>>(emptyList())
+    val matchPlaces: LiveData<List<Pair<Match, Place>>> = _matchPlaces
 
     init {
         viewModelScope.launch {
-            _matches.value = matchRepository.fetchExploreMatches(Sport.ANY)
+            filterMatchBySport(Sport.ANY)
         }
     }
 
@@ -37,6 +39,9 @@ class FindViewModel @Inject constructor(
      * Filters matches by sport.
      */
     suspend fun filterMatchBySport(sport: Sport) {
-        _matches.value = matchRepository.fetchExploreMatches(sport)
+        val fetchedMatches = matchRepository.fetchExploreMatches(sport)
+        val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
+
+        _matchPlaces.value = fetchedMatches.zip(fetchedPlaces)
     }
 }

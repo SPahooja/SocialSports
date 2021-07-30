@@ -56,8 +56,8 @@ class FindFragment : Fragment() {
         binding.layoutMatchList.recyclerviewMatch.adapter = recyclerViewAdapter
 
         // Observer which updates the recyclerview when match data changes
-        findViewModel.matches.observe(viewLifecycleOwner) { matchList ->
-            recyclerViewAdapter.updateMatchList(matchList)
+        findViewModel.matchPlaces.observe(viewLifecycleOwner) { matchPlaces ->
+            recyclerViewAdapter.updateMatchList(matchPlaces)
 
             binding.findProgressBar.visibility = INVISIBLE
             binding.layoutMatchList.recyclerviewMatch.visibility = VISIBLE
