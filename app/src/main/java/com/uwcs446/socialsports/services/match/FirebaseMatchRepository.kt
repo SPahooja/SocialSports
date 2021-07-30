@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath.of
+import com.google.firebase.firestore.FieldValue
 import com.uwcs446.socialsports.di.module.MatchesCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
@@ -122,6 +123,61 @@ class FirebaseMatchRepository
 
     override suspend fun fetchMatchById(matchId: String): Match? {
         return matchesCollection.document(matchId).get().await().toMatchEntity()?.toDomain()
+    }
+
+    override suspend fun joinMatch(matchId: String, userId: String, team: Int): Boolean {
+        val match = fetchMatchById(matchId) ?: return false
+        val teamSize = match.teamSize()
+        val teamName = when (team) {
+            1 -> "teamOne"
+            2 -> "teamTwo"
+            else -> {
+                Log.d(
+                    TAG,
+                    "Failed to add user $userId to team $team in match $matchId. Team must be either 1 or 2."
+                )
+                return false
+            }
+        }
+
+        // No-op if user already part of match
+        if ((match.teamOne + match.teamTwo).contains(userId)) return false
+
+        // No-op if team is full
+        val isFull = when (team) {
+            1 -> match.teamOne.size >= teamSize
+            2 -> match.teamOne.size >= teamSize
+            else -> false
+        }
+        if (isFull) {
+            Log.d(TAG, "Failed to add user $userId to team $team in match $matchId. No space left")
+            return false
+        }
+
+        // Add user to team
+        matchesCollection
+            .document(match.id)
+            .update(teamName, FieldValue.arrayUnion(userId))
+            .await()
+
+        return true
+    }
+
+    override suspend fun leaveMatch(matchId: String, userId: String, team: Int): Boolean {
+        val match = fetchMatchById(matchId) ?: return false
+        val teamName = when (team) {
+            1 -> "teamOne"
+            2 -> "teamTwo"
+            else -> ""
+        }
+
+        // Remove user from team
+        matchesCollection
+            .document(match.id)
+            .update(teamName, FieldValue.arrayRemove(userId))
+            .await()
+
+        return true
     }
 
     override fun create(match: Match) = createOrSave(match.toEntity())
