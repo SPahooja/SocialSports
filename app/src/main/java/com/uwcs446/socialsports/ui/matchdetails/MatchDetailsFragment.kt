@@ -23,6 +23,7 @@ import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -131,7 +132,7 @@ class MatchDetailsFragment : Fragment() {
                         binding.matchProgressBar.visibility = GONE
                         binding.matchDetailsViews.visibility = VISIBLE
 
-                        if (isHost) {
+                        if (isHost && match.startTime.isAfter(Instant.now())) {
                             // display the edit button if current user is the match host
                             binding.editButtonMatchDetails.visibility = VISIBLE
                             binding.editButtonMatchDetails.setOnClickListener {
