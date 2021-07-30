@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath.of
+import com.google.firebase.firestore.FieldValue
 import com.uwcs446.socialsports.di.module.MatchesCollection
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
@@ -118,47 +119,54 @@ class FirebaseMatchRepository
     override suspend fun joinMatch(matchId: String, userId: String, team: Int): Boolean {
         val match = fetchMatchById(matchId) ?: return false
         val teamSize = match.teamSize()
+        val matchTeam = when (team) {
+            1 -> match.teamOne
+            2 -> match.teamTwo
+            else -> {
+                Log.d(
+                    TAG,
+                    "Failed to add user $userId to team $team in match $matchId. Team must be either 1 or 2."
+                )
+                return false
+            }
+        }
+        val teamName = when (team) {
+            1 -> "teamOne"
+            2 -> "teamTwo"
+            else -> ""
+        }
 
         // No-op if user already part of match
         if ((match.teamOne + match.teamTwo).contains(userId)) return false
 
-        // Create new match with added user
-        val newMatch = when (team) {
-            1 -> match.copy(teamOne = match.teamOne.plus(userId))
-            2 -> match.copy(teamTwo = match.teamTwo.plus(userId))
-            else -> {
-                Log.d(TAG, "Failed to add user $userId to team $team in match $matchId. Team must be either 1 or 2.")
-                return false
-            }
-        }
-
-        // Check if new match's team is still within size limits
-        if (newMatch.teamOne.size > teamSize || newMatch.teamTwo.size > teamSize) {
+        // No-op if team is full
+        if (matchTeam.size >= teamSize) {
             Log.d(TAG, "Failed to add user $userId to team $team in match $matchId. No space left")
             return false
         }
 
-        // Write new match to db
-        edit(newMatch)
+        // Add user to team
+        matchesCollection
+            .document(match.id)
+            .update(teamName, FieldValue.arrayUnion(userId))
+            .await()
 
         return true
     }
 
     override suspend fun leaveMatch(matchId: String, userId: String, team: Int): Boolean {
         val match = fetchMatchById(matchId) ?: return false
-
-        // Create new match with removed user
-        val newMatch = when (team) {
-            1 -> match.copy(teamOne = match.teamOne.minus(userId))
-            2 -> match.copy(teamTwo = match.teamTwo.minus(userId))
-            else -> {
-                Log.d(TAG, "Failed to remove user $userId from team $team in match $matchId. Team must be either 1 or 2.")
-                return false
-            }
+        val teamName = when (team) {
+            1 -> "teamOne"
+            2 -> "teamTwo"
+            else -> ""
         }
 
-        // Write new match to db
-        edit(newMatch)
+        // Remove user from team
+        matchesCollection
+            .document(match.id)
+            .update(teamName, FieldValue.arrayRemove(userId))
+            .await()
 
         return true
     }
