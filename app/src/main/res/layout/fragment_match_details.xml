@@ -18,6 +18,20 @@
             tools:context=".ui.matchdetails.MatchDetailsFragment">
 
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/edit_button_match_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone"
+                app:fabSize="mini"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_baseline_edit_24dp"
+                tools:layout_editor_absoluteY="24dp" />
+
             <ProgressBar
                 android:id="@+id/match_progress_bar"
                 android:layout_width="wrap_content"
@@ -28,7 +42,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
+            <!-- team lists -->
             <LinearLayout
                 android:id="@+id/match_details_views"
                 android:layout_width="match_parent"
@@ -193,13 +207,6 @@
                     </LinearLayout>
 
                 </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/edit_button_match_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_edit_24dp"
-                    android:visibility="gone" />
 
             </LinearLayout>
 

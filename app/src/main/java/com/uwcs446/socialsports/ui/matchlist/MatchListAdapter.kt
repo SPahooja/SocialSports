@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.domain.match.Match
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -46,9 +47,9 @@ class MatchListAdapter() :
             holder.matchPlayerCount.text =
                 "${match.currentPlayerCount()} / ${match.maxPlayerCount()}"
             holder.matchDate.text =
-                match.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
             holder.matchTime.text =
-                match.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                match.startTime.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
             holder.matchLocationName.text = "High Park" // TODO: add location name field
             holder.matchAddress.text =
                 "1873 Bloor St W, Toronto, ON M6R 2Z" // TODO: add location address field

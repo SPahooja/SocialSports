@@ -3,9 +3,7 @@ package com.uwcs446.socialsports.domain.match
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.parcel.Parcelize
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalTime
+import java.time.Instant
 
 @Parcelize
 data class Match(
@@ -14,9 +12,8 @@ data class Match(
     val title: String,
     val description: String,
     val location: MatchLocation,
-    val date: LocalDate,
-    val time: LocalTime,
-    val duration: Duration,
+    val startTime: Instant,
+    val endTime: Instant,
     val hostId: String,
     val teamOne: List<String>,
     val teamTwo: List<String>,

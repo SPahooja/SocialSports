@@ -20,8 +20,10 @@ class MatchDetailsViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
     private val currentUserRepository: CurrentAuthUserRepository,
     private val userRepository: UserRepository,
-    private val locationService: LocationService
+    private val locationService: LocationService,
 ) : ViewModel() {
+
+    private val currentUser = currentUserRepository.getUser()
 
     private val _match = MutableLiveData<Match>()
     val match: LiveData<Match> = _match
@@ -35,11 +37,17 @@ class MatchDetailsViewModel @Inject constructor(
     private val _teamTwo = MutableLiveData<List<User>>(emptyList())
     val teamTwo: LiveData<List<User>> = _teamTwo
 
+    private val _place = MutableLiveData<Place>()
+    val place: LiveData<Place> = _place
+
     private val _ready = MutableLiveData<Boolean>(false)
     val ready: LiveData<Boolean> = _ready
 
     private val _matchPlace = MutableLiveData<Place>()
     val matchPlace: LiveData<Place> = _matchPlace
+
+    private val _isHost = MutableLiveData<Boolean>(false)
+    val isHost: LiveData<Boolean> = _isHost
 
     suspend fun fetchMatch(matchId: String) {
         _ready.value = false
@@ -51,11 +59,13 @@ class MatchDetailsViewModel @Inject constructor(
             val fetchedTeamTwo = userRepository.findByIds(fetchedMatch.teamTwo)
             val fetchedMatchedPlace = locationService.getPlace(fetchedMatch.location.placeId)
 
-            _match.value = fetchedMatch
+            _match.value = fetchedMatch!!
             _host.value = fetchedHost!!
             _teamOne.value = fetchedTeamOne
             _teamTwo.value = fetchedTeamTwo
-            _matchPlace.value = fetchedMatchedPlace
+            _place.value = fetchedMatchedPlace
+
+            checkHost(fetchedHost.id)
 
             _ready.value = true
         }
@@ -90,6 +100,15 @@ class MatchDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             matchRepository.leaveMatch(match.id, currentUser.uid, team)
             fetchMatch(match.id)
+        }
+    }
+
+    // check whether the current user is the match host and update isHost accordingly
+    private fun checkHost(hostId: String) {
+        if (currentUser != null) {
+            _isHost.value = (hostId == currentUser.uid)
+        } else {
+            _isHost.value = false
         }
     }
 }
