@@ -30,7 +30,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -103,12 +102,8 @@ class HostDetailsFragment : Fragment() {
         sportTextView.setText(hostDetailsViewModel.sportType.toString())
         rulesTextView.setText(hostDetailsViewModel.matchDescription)
 
-        dateTextView.setText(
-            matchStartTime?.atZone(ZoneId.systemDefault())?.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-            )
-        )
-        timeTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
+        dateTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimePicker().getDateFormatter()))
+        timeTextView.setText(matchStartTime?.atZone(ZoneId.systemDefault())?.format(DateTimePicker().getTimeFormatter()))
 
         var duration: Duration
         if (matchStartTime != null && matchEndTime != null) {
@@ -183,9 +178,12 @@ class HostDetailsFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val startTime = LocalDate.parse("${dateTextView.text} ${timeTextView.text}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).atStartOfDay(
-                ZoneId.systemDefault()
-            ).toInstant()
+            val startTime = LocalDate.parse(
+                "${dateTextView.text} ${timeTextView.text}",
+                DateTimeFormatter.ofPattern("${DateTimePicker().getDateFormatter()} ${DateTimePicker().getDateFormatter()}")
+            )
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
             val duration = Duration.ofHours(durationHourTextView.text.toString().toLong()).plus(
                 Duration.ofMinutes(durationMinuteTextView.text.toString().toLong())
             )
