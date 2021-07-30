@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.Instant
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -178,11 +178,11 @@ class HostDetailsFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val startTime = LocalDate.parse(
+            val startTime = LocalDateTime.parse(
                 "${dateTextView.text} ${timeTextView.text}",
-                DateTimeFormatter.ofPattern("${DateTimePicker().getDateFormatter()} ${DateTimePicker().getDateFormatter()}")
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             )
-                .atStartOfDay(ZoneId.systemDefault())
+                .atZone(ZoneId.systemDefault())
                 .toInstant()
             val duration = Duration.ofHours(durationHourTextView.text.toString().toLong()).plus(
                 Duration.ofMinutes(durationMinuteTextView.text.toString().toLong())
