@@ -23,7 +23,7 @@ object UserLoginService {
                 .getInstance()
                 .createSignInIntentBuilder()
                 .setIsSmartLockEnabled(false)
-                .setLogo(R.drawable.sports_for_all_logo) // TODO add bg
+                .setLogo(R.drawable.sports_for_all_logo)
                 .setAvailableProviders(
                     arrayListOf(
                         AuthUI.IdpConfig.EmailBuilder()
