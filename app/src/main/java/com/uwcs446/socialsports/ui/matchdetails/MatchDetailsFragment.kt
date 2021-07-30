@@ -56,17 +56,22 @@ class MatchDetailsFragment : Fragment() {
         }
 
         // Open map if permission is granted
-        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                // Show the map
-                val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
-                Navigation.findNavController(binding.root).navigate(action)
+        val requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    // Show the map
+                    val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
+                    Navigation.findNavController(binding.root).navigate(action)
+                }
             }
-        }
 
         // Open Maps Fragment for Location
         binding.matchLocation.locationItemWrapper.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 // Show the map
                 val action = MobileNavigationDirections.actionGlobalToMatchLocationMap()
                 Navigation.findNavController(binding.root).navigate(action)
@@ -78,13 +83,15 @@ class MatchDetailsFragment : Fragment() {
         val teamOneViewAdapter = TeamListAdapter()
         binding.layoutTeamOne.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamOne.recyclerviewTeam.stopNestedScroll()
-        binding.layoutTeamOne.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutTeamOne.recyclerviewTeam.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamOne.recyclerviewTeam.adapter = teamOneViewAdapter
 
         val teamTwoViewAdapter = TeamListAdapter()
         binding.layoutTeamTwo.recyclerviewTeam.setHasFixedSize(false)
         binding.layoutTeamTwo.recyclerviewTeam.stopNestedScroll()
-        binding.layoutTeamTwo.recyclerviewTeam.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding.layoutTeamTwo.recyclerviewTeam.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.layoutTeamTwo.recyclerviewTeam.adapter = teamTwoViewAdapter
 
         matchDetailsViewModel.ready.observe(
@@ -127,6 +134,60 @@ class MatchDetailsFragment : Fragment() {
                         // Pass names from teams one and two to recycle view adapter
                         if (teamOne != null) teamOneViewAdapter.updateTeamMembers(teamOne.map { user -> user.name })
                         if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
+
+                        // Enable or disable join buttons
+                        if (matchDetailsViewModel.isInTeam(1)) {
+                            // Enable leave team one button
+                            binding.matchTeamOneJoinButton.text = "Leave"
+                            binding.matchTeamOneJoinButton.isEnabled = true
+                            binding.matchTeamOneJoinButton.setOnClickListener {
+                                matchDetailsViewModel.leaveMatch(
+                                    1
+                                )
+                            }
+                            // Disable join team two button
+                            binding.matchTeamTwoJoinButton.text = "Join"
+                            binding.matchTeamTwoJoinButton.isEnabled = false
+                            binding.matchTeamTwoJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    2
+                                )
+                            }
+                        } else if (matchDetailsViewModel.isInTeam(2)) {
+                            // Disable join team one button
+                            binding.matchTeamOneJoinButton.text = "Join"
+                            binding.matchTeamOneJoinButton.isEnabled = false
+                            binding.matchTeamOneJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    1
+                                )
+                            }
+                            // Enable leave team two button
+                            binding.matchTeamTwoJoinButton.text = "Leave"
+                            binding.matchTeamTwoJoinButton.isEnabled = true
+                            binding.matchTeamTwoJoinButton.setOnClickListener {
+                                matchDetailsViewModel.leaveMatch(
+                                    2
+                                )
+                            }
+                        } else {
+                            // Enable join team one button
+                            binding.matchTeamOneJoinButton.text = "Join"
+                            binding.matchTeamOneJoinButton.isEnabled = true
+                            binding.matchTeamOneJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    1
+                                )
+                            }
+                            // Enable join team two button
+                            binding.matchTeamTwoJoinButton.text = "Join"
+                            binding.matchTeamTwoJoinButton.isEnabled = true
+                            binding.matchTeamTwoJoinButton.setOnClickListener {
+                                matchDetailsViewModel.joinMatch(
+                                    2
+                                )
+                            }
+                        }
 
                         // Switch visibility of views
                         binding.matchProgressBar.visibility = GONE
