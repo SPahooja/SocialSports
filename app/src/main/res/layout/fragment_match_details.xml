@@ -76,7 +76,6 @@
                                 android:id="@+id/match_host_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
                                 android:text="Host"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                                 android:textStyle="bold" />
