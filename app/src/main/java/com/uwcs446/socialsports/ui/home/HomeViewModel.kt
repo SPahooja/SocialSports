@@ -22,12 +22,6 @@ class HomeViewModel @Inject constructor(
 
     private val currentUser = currentUserRepository.getUser()
 
-    private val _matches = MutableLiveData<List<Match>>(emptyList())
-    val matches: LiveData<List<Match>> = _matches
-
-    private val _places = MutableLiveData<List<Place>>(emptyList())
-    val places: LiveData<List<Place>> = _places
-
     private val _matchPlaces = MutableLiveData<List<Pair<Match, Place>>>(emptyList())
     val matchPlaces: LiveData<List<Pair<Match, Place>>> = _matchPlaces
 
