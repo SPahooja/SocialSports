@@ -119,9 +119,9 @@ class FirebaseMatchRepository
     override suspend fun joinMatch(matchId: String, userId: String, team: Int): Boolean {
         val match = fetchMatchById(matchId) ?: return false
         val teamSize = match.teamSize()
-        val matchTeam = when (team) {
-            1 -> match.teamOne
-            2 -> match.teamTwo
+        val teamName = when (team) {
+            1 -> "teamOne"
+            2 -> "teamTwo"
             else -> {
                 Log.d(
                     TAG,
@@ -130,17 +130,17 @@ class FirebaseMatchRepository
                 return false
             }
         }
-        val teamName = when (team) {
-            1 -> "teamOne"
-            2 -> "teamTwo"
-            else -> ""
-        }
 
         // No-op if user already part of match
         if ((match.teamOne + match.teamTwo).contains(userId)) return false
 
         // No-op if team is full
-        if (matchTeam.size >= teamSize) {
+        val isFull = when (team) {
+            1 -> match.teamOne.size >= teamSize
+            2 -> match.teamOne.size >= teamSize
+            else -> false
+        }
+        if (isFull) {
             Log.d(TAG, "Failed to add user $userId to team $team in match $matchId. No space left")
             return false
         }
