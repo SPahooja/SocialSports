@@ -28,9 +28,6 @@ class HomeViewModel @Inject constructor(
     private val _filterType = MutableLiveData(MatchFilter.JOINED)
     val filterType: LiveData<MatchFilter> = _filterType
 
-    private val _ready = MutableLiveData(false)
-    val ready: LiveData<Boolean> = _ready
-
     fun setFilterType(filter: MatchFilter) {
         filterMatches(filter)
 
