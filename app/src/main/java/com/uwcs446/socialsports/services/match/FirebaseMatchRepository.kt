@@ -90,21 +90,21 @@ class FirebaseMatchRepository
     override suspend fun findPastWithUser(userId: String): List<Match> {
         val hostMatches = matchesCollection
             .whereEqualTo(of(MatchEntity::hostId.name), userId)
-            .whereLessThan(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .whereLessThan(MatchEntity::endTime.name, Instant.now().toEpochMilli())
             .get()
             .await()
             .documents
             .mapNotNull { document -> document.toMatchEntity() }
         val teamOneMatches = matchesCollection
             .whereArrayContains(MatchEntity::teamOne.name, userId)
-            .whereLessThan(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .whereLessThan(MatchEntity::endTime.name, Instant.now().toEpochMilli())
             .get()
             .await()
             .documents
             .mapNotNull { document -> document.toMatchEntity() }
         val teamTwoMatches = matchesCollection
             .whereArrayContains(Match::teamTwo.name, userId)
-            .whereLessThan(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .whereLessThan(MatchEntity::endTime.name, Instant.now().toEpochMilli())
             .get()
             .await()
             .documents
