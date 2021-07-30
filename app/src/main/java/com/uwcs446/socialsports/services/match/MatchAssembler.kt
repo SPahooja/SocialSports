@@ -15,7 +15,7 @@ fun Match.toEntity() =
         description = description,
         hostId = hostId,
         startTime = startTime.toEpochMilli(),
-        endTime = startTime.toEpochMilli(),
+        endTime = endTime.toEpochMilli(),
         location = LocationEntity(
             placeId = location.placeId,
             lat = location.latLng.latitude,
@@ -37,7 +37,7 @@ fun MatchEntity.toDomain() =
         title = title,
         description = description,
         startTime = Instant.ofEpochMilli(startTime),
-        endTime = Instant.ofEpochMilli(startTime),
+        endTime = Instant.ofEpochMilli(endTime),
         location = MatchLocation(
             location.placeId,
             LatLng(
