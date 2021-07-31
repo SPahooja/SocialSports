@@ -1,8 +1,10 @@
 package com.uwcs446.socialsports.services.match
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath.of
@@ -42,6 +44,22 @@ class FirebaseMatchRepository
         Log.d(TAG, "Found ${matches.size} matches")
 
         return matches
+    }
+
+    override suspend fun fetchWithinDistance(curLatLng: LatLng?, distance: Int?): List<Match> {
+        val matches = matchesCollection
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+            .toDomain()
+
+        return if (curLatLng != null) {
+            val curLocation = createLocation(curLatLng!!)
+            matches?.filter { m -> curLocation.distanceTo(createLocation(m.location.latLng)) < distance!!.times(1000) }
+        } else {
+            matches
+        }
     }
 
     // TODO: Add filtering for future timestamp
@@ -141,6 +159,13 @@ class FirebaseMatchRepository
 }
 
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
+
+private fun createLocation(latLng: LatLng): Location {
+    var location = Location("")
+    location.latitude = latLng.latitude
+    location.longitude = latLng.longitude
+    return location
+}
 
 // TODO add this logic to fetch users from match (in match details view)
 // private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
