@@ -26,8 +26,6 @@ class FindViewModel @Inject constructor(
     private val _matchesByDate = MutableLiveData<List<Match>>(emptyList())
     private val _matchesByTime = MutableLiveData<List<Match>>(emptyList())
 
-//    private val _matches = MutableLiveData<List<Match>>(emptyList())
-//    val matches: LiveData<List<Match>> = _matches
     val _matchPlaces = MutableLiveData<List<Pair<Match, Place>>>(emptyList())
     val matchPlaces: LiveData<List<Pair<Match, Place>>> = _matchPlaces
 
@@ -48,11 +46,6 @@ class FindViewModel @Inject constructor(
      * Filters matches by sport.
      */
     suspend fun filterMatchBySport(sport: Sport) {
-//        val fetchedMatches = matchRepository.fetchExploreMatches(sport)
-//        val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
-//
-//        _matchPlaces.value = fetchedMatches.zip(fetchedPlaces)
-
         _matchesBySport.value = matchRepository.fetchExploreMatches(sport)
         updateMatchList()
     }
@@ -87,6 +80,5 @@ class FindViewModel @Inject constructor(
         val fetchedMatches = matchesByDistance.filter { m -> idsBySport.contains(m.id) }
         val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
         _matchPlaces.value = fetchedMatches.zip(fetchedPlaces)
-//        _matches.value = result
     }
 }
