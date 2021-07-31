@@ -22,13 +22,12 @@ object UserLoginService {
             AuthUI
                 .getInstance()
                 .createSignInIntentBuilder()
-                .setLogo(R.drawable.ic_add_fab) // TODO add bg
+                .setIsSmartLockEnabled(false)
+                .setLogo(R.drawable.sports_for_all_logo)
                 .setAvailableProviders(
                     arrayListOf(
                         AuthUI.IdpConfig.EmailBuilder()
                             .setRequireName(true)
-                            .build(),
-                        AuthUI.IdpConfig.PhoneBuilder() // TODO probably remove since no name set option
                             .build(),
                         AuthUI.IdpConfig.GoogleBuilder()
                             .build(),

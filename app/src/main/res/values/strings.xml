@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SocialSports</string>
+    <string name="app_name">SportsForAll</string>
     <string name="title_home">My Games</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="nav_menu_host">Host</string>
