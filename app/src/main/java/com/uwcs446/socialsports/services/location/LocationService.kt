@@ -37,6 +37,6 @@ class LocationService @Inject constructor(
                 curPlace = places[0].place
             }
         }
-        return placesClient.findCurrentPlace(request).await().placeLikelihoods[0].place
+        return curPlace
     }
 }
