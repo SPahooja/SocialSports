@@ -21,6 +21,10 @@ interface MatchRepository {
 
     suspend fun fetchMatchById(matchId: String): Match?
 
+    suspend fun joinMatch(matchId: String, userId: String, team: Int): Boolean
+
+    suspend fun leaveMatch(matchId: String, userId: String, team: Int): Boolean
+
     fun create(match: Match)
 
     fun edit(match: Match)

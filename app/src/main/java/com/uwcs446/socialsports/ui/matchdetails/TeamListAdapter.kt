@@ -18,13 +18,8 @@ class TeamListAdapter() :
     class TeamPositionViewHolder(private val binding: TeamPositionRowBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(identifier: String) {
             with(binding) {
-                if (identifier.isEmpty()) {
-                    textPlayerIdentifier.text = "Join"
-                    icTeamPlayer.setImageResource(R.drawable.ic_baseline_person_add_24px)
-                } else {
-                    textPlayerIdentifier.text = identifier
-                    icTeamPlayer.setImageResource(R.drawable.ic_baseline_account_circle_50)
-                }
+                textPlayerIdentifier.text = identifier
+                icTeamPlayer.setImageResource(R.drawable.ic_baseline_account_circle_50)
             }
         }
     }
@@ -42,22 +37,15 @@ class TeamListAdapter() :
         if (position < joinedUsers.size) {
             holder.bind(joinedUsers[position])
 
-            // TODO: onClick for joining
+            // TODO: on clicking a team member
             holder.itemView.setOnClickListener {
                 Log.d("join", "Existing user!")
-            }
-        } else if (position < teamSize && position == joinedUsers.size) {
-            holder.bind("")
-
-            // TODO: onClick for joining
-            holder.itemView.setOnClickListener {
-                Log.d("join", "Joined!")
             }
         }
     }
 
     // Return the size of your dataset
-    override fun getItemCount() = min(teamSize, joinedUsers.size + 1)
+    override fun getItemCount() = min(teamSize, joinedUsers.size)
 
     // Update joinedUsers
     fun updateTeamMembers(users: List<String>) {
