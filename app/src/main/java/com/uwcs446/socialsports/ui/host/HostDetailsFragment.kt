@@ -21,7 +21,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentHostEditDetailsBinding
 import com.uwcs446.socialsports.domain.datetimepicker.DateTimePicker
-import com.uwcs446.socialsports.domain.match.MatchLocation
+import com.uwcs446.socialsports.domain.location.Location
 import com.uwcs446.socialsports.domain.match.Sport
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -63,7 +63,7 @@ class HostDetailsFragment : Fragment() {
         val hostGameButton: Button = binding.hostButtonHost
 
         // Location search
-        var matchLocation: MatchLocation? = null
+        var matchLocation: Location? = null
         val locationSearchFragment = childFragmentManager.findFragmentById(R.id.host_search_choose_a_location)
             as AutocompleteSupportFragment
         locationSearchFragment.setHint(getString(R.string.host_hint_search_location))
@@ -71,7 +71,7 @@ class HostDetailsFragment : Fragment() {
         locationSearchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
                 // println("Place: ${place.name}, ${place.address}, ${place.latLng}, ${place.id}")
-                matchLocation = MatchLocation(place.id!!, place.latLng!!)
+                matchLocation = Location(place.id!!, place.latLng!!)
                 locationTitleTextView.text = place.name
                 locationAddressTextView.text = place.address
                 locationSearch.visibility = View.INVISIBLE
@@ -145,7 +145,7 @@ class HostDetailsFragment : Fragment() {
             timePicker.show(parentFragmentManager, "timePicker")
         }
 
-        // Click MatchLocation card on host details fragment to edit selected location
+        // Click match location card on host details fragment to edit selected location
         locationCard.setOnClickListener {
             locationSearch.visibility = View.VISIBLE
             locationCard.visibility = View.INVISIBLE
@@ -190,7 +190,7 @@ class HostDetailsFragment : Fragment() {
             val endTime = startTime.plus(duration)
 
             // Update user input in view model
-            if (matchLocation != null) hostDetailsViewModel.matchLocation = matchLocation as MatchLocation
+            if (matchLocation != null) hostDetailsViewModel.matchLocation = matchLocation as Location
             hostDetailsViewModel.matchTitle = titleTextView.text.toString()
             hostDetailsViewModel.sportType = sportTextView.text.toString()
             hostDetailsViewModel.matchStartTime = startTime

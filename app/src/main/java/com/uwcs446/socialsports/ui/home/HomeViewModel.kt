@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.Place
+import com.uwcs446.socialsports.domain.location.LocationRepository
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
-import com.uwcs446.socialsports.services.location.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val currentUserRepository: CurrentAuthUserRepository,
     private val matchRepository: MatchRepository,
-    private val locationService: LocationService
+    private val locationRepository: LocationRepository
 ) : ViewModel() {
 
     private val currentUser = currentUserRepository.getUser()
@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
                 MatchFilter.HOSTING -> matchRepository.findAllByHost(currentUser.uid)
                 MatchFilter.PAST -> matchRepository.findPastWithUser(currentUser.uid)
             }
-            val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
+            val fetchedPlaces = fetchedMatches.map { match -> locationRepository.getPlace(match.location.placeId) }
             _matchPlaces.value = fetchedMatches.zip(fetchedPlaces)
         }
     }

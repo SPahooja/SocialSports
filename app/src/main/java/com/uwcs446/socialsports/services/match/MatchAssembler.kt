@@ -1,8 +1,8 @@
 package com.uwcs446.socialsports.services.match
 
 import com.google.android.gms.maps.model.LatLng
+import com.uwcs446.socialsports.domain.location.Location
 import com.uwcs446.socialsports.domain.match.Match
-import com.uwcs446.socialsports.domain.match.MatchLocation
 import java.time.Instant
 
 fun Collection<Match>.toEntity() = this.map { it.toEntity() }
@@ -38,7 +38,7 @@ fun MatchEntity.toDomain() =
         description = description,
         startTime = Instant.ofEpochMilli(startTime),
         endTime = Instant.ofEpochMilli(endTime),
-        location = MatchLocation(
+        location = Location(
             location.placeId,
             LatLng(
                 location.lat,

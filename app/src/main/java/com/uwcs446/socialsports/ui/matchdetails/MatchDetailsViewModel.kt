@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.model.Place
+import com.uwcs446.socialsports.domain.location.LocationRepository
 import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
 import com.uwcs446.socialsports.domain.user.User
 import com.uwcs446.socialsports.domain.user.UserRepository
-import com.uwcs446.socialsports.services.location.LocationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class MatchDetailsViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
     private val currentUserRepository: CurrentAuthUserRepository,
     private val userRepository: UserRepository,
-    private val locationService: LocationService,
+    private val locationRepository: LocationRepository
 ) : ViewModel() {
 
     private val currentUser = currentUserRepository.getUser()
@@ -57,7 +57,7 @@ class MatchDetailsViewModel @Inject constructor(
             val fetchedHost = userRepository.findById(fetchedMatch.hostId)
             val fetchedTeamOne = userRepository.findByIds(fetchedMatch.teamOne)
             val fetchedTeamTwo = userRepository.findByIds(fetchedMatch.teamTwo)
-            val fetchedMatchedPlace = locationService.getPlace(fetchedMatch.location.placeId)
+            val fetchedMatchedPlace = locationRepository.getPlace(fetchedMatch.location.placeId)
 
             _match.value = fetchedMatch!!
             _host.value = fetchedHost!!

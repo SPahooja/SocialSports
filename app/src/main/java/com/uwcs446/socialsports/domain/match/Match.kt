@@ -1,7 +1,7 @@
 package com.uwcs446.socialsports.domain.match
 
 import android.os.Parcelable
-import com.google.android.gms.maps.model.LatLng
+import com.uwcs446.socialsports.domain.location.Location
 import kotlinx.android.parcel.Parcelize
 import java.time.Instant
 
@@ -11,7 +11,7 @@ data class Match(
     val sport: Sport,
     val title: String,
     val description: String,
-    val location: MatchLocation,
+    val location: Location,
     val startTime: Instant,
     val endTime: Instant,
     val hostId: String,
@@ -25,9 +25,3 @@ data class Match(
 
     fun currentPlayerCount() = teamOne.size.plus(teamTwo.size)
 }
-
-@Parcelize
-data class MatchLocation(
-    val placeId: String,
-    val latLng: LatLng
-) : Parcelable
