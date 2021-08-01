@@ -42,4 +42,9 @@
     <string name="date_filter_hint">Date</string>
     <string name="time_filter_hint">Time</string>
 
+    <!-- Notification Channel -->
+    <string name="match_rating_notification_channel_id">notifyRating</string>
+    <string name="match_rating_notification_channel_name">SFAMatchRatingChannel</string>
+    <string name="match_rating_notification_channel_description">Channel for SFA match rating reminder</string>
+    <string name="join_match_button">Join Match</string>
 </resources>

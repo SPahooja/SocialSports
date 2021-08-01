@@ -157,5 +157,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toEndOf="@+id/match_host_icon"
             app:layout_constraintTop_toTopOf="@+id/match_host_icon" />
+
+        <Button
+            android:id="@+id/join_match_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/join_match_button"
+            tools:layout_editor_absoluteX="179dp"
+            tools:layout_editor_absoluteY="569dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

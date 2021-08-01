@@ -21,7 +21,7 @@ class MatchListUtils {
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 teamOne = listOf(User("1")),
-                teamTwo = listOf(User("1"))
+                teamTwo = listOf(User("2"))
             ),
             Match(
                 id = "2",
@@ -33,7 +33,7 @@ class MatchListUtils {
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"))
+                teamTwo = listOf(User("2"))
             ),
             Match(
                 id = "3",
@@ -44,8 +44,8 @@ class MatchListUtils {
                 time = LocalTime.parse("18:00:00"),
                 duration = Duration.parse("PT1H"),
                 host = User("1"),
-                teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"), User("1"))
+                teamOne = listOf(User("1"), User("12")),
+                teamTwo = listOf(User("3"), User("4"))
             ),
             Match(
                 id = "4",
@@ -56,8 +56,8 @@ class MatchListUtils {
                 time = LocalTime.parse("15:30:00"),
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
-                teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"), User("1"), User("1"))
+                teamOne = listOf(User("1"), User("2")),
+                teamTwo = listOf(User("3"), User("4"), User("5"))
             ),
             Match(
                 id = "5",
@@ -69,7 +69,7 @@ class MatchListUtils {
                 duration = Duration.parse("PT2H"),
                 host = User("1"),
                 teamOne = listOf(User("1"), User("1")),
-                teamTwo = listOf(User("1"), User("1"), User("1"))
+                teamTwo = listOf(User("2"), User("3"), User("4"))
             )
         )
 
