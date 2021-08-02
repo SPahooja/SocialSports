@@ -1,6 +1,10 @@
 package com.uwcs446.socialsports
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +33,8 @@ class MainActivity :
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        createNotificationChannel()
 
         Places.initialize(this, getString(R.string.google_api_key), Locale.CANADA)
 
@@ -71,6 +77,25 @@ class MainActivity :
             if (resultCode != RESULT_OK) {
                 UserLoginService.login(this)
             }
+        }
+    }
+
+    // Creates notification channel with channel id, name, description, importance, and registers the
+    // channel to a NotificationManager in the system.
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.match_rating_notification_channel_name)
+            val descriptionText = getString(R.string.match_rating_notification_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(getString(R.string.match_rating_notification_channel_id), name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
