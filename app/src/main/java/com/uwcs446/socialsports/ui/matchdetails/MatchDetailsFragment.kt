@@ -1,7 +1,11 @@
 package com.uwcs446.socialsports.ui.matchdetails
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +24,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.MobileNavigationDirections
+import com.uwcs446.socialsports.R
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,6 +49,8 @@ class MatchDetailsFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentMatchDetailsBinding.inflate(inflater, container, false)
+
+        createNotificationChannel()
 
         // Remove visibility of location in the summary
         binding.matchSummary.textMatchLocationName.visibility = GONE
@@ -213,6 +220,25 @@ class MatchDetailsFragment : Fragment() {
         )
 
         return binding.root
+    }
+
+    // Creates notification channel with channel id, name, description, importance, and registers the
+    // channel to a NotificationManager in the system.
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.match_rating_notification_channel_name)
+            val descriptionText = getString(R.string.match_rating_notification_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(getString(R.string.match_rating_notification_channel_id), name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     override fun onDestroyView() {
