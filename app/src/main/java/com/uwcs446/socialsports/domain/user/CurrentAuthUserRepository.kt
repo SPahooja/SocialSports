@@ -1,6 +1,5 @@
 package com.uwcs446.socialsports.domain.user
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 
@@ -16,7 +15,7 @@ interface CurrentAuthUserRepository {
     /**
      * Logs out the current user.
      */
-    fun logout(context: Context)
+    fun logout()
 
     suspend fun handleAuthChange()
 }

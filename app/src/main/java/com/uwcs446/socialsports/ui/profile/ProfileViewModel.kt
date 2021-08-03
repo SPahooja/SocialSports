@@ -1,6 +1,5 @@
 package com.uwcs446.socialsports.ui.profile
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -33,8 +32,8 @@ class ProfileViewModel
         currentUserRepository.user.observeForever(userObserver)
     }
 
-    fun handleLogout(context: Context) {
-        currentUserRepository.logout(context)
+    fun handleLogout() {
+        currentUserRepository.logout()
     }
 
     override fun onCleared() {

@@ -1,10 +1,8 @@
 package com.uwcs446.socialsports.services.user.current
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
@@ -28,14 +26,11 @@ class FirebaseCurrentUserRepository
             .also { Log.d(TAG, "Fetched logged in user: ${it?.uid}") }
     }
 
-    override fun logout(context: Context) {
-        AuthUI
-            .getInstance()
-            .signOut(context)
-            .addOnCompleteListener {
-                updateCurrentUser()
-                Log.d(TAG, "User logged out")
-            }
+    override fun logout() {
+        firebaseAuth
+            .signOut()
+            .also { updateCurrentUser() }
+            .also { Log.d(TAG, "User logged out") }
     }
 
     override suspend fun handleAuthChange() {
