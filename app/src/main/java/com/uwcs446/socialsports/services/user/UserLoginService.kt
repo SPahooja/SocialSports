@@ -22,7 +22,6 @@ object UserLoginService {
             AuthUI
                 .getInstance()
                 .createSignInIntentBuilder()
-                .setIsSmartLockEnabled(false)
                 .setLogo(R.drawable.sports_for_all_logo)
                 .setAvailableProviders(
                     arrayListOf(

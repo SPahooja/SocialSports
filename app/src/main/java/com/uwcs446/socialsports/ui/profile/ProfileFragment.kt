@@ -28,7 +28,7 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.logoutButton.setOnClickListener { viewModel.handleLogout() }
+        binding.logoutButton.setOnClickListener { viewModel.handleLogout(requireActivity()) }
 
         val textView: TextView = binding.userProfileUsername
         viewModel.username.observe(
