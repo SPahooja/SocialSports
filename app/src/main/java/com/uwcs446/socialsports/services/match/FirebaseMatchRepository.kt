@@ -1,8 +1,12 @@
 package com.uwcs446.socialsports.services.match
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath.of
@@ -12,6 +16,7 @@ import com.uwcs446.socialsports.domain.match.Match
 import com.uwcs446.socialsports.domain.match.MatchRepository
 import com.uwcs446.socialsports.domain.match.Sport
 import kotlinx.coroutines.tasks.await
+import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 
@@ -46,6 +51,98 @@ class FirebaseMatchRepository
 
         return matches
     }
+
+    override suspend fun fetchWithinDistance(curLatLng: LatLng?, distance: Int?): List<Match> {
+        val start = Instant.now()
+        val matches = matchesCollection
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+            .toDomain()
+
+//        return if (curLatLng != null) {
+//            val curLocation = createLocation(curLatLng!!)
+//            matches?.filter { m -> curLocation.distanceTo(createLocation(m.location.latLng)) < distance!!.times(1000) }
+//        } else {
+//            matches
+//        }
+        return if (curLatLng != null) {
+            val curLocation = createGeoLocation(curLatLng)
+            val distance = distance!!.times(1000)
+            matches.filter { m ->
+                GeoFireUtils.getDistanceBetween(
+                    curLocation,
+                    createGeoLocation(m.location.latLng)
+                ) < distance
+            }
+        } else {
+            matches
+        }
+            .also {
+                println("Time ${Duration.between(start, Instant.now()).toMillis()} s")
+            }
+    }
+
+//    suspend fun fetchWithinDistanceV2(curLatLng: LatLng, distanceInKM: Int): List<Match> {
+//        val center = GeoLocation(curLatLng.latitude, curLatLng.longitude)
+//        val radiusInM = (distanceInKM * 1000).toDouble()
+//
+//        val bounds = GeoFireUtils.getGeoHashQueryBounds(
+//            center,
+//            radiusInM
+//        )
+//
+//        val queries = mutableListOf<Task<QuerySnapshot>>()
+//        bounds.forEach {
+//            queries.add(
+//                matchesCollection
+//                    .orderBy(of(MatchEntity::location.name, LocationEntity::geohash.name))
+//                    .startAt(it.startHash)
+//                    .endAt(it.endHash)
+//                    .get()
+//            )
+//        }
+//        val ans = mutableListOf<DocumentSnapshot>()
+//        val l = Tasks.whenAllComplete(queries).await()
+//            .forEach { t: Task<QuerySnapshot> ->
+//                t.result
+//                    .documents
+// //                    .forEach { d ->
+// //                        val lat = d.getDouble("lat") ?: Double.NaN
+// //                        val lng = d.getDouble("lng") ?: Double.NaN
+// //
+// //                        // We have to filter out a few false positives due to GeoHash
+// //                        // accuracy, but most will match
+// //
+// //                        // We have to filter out a few false positives due to GeoHash
+// //                        // accuracy, but most will match
+// //                        val docLocation = GeoLocation(lat, lng)
+// //                        val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
+// //                        if (distanceInM <= radiusInM) {
+// //                            ans.add(d)
+// //                        }
+// //                    }
+//            }
+
+//        val matches = matchesCollection
+//            .get()
+//            .await()
+//            .documents
+//            .mapNotNull { document -> document.toMatchEntity() }
+//            .toDomain()
+
+//        return if (curLatLng != null) {
+//            val curLocation = createLocation(curLatLng)
+//            matches.filter { m ->
+//                curLocation.distanceTo(createLocation(m.location.latLng)) < distanceInKM.times(1000)
+//            }
+//        } else {
+//            matches
+//        }
+//    }
+
+    // TODO: Add filtering for future timestamp
 
     override suspend fun findAllByHost(hostId: String): List<Match> {
         val matches = matchesCollection
@@ -206,3 +303,24 @@ class FirebaseMatchRepository
 }
 
 private fun DocumentSnapshot.toMatchEntity() = this.toObject(MatchEntity::class.java)
+
+private fun createLocation(latLng: LatLng) =
+    Location("")
+        .apply {
+            latitude = latLng.latitude
+            longitude = latLng.longitude
+        }
+
+private fun createGeoLocation(latLng: LatLng) =
+    GeoLocation(
+        latLng.latitude,
+        latLng.longitude
+    )
+// TODO add this logic to fetch users from match (in match details view)
+// private fun allUsersFromMatches(matches: List<MatchEntity>): List<String> {
+//    return matches.map { allUsersFromMatch(it) }.flatten().distinct()
+// }
+//
+// private fun allUsersFromMatch(match: MatchEntity): List<String> {
+//    return match.teamOne.plus(match.teamTwo)
+// }

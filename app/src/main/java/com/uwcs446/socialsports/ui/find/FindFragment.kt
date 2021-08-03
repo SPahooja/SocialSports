@@ -1,7 +1,11 @@
 package com.uwcs446.socialsports.ui.find
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -11,6 +15,9 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.Filter
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -97,6 +104,59 @@ class FindFragment : Fragment() {
         // Default sport is "All"
         autoCompleteTextView.setText(getString(R.string.type_all), false)
 
+        val distanceFilterTextView = binding.layoutListFilterToolbar.edittextFilterDistance
+        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                enableDistanceFilter()
+            }
+        }
+
+        // Check for location permission
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Show matches within 10km and enable distance filter
+            lifecycleScope.launch {
+                findViewModel.filterMatchByDistance(10)
+            }
+            enableDistanceFilter()
+            distanceFilterTextView.setText("10")
+        } else {
+            lifecycleScope.launch {
+                findViewModel.removeDistanceFilter()
+            }
+        }
+
+        distanceFilterTextView.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                enableDistanceFilter()
+            } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(context, "Location access was disable for this app.", Toast.LENGTH_SHORT).show()
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+
+        distanceFilterTextView.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                binding.findProgressBar.visibility = VISIBLE
+                binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+                lifecycleScope.launch {
+                    if (s.isNotEmpty()) {
+                        lifecycleScope.launch {
+                            var distance = s.toString().toInt()
+                            findViewModel.filterMatchByDistance(distance)
+                        }
+                    } else { // no restriction to distance when distanceFilterTextView is cleared
+                        findViewModel.removeDistanceFilter()
+                    }
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+
         return binding.root
     }
 
@@ -161,6 +221,14 @@ class FindFragment : Fragment() {
             }
             timePicker.show(fragmentManager, "timePicker")
         }
+    }
+
+    private fun enableDistanceFilter() {
+        val distanceFilterTextView = binding.layoutListFilterToolbar.edittextFilterDistance
+        distanceFilterTextView.isClickable = true
+        distanceFilterTextView.isCursorVisible = true
+        distanceFilterTextView.isFocusable = true
+        distanceFilterTextView.isFocusableInTouchMode = true
     }
 
     // override ArrayAdapter filter to avoid spinner options disappearing when navigating back from details page
