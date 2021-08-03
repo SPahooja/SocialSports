@@ -105,6 +105,7 @@ class MatchDetailsViewModel @Inject constructor(
 
     // check whether the current user is the match host and update isHost accordingly
     private fun checkHost(hostId: String) {
+        val currentUser = currentUserRepository.getUser()
         if (currentUser != null) {
             _isHost.value = (hostId == currentUser.uid)
         } else {
