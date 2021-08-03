@@ -54,7 +54,7 @@ class FindViewModel @Inject constructor(
      * Filters matches by distance.
      */
     suspend fun filterMatchByDistance(distance: Int) {
-        val curLatLng = locationService.getCurrentPlace()?.latLng ?: null
+        val curLatLng = locationService.getCurrentPlace()?.latLng
         _matchesByDistance.value = matchRepository.fetchWithinDistance(curLatLng, distance)
         updateMatchList()
     }
