@@ -138,7 +138,7 @@ class FindFragment : Fragment() {
                 } else {
                     requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
-            }:
+            }
         }
 
         distanceFilterTextView.addTextChangedListener(object : TextWatcher {
