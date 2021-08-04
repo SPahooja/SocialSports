@@ -17,15 +17,22 @@ import javax.inject.Inject
 @HiltViewModel
 class FindViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
-    private val locationService: LocationService,
+    private val locationService: LocationService
 ) : ViewModel() {
+
+    private val _matchesBySport = MutableLiveData<List<Match>>(emptyList())
+    private val _matchesByDistance = MutableLiveData<List<Match>>(emptyList())
+    // TODO: filter by date and time
+    private val _matchesByDate = MutableLiveData<List<Match>>(emptyList())
+    private val _matchesByTime = MutableLiveData<List<Match>>(emptyList())
 
     val _matchPlaces = MutableLiveData<List<Pair<Match, Place>>>(emptyList())
     val matchPlaces: LiveData<List<Pair<Match, Place>>> = _matchPlaces
 
     init {
         viewModelScope.launch {
-            filterMatchBySport(Sport.ANY)
+            _matchesBySport.value = matchRepository.fetchExploreMatches(Sport.ANY)
+            updateMatchList()
         }
     }
 
@@ -39,9 +46,39 @@ class FindViewModel @Inject constructor(
      * Filters matches by sport.
      */
     suspend fun filterMatchBySport(sport: Sport) {
-        val fetchedMatches = matchRepository.fetchExploreMatches(sport)
-        val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
+        _matchesBySport.value = matchRepository.fetchExploreMatches(sport)
+        updateMatchList()
+    }
 
+    /**
+     * Filters matches by distance.
+     */
+    suspend fun filterMatchByDistance(distance: Int) {
+        val curLatLng = locationService.getCurrentPlace()?.latLng
+        _matchesByDistance.value = matchRepository.fetchWithinDistance(curLatLng, distance)
+        updateMatchList()
+    }
+
+    /**
+     * Remove distance filter.
+     */
+    suspend fun removeDistanceFilter() {
+        _matchesByDistance.value = matchRepository.fetchWithinDistance(null, null)
+        updateMatchList()
+    }
+
+    private suspend fun updateMatchList() {
+        val matchesBySport: List<Match> = _matchesBySport.value ?: emptyList()
+        val matchesByDistance: List<Match> = _matchesByDistance.value ?: emptyList()
+        val matchesByDate: List<Match> = _matchesByDate.value ?: emptyList()
+        val matchesByTime: List<Match> = _matchesByTime.value ?: emptyList()
+
+        val idsBySport = matchesBySport.map { m -> m.id }
+        // TODO: uncomment after filter by date and time implemented
+        // val idsBySportDate = matchesByDate.filter { m -> idsBySport.contains(m.id) }.map { m -> m.id }
+        // val idsBySportDateTime = matchesByTime.filter { m -> idsBySportDate.contains(m.id) }.map { m -> m.id }
+        val fetchedMatches = matchesByDistance.filter { m -> idsBySport.contains(m.id) }
+        val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
         _matchPlaces.value = fetchedMatches.zip(fetchedPlaces)
     }
 }
