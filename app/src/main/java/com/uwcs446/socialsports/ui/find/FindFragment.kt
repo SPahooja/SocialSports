@@ -97,21 +97,15 @@ class FindFragment : Fragment() {
 
         // set up observers for filter options
         findViewModel.filterDate.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                findViewModel.filterMatch()
-            }
+            filterProcess()
         }
 
         findViewModel.filterTime.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                findViewModel.filterMatch()
-            }
+            filterProcess()
         }
 
         findViewModel.filterType.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                findViewModel.filterMatch()
-            }
+            filterProcess()
         }
 
         return binding.root
@@ -181,6 +175,14 @@ class FindFragment : Fragment() {
                 findViewModel.filterTime.value = ""
             }
             timePicker.show(fragmentManager, "timePicker")
+        }
+    }
+
+    private fun filterProcess() {
+        lifecycleScope.launch {
+            binding.findProgressBar.visibility = VISIBLE
+            binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+            findViewModel.filterMatch()
         }
     }
 
