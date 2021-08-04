@@ -34,7 +34,7 @@ class FirebaseMatchRepository
 
         val matches = matchesCollection
             .whereIn(Match::sport.name, sportsToMatch)
-            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, dateTime)
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, dateTime.toEpochMilli())
             .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
