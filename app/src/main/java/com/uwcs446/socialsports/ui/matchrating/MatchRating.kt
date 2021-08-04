@@ -1,8 +1,8 @@
 package com.uwcs446.socialsports.ui.matchrating
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.uwcs446.socialsports.R
 
 class MatchRating : AppCompatActivity() {

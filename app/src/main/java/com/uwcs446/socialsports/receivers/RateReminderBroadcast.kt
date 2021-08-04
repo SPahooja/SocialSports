@@ -25,19 +25,19 @@ class RateReminderBroadcast : BroadcastReceiver() {
         }
         // we use notification compat builder to construct the details of our notification
         val builder = NotificationCompat.Builder(
-                context,
-                context.getString(R.string.match_rating_notification_channel_id)
+            context,
+            context.getString(R.string.match_rating_notification_channel_id)
         )
-                .setContentIntent(resultPendingIntent)
-                .setSmallIcon(R.drawable.ic_baseline_sports_24)
-                .setContentTitle("Rate your match!")
-                .setContentText("How was your game?")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(resultPendingIntent)
+            .setSmallIcon(R.drawable.ic_baseline_sports_24)
+            .setContentTitle("Rate your match!")
+            .setContentText("How was your game?")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         // call the static function from(Context) to get a NotificationManagerCompat object, and then call one of its methods to post or cancel notifications.
         val notificationManager = NotificationManagerCompat.from(context)
 
         // Post a notification to be shown in the status bar, stream, etc.
-        notificationManager.notify(200, builder.build());
+        notificationManager.notify(200, builder.build())
     }
 }
