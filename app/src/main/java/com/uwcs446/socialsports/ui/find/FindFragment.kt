@@ -24,10 +24,10 @@ import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.ui.matchlist.MatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import java.util.Calendar
 
 @AndroidEntryPoint
 class FindFragment : Fragment() {
@@ -84,18 +84,35 @@ class FindFragment : Fragment() {
             binding.findProgressBar.visibility = VISIBLE
             binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
 
-            lifecycleScope.launch {
-                when (position) {
-                    0 -> findViewModel.filterMatchBySport(Sport.ANY)
-                    1 -> findViewModel.filterMatchBySport(Sport.SOCCER)
-                    2 -> findViewModel.filterMatchBySport(Sport.BASKETBALL)
-                    else -> findViewModel.filterMatchBySport(Sport.ULTIMATE)
-                }
+            when (position) {
+                0 -> findViewModel.filterType.value = Sport.ANY
+                1 -> findViewModel.filterType.value = Sport.SOCCER
+                2 -> findViewModel.filterType.value = Sport.BASKETBALL
+                else -> findViewModel.filterType.value = Sport.ULTIMATE
             }
         }
 
         // Default sport is "All"
         autoCompleteTextView.setText(getString(R.string.type_all), false)
+
+        // set up observers for filter options
+        findViewModel.filterDate.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                findViewModel.filterMatch()
+            }
+        }
+
+        findViewModel.filterTime.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                findViewModel.filterMatch()
+            }
+        }
+
+        findViewModel.filterType.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                findViewModel.filterMatch()
+            }
+        }
 
         return binding.root
     }
@@ -112,11 +129,11 @@ class FindFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener { time ->
                 // display selected date
                 val date = Instant.ofEpochMilli(time).atZone(ZoneId.of("UTC")).toLocalDate()
-                val format = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                val format = date.format(DateTimePicker().getDateFormatter())
                 edittext.setText(format)
 
                 // filter
-                findViewModel.filterMatchByDate(date)
+                findViewModel.filterDate.value = format
             }
 
             datePicker.addOnNegativeButtonClickListener {
@@ -124,7 +141,7 @@ class FindFragment : Fragment() {
                 edittext.setText("")
 
                 // remove filter
-                findViewModel.filterMatchByDate(null)
+                findViewModel.filterDate.value = ""
             }
 
             datePicker.show(fragmentManager, "datePicker")
@@ -144,12 +161,16 @@ class FindFragment : Fragment() {
                 // set text
                 val hour = timePicker.hour
                 val minute = timePicker.minute
-                val selectedTime =
-                    "${if (hour == 0) "00" else hour} : ${if (minute == 0) "00" else minute}"
-                edittext.setText(selectedTime)
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+                val viewFormatter = SimpleDateFormat("HH:mm")
+                var formattedTime = viewFormatter.format(calendar.time)
+
+                edittext.setText(formattedTime)
 
                 // filter
-                findViewModel.filterMatchByTime(hour, minute)
+                findViewModel.filterTime.value = formattedTime
             }
 
             timePicker.addOnNegativeButtonClickListener {
@@ -157,7 +178,7 @@ class FindFragment : Fragment() {
                 edittext.setText("")
 
                 // remove filter
-                findViewModel.filterMatchByTime(-1, -1)
+                findViewModel.filterTime.value = ""
             }
             timePicker.show(fragmentManager, "timePicker")
         }

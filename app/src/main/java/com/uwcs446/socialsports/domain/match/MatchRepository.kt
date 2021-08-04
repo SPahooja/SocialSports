@@ -1,6 +1,7 @@
 package com.uwcs446.socialsports.domain.match
 
 import androidx.lifecycle.LiveData
+import java.time.Instant
 
 interface MatchRepository {
 
@@ -8,7 +9,7 @@ interface MatchRepository {
 
     val matchesByHost: LiveData<Pair<String, List<Match>>>
 
-    suspend fun fetchExploreMatches(sport: Sport): List<Match>
+    suspend fun fetchExploreMatches(sport: Sport, dateTime: Instant): List<Match>
 
     suspend fun findAllByHost(hostId: String): List<Match>
 

@@ -29,12 +29,12 @@ class FirebaseMatchRepository
     private val _matchesByHost = MutableLiveData<Pair<String, List<Match>>>()
     override val matchesByHost: LiveData<Pair<String, List<Match>>> = _matchesByHost
 
-    override suspend fun fetchExploreMatches(sport: Sport): List<Match> {
+    override suspend fun fetchExploreMatches(sport: Sport, dateTime: Instant): List<Match> {
         val sportsToMatch = if (sport == Sport.ANY) Sport.values().toList() else listOf(sport)
 
         val matches = matchesCollection
             .whereIn(Match::sport.name, sportsToMatch)
-            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, Instant.now().toEpochMilli())
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, dateTime)
             .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
