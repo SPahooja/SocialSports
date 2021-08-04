@@ -36,12 +36,21 @@
 
     <!--  filter toolbar  -->
     <string name="date_filter_hint">Date</string>
-    <string name="time_filter_hint">Time</string>
+    <string name="time_filter_hint">Starting Time</string>
+    <string name="distance_filter_hint">Distance</string>
+    <string name="distance_filter_unit">km</string>
+    <string name="match_type_filter_hint">Match Type</string>
 
     <!-- game details view -->
     <string name="team_one">Team 1</string>
     <string name="team_two">Team 2</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Notification Channel -->
+    <string name="match_rating_notification_channel_id">notifyRating</string>
+    <string name="match_rating_notification_channel_name">SFAMatchRatingChannel</string>
+    <string name="match_rating_notification_channel_description">Channel for SFA match rating reminder</string>
+
 
 </resources>
