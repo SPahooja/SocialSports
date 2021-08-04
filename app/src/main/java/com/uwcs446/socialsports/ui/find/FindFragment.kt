@@ -3,6 +3,7 @@ package com.uwcs446.socialsports.ui.find
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -105,6 +106,7 @@ class FindFragment : Fragment() {
         autoCompleteTextView.setText(getString(R.string.type_all), false)
 
         val distanceFilterTextView = binding.layoutListFilterToolbar.edittextFilterDistance
+        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 enableDistanceFilter()
@@ -112,7 +114,9 @@ class FindFragment : Fragment() {
         }
 
         // Check for location permission
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        ) {
             // Show matches within 10km and enable distance filter
             lifecycleScope.launch {
                 findViewModel.filterMatchByDistance(10)
@@ -126,13 +130,15 @@ class FindFragment : Fragment() {
         }
 
         distanceFilterTextView.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                enableDistanceFilter()
-            } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(context, "Location access was disable for this app.", Toast.LENGTH_SHORT).show()
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    enableDistanceFilter()
+                } else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(context, "Location access was disable for this app.", Toast.LENGTH_SHORT).show()
+                } else {
+                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }:
         }
 
         distanceFilterTextView.addTextChangedListener(object : TextWatcher {
