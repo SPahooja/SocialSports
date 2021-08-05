@@ -107,8 +107,8 @@ class FindViewModel @Inject constructor(
         val matchesByDateTime: List<Match> = _matchesByDateTime.value ?: emptyList()
 
         val idsBySport = matchesBySport.map { m -> m.id }
-        val idsByDateTime = matchesByDateTime.filter { m -> idsBySport.contains(m.id) }.map { m -> m.id }
-        val fetchedMatches = matchesByDistance.filter { m -> idsByDateTime.contains(m.id) }
+        val idsBySportDateTime = matchesByDateTime.filter { m -> idsBySport.contains(m.id) }.map { m -> m.id }
+        val fetchedMatches = matchesByDistance.filter { m -> idsBySportDateTime.contains(m.id) }
         val fetchedPlaces = fetchedMatches.map { match -> locationService.getPlace(match.location.placeId) }
         _matchPlaces.value = fetchedMatches.zip(fetchedPlaces)
     }
