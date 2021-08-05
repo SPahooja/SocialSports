@@ -2,6 +2,7 @@ package com.uwcs446.socialsports.domain.match
 
 import androidx.lifecycle.LiveData
 import com.google.android.gms.maps.model.LatLng
+import java.time.Instant
 
 interface MatchRepository {
 
@@ -12,6 +13,8 @@ interface MatchRepository {
     suspend fun fetchExploreMatches(sport: Sport): List<Match>
 
     suspend fun fetchWithinDistance(curLatLng: LatLng?, distance: Int?): List<Match>
+
+    suspend fun fetchAfterDateTime(dateTime: Instant): List<Match>
 
     suspend fun findAllByHost(hostId: String): List<Match>
 

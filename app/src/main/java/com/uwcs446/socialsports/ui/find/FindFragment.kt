@@ -32,10 +32,10 @@ import com.uwcs446.socialsports.domain.match.Sport
 import com.uwcs446.socialsports.ui.matchlist.MatchListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import java.util.Calendar
 
 @AndroidEntryPoint
 class FindFragment : Fragment() {
@@ -104,6 +104,15 @@ class FindFragment : Fragment() {
 
         // Default sport is "All"
         autoCompleteTextView.setText(getString(R.string.type_all), false)
+
+        // set up observers for time filtering options
+        findViewModel.filterDate.observe(viewLifecycleOwner) {
+            dateTimeFilterProcess()
+        }
+
+        findViewModel.filterTime.observe(viewLifecycleOwner) {
+            dateTimeFilterProcess()
+        }
 
         val distanceFilterTextView = binding.layoutListFilterToolbar.edittextFilterDistance
         val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -178,11 +187,11 @@ class FindFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener { time ->
                 // display selected date
                 val date = Instant.ofEpochMilli(time).atZone(ZoneId.of("UTC")).toLocalDate()
-                val format = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
-                edittext.setText(format)
+                val formattedDate = date.format(DateTimePicker().getDateFormatter())
+                edittext.setText(formattedDate)
 
                 // filter
-                findViewModel.filterMatchByDate(date)
+                findViewModel.filterDate.value = formattedDate
             }
 
             datePicker.addOnNegativeButtonClickListener {
@@ -190,7 +199,7 @@ class FindFragment : Fragment() {
                 edittext.setText("")
 
                 // remove filter
-                findViewModel.filterMatchByDate(null)
+                findViewModel.filterDate.value = ""
             }
 
             datePicker.show(fragmentManager, "datePicker")
@@ -210,12 +219,16 @@ class FindFragment : Fragment() {
                 // set text
                 val hour = timePicker.hour
                 val minute = timePicker.minute
-                val selectedTime =
-                    "${if (hour == 0) "00" else hour} : ${if (minute == 0) "00" else minute}"
-                edittext.setText(selectedTime)
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+                val viewFormatter = SimpleDateFormat("HH:mm")
+                var formattedTime = viewFormatter.format(calendar.time)
+
+                edittext.setText(formattedTime)
 
                 // filter
-                findViewModel.filterMatchByTime(hour, minute)
+                findViewModel.filterTime.value = formattedTime
             }
 
             timePicker.addOnNegativeButtonClickListener {
@@ -223,7 +236,7 @@ class FindFragment : Fragment() {
                 edittext.setText("")
 
                 // remove filter
-                findViewModel.filterMatchByTime(-1, -1)
+                findViewModel.filterTime.value = ""
             }
             timePicker.show(fragmentManager, "timePicker")
         }
@@ -235,6 +248,14 @@ class FindFragment : Fragment() {
         distanceFilterTextView.isCursorVisible = true
         distanceFilterTextView.isFocusable = true
         distanceFilterTextView.isFocusableInTouchMode = true
+    }
+
+    private fun dateTimeFilterProcess() {
+        binding.findProgressBar.visibility = VISIBLE
+        binding.layoutMatchList.recyclerviewMatch.visibility = INVISIBLE
+        lifecycleScope.launch {
+            findViewModel.filterMatchByDateTime()
+        }
     }
 
     // override ArrayAdapter filter to avoid spinner options disappearing when navigating back from details page
