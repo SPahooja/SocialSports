@@ -55,6 +55,7 @@ class FirebaseMatchRepository
     override suspend fun fetchWithinDistance(curLatLng: LatLng?, distance: Int?): List<Match> {
         val start = Instant.now()
         val matches = matchesCollection
+            .orderBy(MatchEntity::startTime.name)
             .get()
             .await()
             .documents
@@ -142,7 +143,20 @@ class FirebaseMatchRepository
 //        }
 //    }
 
-    // TODO: Add filtering for future timestamp
+    override suspend fun fetchAfterDateTime(dateTime: Instant): List<Match> {
+        val matches = matchesCollection
+            .whereGreaterThanOrEqualTo(MatchEntity::startTime.name, dateTime.toEpochMilli())
+            .orderBy(MatchEntity::startTime.name)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document -> document.toMatchEntity() }
+            .toDomain()
+
+        Log.d(TAG, "Found ${matches.size} matches")
+
+        return matches
+    }
 
     override suspend fun findAllByHost(hostId: String): List<Match> {
         val matches = matchesCollection
