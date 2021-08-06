@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.R
+import com.uwcs446.socialsports.domain.user.User
 
-class ViewPagerAdapter(private var userNames: List<String>) : RecyclerView.Adapter<ViewPagerAdapter.Pager2ViewHolder>() {
+class ViewPagerAdapter(private var userNames: List<User>) : RecyclerView.Adapter<ViewPagerAdapter.Pager2ViewHolder>() {
 
     private var userRatingList = MutableList(userNames.size) { 0F }
 
@@ -22,7 +22,6 @@ class ViewPagerAdapter(private var userNames: List<String>) : RecyclerView.Adapt
             userRatingBar.setOnRatingBarChangeListener { ratingBar: RatingBar, fl: Float, b: Boolean ->
                 val position = adapterPosition
                 userRatingList[position] = fl
-                Toast.makeText(itemView.context, "you clicked on item #${position + 1}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -35,10 +34,14 @@ class ViewPagerAdapter(private var userNames: List<String>) : RecyclerView.Adapt
     }
 
     override fun onBindViewHolder(holder: ViewPagerAdapter.Pager2ViewHolder, position: Int) {
-        holder.userNameText.text = userNames[position]
+        holder.userNameText.text = userNames[position].name
     }
 
     override fun getItemCount(): Int {
         return userNames.size
+    }
+
+    fun getPlayerRatingList(): MutableList<Float> {
+        return userRatingList
     }
 }
