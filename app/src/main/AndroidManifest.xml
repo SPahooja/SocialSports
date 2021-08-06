@@ -17,7 +17,7 @@
             android:enabled="true"
             android:exported="true" />
         <activity
-            android:name=".ui.matchrating.MatchRating"
+            android:name=".ui.matchrating.MatchRatingActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"

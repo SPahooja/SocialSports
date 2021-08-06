@@ -8,13 +8,13 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.uwcs446.socialsports.R
-import com.uwcs446.socialsports.ui.matchrating.MatchRating
+import com.uwcs446.socialsports.ui.matchrating.MatchRatingActivity
 
 class RateReminderBroadcast : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         // Create an Intent for the activity you want to start
-        val resultIntent = Intent(context, MatchRating::class.java)
+        val resultIntent = Intent(context, MatchRatingActivity::class.java)
         resultIntent.putExtra("MatchId", intent.getSerializableExtra("MatchId"))
         // Create the TaskStackBuilder
         val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
