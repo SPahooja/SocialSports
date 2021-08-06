@@ -35,7 +35,7 @@ class MatchRatingActivity : AppCompatActivity() {
         // Hook up indicator with the view pager
         indicator.setViewPager(view_pager2)
 
-        // On Submit go to profile fragment
+        // OnSubmit go home fragment
         submitRatingButton.setOnClickListener {
             finish()
         }
