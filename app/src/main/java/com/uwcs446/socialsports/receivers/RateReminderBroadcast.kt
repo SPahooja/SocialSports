@@ -32,6 +32,7 @@ class RateReminderBroadcast : BroadcastReceiver() {
             .setSmallIcon(R.drawable.ic_baseline_sports_24)
             .setContentTitle("Rate your match!")
             .setContentText("How was your game?")
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         // call the static function from(Context) to get a NotificationManagerCompat object, and then call one of its methods to post or cancel notifications.
