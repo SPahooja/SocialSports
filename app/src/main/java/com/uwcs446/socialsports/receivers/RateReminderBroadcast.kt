@@ -14,14 +14,15 @@ class RateReminderBroadcast : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         // Create an Intent for the activity you want to start
+        val matchId = intent.getStringExtra("MatchId")
         val resultIntent = Intent(context, MatchRatingActivity::class.java)
-        resultIntent.putExtra("MatchId", intent.getSerializableExtra("MatchId"))
+        resultIntent.putExtra("MatchId", matchId)
         // Create the TaskStackBuilder
         val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
             // Add the intent, which inflates the back stack
             addNextIntentWithParentStack(resultIntent)
             // Get the PendingIntent containing the entire back stack
-            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT)
         }
         // we use notification compat builder to construct the details of our notification
         val builder = NotificationCompat.Builder(

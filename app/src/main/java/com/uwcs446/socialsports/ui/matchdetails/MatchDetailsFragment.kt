@@ -120,7 +120,7 @@ class MatchDetailsFragment : Fragment() {
                             // Passing the matchId so the MatchRatingActivity will know the match it is dealing with
                             intent.putExtra("MatchId", matchId)
                             // Pending intent, will trigger the RateReminderBroadcast
-                            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+                            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
                             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
                             // Using alarm manager to trigger a notification via broadcast receiver after the game is done
