@@ -23,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.uwcs446.socialsports.databinding.ActivityMainBinding
 import com.uwcs446.socialsports.services.user.UserLoginService
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 @AndroidEntryPoint

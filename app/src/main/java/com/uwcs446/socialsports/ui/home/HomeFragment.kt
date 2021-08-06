@@ -80,9 +80,18 @@ class HomeFragment : Fragment() {
                     homeViewModel.setFilterType(filter!!)
                 }
             }
+
+            button.setOnClickListener {
+                toggleButtons.forEach { it.isChecked = false || it == button }
+            }
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.handleOnResume()
     }
 
     override fun onDestroyView() {
