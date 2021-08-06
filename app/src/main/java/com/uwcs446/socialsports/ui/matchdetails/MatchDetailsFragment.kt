@@ -1,6 +1,10 @@
 package com.uwcs446.socialsports.ui.matchdetails
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uwcs446.socialsports.MobileNavigationDirections
 import com.uwcs446.socialsports.databinding.FragmentMatchDetailsBinding
+import com.uwcs446.socialsports.receivers.RateReminderBroadcast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -106,6 +111,26 @@ class MatchDetailsFragment : Fragment() {
                     val isHost = matchDetailsViewModel.isHost.value ?: false
 
                     if (match != null && host != null && place != null) {
+                        // time the match ends
+                        val endTimeInMillis = match.endTime.toEpochMilli()
+                        // Using this callback since to reduce code duplication. Will be called via all
+                        //  the onClickListens for the join buttons
+                        val rateReminderCallback = { matchId: String?, endTime: Long ->
+                            val intent = Intent(context, RateReminderBroadcast::class.java)
+                            // Passing the matchId so the MatchRatingActivity will know the match it is dealing with
+                            intent.putExtra("MatchId", matchId)
+                            // Pending intent, will trigger the RateReminderBroadcast
+                            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+                            val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+
+                            // Using alarm manager to trigger a notification via broadcast receiver after the game is done
+                            alarmManager?.set(
+                                AlarmManager.RTC_WAKEUP,
+                                endTime,
+                                pendingIntent
+                            )
+                        }
+
                         binding.matchSummary.textMatchTitle.text = match.title
                         binding.matchSummary.icMatchType.setImageResource(match.sport.imageResource)
                         binding.matchSummary.textMatchType.text = match.sport.name
@@ -144,6 +169,7 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.leaveMatch(
                                     1
                                 )
+                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                             // Disable join team two button
                             binding.matchTeamTwoJoinButton.text = "Join"
@@ -152,6 +178,7 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.joinMatch(
                                     2
                                 )
+                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                         } else if (matchDetailsViewModel.isInTeam(2)) {
                             // Disable join team one button
@@ -161,6 +188,7 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.joinMatch(
                                     1
                                 )
+                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                             // Enable leave team two button
                             binding.matchTeamTwoJoinButton.text = "Leave"
@@ -169,6 +197,7 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.leaveMatch(
                                     2
                                 )
+                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                         } else {
                             // Enable join team one button
@@ -178,6 +207,7 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.joinMatch(
                                     1
                                 )
+                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                             // Enable join team two button
                             binding.matchTeamTwoJoinButton.text = "Join"
@@ -186,6 +216,7 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.joinMatch(
                                     2
                                 )
+                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                         }
 
