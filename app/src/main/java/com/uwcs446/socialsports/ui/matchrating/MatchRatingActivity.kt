@@ -25,6 +25,8 @@ class MatchRatingActivity : AppCompatActivity() {
             Log.d("match-rating-id", matchId)
         }
 
+        postDummyToList()
+
         view_pager2.adapter = ViewPagerAdapter(userNameList)
         view_pager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
@@ -43,5 +45,9 @@ class MatchRatingActivity : AppCompatActivity() {
         userNameList.add(userName)
     }
 
-
+    private fun postDummyToList() {
+        for (i in 1..5) {
+            addToList("Name $i")
+        }
+    }
 }
