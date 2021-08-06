@@ -20,8 +20,6 @@ class HomeViewModel @Inject constructor(
     private val locationService: LocationService
 ) : ViewModel() {
 
-    private val currentUser = currentUserRepository.getUser()
-
     private val _matchPlaces = MutableLiveData<List<Pair<Match, Place>>>(emptyList())
     val matchPlaces: LiveData<List<Pair<Match, Place>>> = _matchPlaces
 
@@ -35,7 +33,13 @@ class HomeViewModel @Inject constructor(
         _filterType.value = filter
     }
 
+    fun handleOnResume() {
+        filterMatches(_filterType.value!!)
+    }
+
     private fun filterMatches(filter: MatchFilter) {
+        val currentUser = currentUserRepository.getUser()
+
         if (currentUser == null) {
             _matchPlaces.value = _matchPlaces.value // no-op
             return
