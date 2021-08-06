@@ -169,7 +169,6 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.leaveMatch(
                                     1
                                 )
-                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                             // Disable join team two button
                             binding.matchTeamTwoJoinButton.text = "Join"
@@ -178,7 +177,6 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.joinMatch(
                                     2
                                 )
-                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                         } else if (matchDetailsViewModel.isInTeam(2)) {
                             // Disable join team one button
@@ -188,7 +186,6 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.joinMatch(
                                     1
                                 )
-                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                             // Enable leave team two button
                             binding.matchTeamTwoJoinButton.text = "Leave"
@@ -197,7 +194,6 @@ class MatchDetailsFragment : Fragment() {
                                 matchDetailsViewModel.leaveMatch(
                                     2
                                 )
-                                rateReminderCallback(match.id, endTimeInMillis)
                             }
                         } else {
                             // Enable join team one button
