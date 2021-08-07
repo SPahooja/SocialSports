@@ -51,6 +51,8 @@
     <string name="match_rating_notification_channel_name">SFAMatchRatingChannel</string>
     <string name="match_rating_notification_channel_description">Channel for SFA match rating reminder</string>
     <string name="submit_ratings">Submit Ratings</string>
+    <string name="number_of_ratings">0</string>
+    <string name="number_of_ratings_label">Number of Ratings:</string>
 
 
 </resources>
