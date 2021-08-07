@@ -4,15 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.uwcs446.socialsports.domain.user.CurrentAuthUserRepository
+import com.uwcs446.socialsports.domain.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
 @Inject constructor(
-    private val currentUserRepository: CurrentAuthUserRepository
+    private val currentUserRepository: CurrentAuthUserRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _username = MutableLiveData<String>()
@@ -23,9 +27,11 @@ class ProfileViewModel
 
     private val userObserver = Observer<FirebaseUser> {
         // TODO: fetch user's real name
-        _username.value = currentUserRepository.getUser()?.displayName ?: "Logged out."
-        // TODO: fetch user's rating
-        _rating.value = 3.5F
+        val authUser = currentUserRepository.getUser()
+        _username.value = authUser?.displayName ?: "Logged out."
+        viewModelScope.launch {
+            _rating.value = userRepository.findById(authUser!!.uid)?.rating ?: 0F
+        }
     }
 
     init {
