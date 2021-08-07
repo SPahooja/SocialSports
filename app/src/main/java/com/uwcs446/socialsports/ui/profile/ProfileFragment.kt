@@ -30,19 +30,29 @@ class ProfileFragment : Fragment() {
 
         binding.logoutButton.setOnClickListener { viewModel.handleLogout() }
 
-        val textView: TextView = binding.userProfileUsername
+        val userNameView: TextView = binding.userProfileUsername
+
         viewModel.username.observe(
             viewLifecycleOwner,
             {
-                textView.text = it
+                userNameView.text = it
             }
         )
 
         val ratingBarView: RatingBar = binding.userProfileRating
+
         viewModel.rating.observe(
             viewLifecycleOwner,
             {
                 ratingBarView.rating = it
+            }
+        )
+
+        val numRatingsView: TextView = binding.userProfileNumberOfRatings
+        viewModel.numRatings.observe(
+            viewLifecycleOwner,
+            {
+                numRatingsView.text = it.toString()
             }
         )
 
