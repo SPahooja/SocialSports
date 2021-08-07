@@ -25,12 +25,18 @@ class ProfileViewModel
     private val _rating = MutableLiveData<Float>()
     val rating: LiveData<Float> = _rating
 
+    private val _numRatings = MutableLiveData<Int>()
+    val numRatings: LiveData<Int> = _numRatings
+
     private val userObserver = Observer<FirebaseUser> {
-        // TODO: fetch user's real name
-        val authUser = currentUserRepository.getUser()
-        _username.value = authUser?.displayName ?: "Logged out."
+        val authUser = currentUserRepository.getUser()!!
+        val uid = authUser.uid
+
+        _username.value = authUser.displayName
         viewModelScope.launch {
-            _rating.value = userRepository.findById(authUser!!.uid)?.rating ?: 0F
+            val user = userRepository.findById(uid)!!
+            _rating.value = user.rating
+            _numRatings.value = user.numRatings
         }
     }
 
