@@ -51,6 +51,6 @@ class FirebaseCurrentUserRepository
     private suspend fun upsertUserCollection() {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null)
-            userRepository.upsert(User(currentUser.uid, currentUser.displayName ?: "NO_NAME", 0F,0))
+            userRepository.upsert(User(currentUser.uid, currentUser.displayName ?: "NO_NAME", 0F, 0))
     }
 }

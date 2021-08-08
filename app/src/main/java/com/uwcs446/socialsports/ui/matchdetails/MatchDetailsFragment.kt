@@ -161,59 +161,64 @@ class MatchDetailsFragment : Fragment() {
                         if (teamTwo != null) teamTwoViewAdapter.updateTeamMembers(teamTwo.map { user -> user.name })
 
                         // Enable or disable join buttons
-                        if (matchDetailsViewModel.isInTeam(1)) {
-                            // Enable leave team one button
-                            binding.matchTeamOneJoinButton.text = "Leave"
-                            binding.matchTeamOneJoinButton.isEnabled = true
-                            binding.matchTeamOneJoinButton.setOnClickListener {
-                                matchDetailsViewModel.leaveMatch(
-                                    1
-                                )
-                            }
-                            // Disable join team two button
-                            binding.matchTeamTwoJoinButton.text = "Join"
-                            binding.matchTeamTwoJoinButton.isEnabled = false
-                            binding.matchTeamTwoJoinButton.setOnClickListener {
-                                matchDetailsViewModel.joinMatch(
-                                    2
-                                )
-                            }
-                        } else if (matchDetailsViewModel.isInTeam(2)) {
-                            // Disable join team one button
-                            binding.matchTeamOneJoinButton.text = "Join"
-                            binding.matchTeamOneJoinButton.isEnabled = false
-                            binding.matchTeamOneJoinButton.setOnClickListener {
-                                matchDetailsViewModel.joinMatch(
-                                    1
-                                )
-                            }
-                            // Enable leave team two button
-                            binding.matchTeamTwoJoinButton.text = "Leave"
-                            binding.matchTeamTwoJoinButton.isEnabled = true
-                            binding.matchTeamTwoJoinButton.setOnClickListener {
-                                matchDetailsViewModel.leaveMatch(
-                                    2
-                                )
+                        if (match.startTime.isAfter(Instant.now())) {
+                            if (matchDetailsViewModel.isInTeam(1)) {
+                                // Enable leave team one button
+                                binding.matchTeamOneJoinButton.text = "Leave"
+                                binding.matchTeamOneJoinButton.isEnabled = true
+                                binding.matchTeamOneJoinButton.setOnClickListener {
+                                    matchDetailsViewModel.leaveMatch(
+                                        1
+                                    )
+                                }
+                                // Disable join team two button
+                                binding.matchTeamTwoJoinButton.text = "Join"
+                                binding.matchTeamTwoJoinButton.isEnabled = false
+                                binding.matchTeamTwoJoinButton.setOnClickListener {
+                                    matchDetailsViewModel.joinMatch(
+                                        2
+                                    )
+                                }
+                            } else if (matchDetailsViewModel.isInTeam(2)) {
+                                // Disable join team one button
+                                binding.matchTeamOneJoinButton.text = "Join"
+                                binding.matchTeamOneJoinButton.isEnabled = false
+                                binding.matchTeamOneJoinButton.setOnClickListener {
+                                    matchDetailsViewModel.joinMatch(
+                                        1
+                                    )
+                                }
+                                // Enable leave team two button
+                                binding.matchTeamTwoJoinButton.text = "Leave"
+                                binding.matchTeamTwoJoinButton.isEnabled = true
+                                binding.matchTeamTwoJoinButton.setOnClickListener {
+                                    matchDetailsViewModel.leaveMatch(
+                                        2
+                                    )
+                                }
+                            } else {
+                                // Enable join team one button
+                                binding.matchTeamOneJoinButton.text = "Join"
+                                binding.matchTeamOneJoinButton.isEnabled = true
+                                binding.matchTeamOneJoinButton.setOnClickListener {
+                                    matchDetailsViewModel.joinMatch(
+                                        1
+                                    )
+                                    rateReminderCallback(match.id, endTimeInMillis)
+                                }
+                                // Enable join team two button
+                                binding.matchTeamTwoJoinButton.text = "Join"
+                                binding.matchTeamTwoJoinButton.isEnabled = true
+                                binding.matchTeamTwoJoinButton.setOnClickListener {
+                                    matchDetailsViewModel.joinMatch(
+                                        2
+                                    )
+                                    rateReminderCallback(match.id, endTimeInMillis)
+                                }
                             }
                         } else {
-                            // Enable join team one button
-                            binding.matchTeamOneJoinButton.text = "Join"
-                            binding.matchTeamOneJoinButton.isEnabled = true
-                            binding.matchTeamOneJoinButton.setOnClickListener {
-                                matchDetailsViewModel.joinMatch(
-                                    1
-                                )
-                                rateReminderCallback(match.id, endTimeInMillis)
-                            }
-                            // Enable join team two button
-                            binding.matchTeamTwoJoinButton.text = "Join"
-                            binding.matchTeamTwoJoinButton.isEnabled = true
-                            binding.matchTeamTwoJoinButton.setOnClickListener {
-                                matchDetailsViewModel.joinMatch(
-                                    2
-                                )
-                                rateReminderCallback(match.id, endTimeInMillis)
-                            }
+                            binding.matchTeamOneJoinButton.visibility = GONE
+                            binding.matchTeamTwoJoinButton.visibility = GONE
                         }
 
                         // Switch visibility of views
@@ -221,7 +226,7 @@ class MatchDetailsFragment : Fragment() {
                         binding.matchDetailsViews.visibility = VISIBLE
 
                         if (isHost && match.startTime.isAfter(Instant.now())) {
-                            // display the edit button if current user is the match host
+                            // display the edit button if current user is the match host and the game is in the future
                             binding.editButtonMatchDetails.visibility = VISIBLE
                             binding.editButtonMatchDetails.setOnClickListener {
                                 val action =
